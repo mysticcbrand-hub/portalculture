@@ -8,7 +8,7 @@ interface HeroProps {
 
 export default function Hero({ onCtaClick }: HeroProps) {
   const sphereRef = useRef<HTMLDivElement>(null)
-  const btnRef = useRef<HTMLButtonElement>(null)
+  const btnRef = useRef<HTMLAnchorElement>(null)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
 
   // Parallax effect for 3D sphere - Ultra smooth
