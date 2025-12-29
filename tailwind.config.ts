@@ -11,7 +11,6 @@ const config: Config = {
       fontFamily: {
         sans: ['-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'], // PP Neue Montreal equivalent
         display: ['"Scotch Display"', 'Georgia', 'serif'], // REAL Scotch Display Condensed
-        sans: ['-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'], // Clean for small text
         mono: ['"IBM Plex Mono"', 'Menlo', 'Monaco', 'monospace'], // Phoenica TSD Mono equivalent
       },
       fontSize: {
