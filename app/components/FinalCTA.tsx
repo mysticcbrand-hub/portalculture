@@ -105,7 +105,7 @@ export default function FinalCTA({ onCtaClick }: FinalCTAProps) {
         <div className={`mb-8 fade-in-up ${isVisible ? 'visible' : ''} stagger-2`}>
           <a
             ref={btnRef}
-            href="https://app.portalculture.vercel.app"
+            href="https://app-portalculture.vercel.app"
             target="_blank"
             rel="noopener noreferrer"
             className="group relative py-5 px-12 

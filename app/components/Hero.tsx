@@ -133,7 +133,7 @@ export default function Hero({ onCtaClick }: HeroProps) {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fadeIn">
           <a
             ref={btnRef}
-            href="https://app.portalculture.vercel.app"
+            href="https://app-portalculture.vercel.app"
             target="_blank"
             rel="noopener noreferrer"
             className="group relative py-5 px-12 

@@ -64,7 +64,7 @@ export default function CreativeHero({ onCtaClick }: CreativeHeroProps) {
         {/* CTA & Stats - Centrados */}
         <div className="flex flex-col items-center gap-6">
           <a
-            href="https://app.portalculture.vercel.app"
+            href="https://app-portalculture.vercel.app"
             target="_blank"
             rel="noopener noreferrer"
             className="group relative px-8 py-4 text-base font-medium overflow-hidden rounded-full
