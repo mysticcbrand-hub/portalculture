@@ -46,7 +46,7 @@ const benefits = [
   {
     number: '06',
     title: 'Acceso de Por Vida',
-    description: 'Una sola inversión. Beneficios para siempre. Sin cuotas',
+    description: 'Accede gratis. Beneficios para siempre. Sin cuotas',
     icon: '∞',
     color: 'from-white/10 to-gray-500/20',
     glow: 'group-hover:shadow-white/20'
