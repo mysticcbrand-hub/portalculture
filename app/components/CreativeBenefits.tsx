@@ -1,100 +1,138 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 
 const benefits = [
   {
     number: '01',
     title: '5 Cursos Exclusivos',
-    description: 'Formación que no encontrarás en ningún otro sitio',
+    description: 'Formación premium que transforma tu mentalidad y resultados',
+    icon: '📚',
+    color: 'from-blue-500/20 to-purple-500/20',
+    glow: 'group-hover:shadow-blue-500/20'
   },
   {
     number: '02',
-    title: 'Desafíos',
-    description: 'Compite con otras personas y gana premios',
+    title: 'Desafíos Semanales',
+    description: 'Compite, crece y gana premios junto a la comunidad',
+    icon: '🏆',
+    color: 'from-yellow-500/20 to-orange-500/20',
+    glow: 'group-hover:shadow-yellow-500/20'
   },
   {
     number: '03',
     title: 'Sistema de Niveles',
-    description: 'Progresa, desbloquea recompensas, destaca',
+    description: 'Progresa, desbloquea recompensas exclusivas y destaca',
+    icon: '⚡',
+    color: 'from-purple-500/20 to-pink-500/20',
+    glow: 'group-hover:shadow-purple-500/20'
   },
   {
     number: '04',
     title: 'Valor Diario',
-    description: 'Cada miembro aporta valor cada día',
+    description: 'Cada miembro aporta. Crecimiento colectivo real y medible',
+    icon: '💎',
+    color: 'from-cyan-500/20 to-blue-500/20',
+    glow: 'group-hover:shadow-cyan-500/20'
   },
   {
     number: '05',
     title: 'Red de Contactos',
-    description: 'Rodéate de gente ambiciosa',
+    description: 'Rodéate de personas ambiciosas que van en tu dirección',
+    icon: '🤝',
+    color: 'from-green-500/20 to-emerald-500/20',
+    glow: 'group-hover:shadow-green-500/20'
   },
+  {
+    number: '06',
+    title: 'Acceso de Por Vida',
+    description: 'Una sola inversión. Beneficios para siempre. Sin cuotas',
+    icon: '∞',
+    color: 'from-white/10 to-gray-500/20',
+    glow: 'group-hover:shadow-white/20'
+  }
 ]
 
 export default function CreativeBenefits() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
-  const sectionRef = useRef<HTMLElement>(null)
-  const benefitsRef = useRef<HTMLDivElement>(null)
 
   return (
-    <section id="beneficios" ref={sectionRef} className="py-40 px-6 relative overflow-hidden">
-      <div ref={benefitsRef} className="max-w-7xl mx-auto relative z-10">
-        {/* Header - Asymmetric */}
-        <div className="mb-32">
-          <p className="text-xs font-mono text-white/30 tracking-wider mb-4">/ 02</p>
-          <h2 className="font-display text-5xl md:text-7xl font-normal tracking-normal text-white" style={{ transform: 'scaleY(1.15)' }}>
-            Dentro
+    <section id="beneficios" className="py-32 px-6 relative overflow-hidden">
+      {/* Ambient Background */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* Header */}
+        <div className="text-center mb-20">
+          <p className="text-xs font-mono text-white/30 tracking-wider mb-4">/ 02 BENEFICIOS</p>
+          <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
+            Dentro de Portal Culture
           </h2>
+          <p className="text-xl text-white/60 max-w-3xl mx-auto leading-relaxed">
+            No es solo contenido. Es una <span className="text-white font-semibold">experiencia completa</span> diseñada para tu crecimiento
+          </p>
         </div>
 
-        {/* Benefits List - Minimal & Spacious */}
-        <div className="space-y-1">
+        {/* Premium Grid - Bento Style */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {benefits.map((benefit, index) => (
             <div
               key={index}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
-              className="group relative border-t border-white/5 py-8 cursor-pointer
-                       transition-all duration-500 hover:border-white/20"
+              className={`group relative p-8 rounded-2xl border border-white/10 
+                         bg-gradient-to-br ${benefit.color}
+                         backdrop-blur-xl
+                         hover:border-white/30 hover:scale-[1.02]
+                         transition-all duration-700 ease-out
+                         shadow-2xl ${benefit.glow}
+                         ${index === 5 ? 'md:col-span-2 lg:col-span-1' : ''}`}
             >
-              <div className="flex items-start justify-between gap-8">
-                {/* Number */}
-                <span className="font-mono text-sm text-white/20 group-hover:text-white/60 
-                               transition-colors duration-500 mt-2">
+              {/* Glow Effect */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-0 
+                             group-hover:opacity-100 blur-xl transition-opacity duration-700 rounded-2xl -z-10`} />
+
+              {/* Number Badge */}
+              <div className="flex items-start justify-between mb-6">
+                <span className="font-mono text-xs text-white/30 group-hover:text-white/60 
+                               transition-colors duration-500 tracking-wider">
                   {benefit.number}
                 </span>
-
-                {/* Title */}
-                <div className="flex-1">
-                  <h3 className="text-3xl md:text-5xl font-medium tracking-tight mb-2
-                               transition-all duration-500 group-hover:translate-x-4">
-                    {benefit.title}
-                  </h3>
-                  <p className={`text-lg text-white/40 max-w-2xl transition-all duration-500
-                              ${hoveredIndex === index ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'}`}>
-                    {benefit.description}
-                  </p>
-                </div>
-
-                {/* Arrow */}
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
+                <div className="text-4xl transform group-hover:scale-110 transition-transform duration-500">
+                  {benefit.icon}
                 </div>
               </div>
 
-              {/* Hover Line */}
-              <div className={`absolute bottom-0 left-0 h-px bg-gradient-to-r from-white/0 via-white/50 to-white/0
-                            transition-all duration-700 ${hoveredIndex === index ? 'w-full' : 'w-0'}`} />
+              {/* Content */}
+              <div className="space-y-3">
+                <h3 className="text-2xl font-bold text-white group-hover:text-white 
+                             transition-all duration-500">
+                  {benefit.title}
+                </h3>
+                <p className="text-white/60 leading-relaxed group-hover:text-white/80 
+                            transition-colors duration-500">
+                  {benefit.description}
+                </p>
+              </div>
+
+              {/* Hover Indicator */}
+              <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-white/0 via-white/50 to-white/0
+                             transition-all duration-700 ${hoveredIndex === index ? 'opacity-100' : 'opacity-0'}`} />
             </div>
           ))}
         </div>
 
-        {/* Bottom CTA Text */}
-        <div className="mt-32 max-w-2xl">
-          <p className="text-xl md:text-2xl font-light text-white/60 leading-relaxed">
-            No es solo contenido.{' '}
-            <span className="text-white">Es una comunidad que te impulsa</span>.
+        {/* Bottom Statement */}
+        <div className="text-center mt-20 p-12 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl">
+          <p className="text-2xl md:text-3xl font-light text-white/80 leading-relaxed">
+            <span className="text-white font-semibold">100% gratuito</span>.{' '}
+            <span className="text-white font-semibold">Valor infinito</span>.{' '}
+            <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent font-bold">
+              Cambia tu vida hoy
+            </span>.
           </p>
         </div>
       </div>
