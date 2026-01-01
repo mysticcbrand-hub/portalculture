@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import Image from 'next/image'
 
 const benefits = [
   {
@@ -55,6 +56,19 @@ const benefits = [
 
 export default function CreativeBenefits() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth - 0.5) * 15,
+        y: (e.clientY / window.innerHeight - 0.5) * 15,
+      })
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
 
   return (
     <section id="beneficios" className="py-32 px-6 relative overflow-hidden">
@@ -66,7 +80,7 @@ export default function CreativeBenefits() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
-        <div className="text-center mb-20">
+        <div className="text-center mb-20 relative">
           <p className="text-xs font-mono text-white/30 tracking-wider mb-4">/ 02 BENEFICIOS</p>
           <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
             Dentro de Portal Culture
@@ -74,6 +88,37 @@ export default function CreativeBenefits() {
           <p className="text-xl text-white/60 max-w-3xl mx-auto leading-relaxed">
             No es solo contenido. Es una <span className="text-white font-semibold">experiencia completa</span> diseñada para tu crecimiento
           </p>
+
+          {/* Floating Rocks in Benefits Section */}
+          <div
+            className="absolute -top-20 right-[10%] w-[200px] h-[200px] opacity-40 pointer-events-none"
+            style={{
+              transform: `translate(${mousePosition.x * 1.2}px, ${mousePosition.y * 1.2}px)`,
+              transition: 'transform 0.4s ease-out',
+            }}
+          >
+            <Image
+              src="/roca_pequeña.png"
+              alt=""
+              fill
+              className="object-contain drop-shadow-xl"
+            />
+          </div>
+
+          <div
+            className="absolute top-32 left-[5%] w-[150px] h-[150px] opacity-35 pointer-events-none"
+            style={{
+              transform: `translate(${mousePosition.x * -1}px, ${mousePosition.y * -1}px)`,
+              transition: 'transform 0.5s ease-out',
+            }}
+          >
+            <Image
+              src="/roca_pequeña2.png"
+              alt=""
+              fill
+              className="object-contain drop-shadow-lg"
+            />
+          </div>
         </div>
 
         {/* Premium Grid - Bento Style */}

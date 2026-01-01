@@ -5,7 +5,6 @@ import Image from 'next/image'
 
 export default function FloatingRocks() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [scrollY, setScrollY] = useState(0)
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -15,16 +14,10 @@ export default function FloatingRocks() {
       })
     }
 
-    const handleScroll = () => {
-      setScrollY(window.scrollY)
-    }
-
     window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('scroll', handleScroll)
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('scroll', handleScroll)
     }
   }, [])
 
@@ -34,7 +27,7 @@ export default function FloatingRocks() {
       <div
         className="absolute top-[10%] right-[5%] w-[400px] h-[400px] opacity-60"
         style={{
-          transform: `translate(${mousePosition.x * 1.5}px, ${mousePosition.y * 1.5 + scrollY * 0.1}px) rotate(${scrollY * 0.05}deg)`,
+          transform: `translate(${mousePosition.x * 1.5}px, ${mousePosition.y * 1.5}px)`,
           transition: 'transform 0.3s ease-out',
         }}
       >
@@ -51,7 +44,7 @@ export default function FloatingRocks() {
       <div
         className="absolute top-[40%] left-[8%] w-[250px] h-[250px] opacity-50"
         style={{
-          transform: `translate(${mousePosition.x * -1}px, ${mousePosition.y * -1 + scrollY * 0.15}px) rotate(${-scrollY * 0.03}deg)`,
+          transform: `translate(${mousePosition.x * -1}px, ${mousePosition.y * -1}px)`,
           transition: 'transform 0.4s ease-out',
         }}
       >
@@ -67,7 +60,7 @@ export default function FloatingRocks() {
       <div
         className="absolute bottom-[15%] right-[15%] w-[200px] h-[200px] opacity-40"
         style={{
-          transform: `translate(${mousePosition.x * 2}px, ${mousePosition.y * 2 + scrollY * 0.08}px) rotate(${scrollY * 0.04}deg)`,
+          transform: `translate(${mousePosition.x * 2}px, ${mousePosition.y * 2}px)`,
           transition: 'transform 0.35s ease-out',
         }}
       >
@@ -83,7 +76,7 @@ export default function FloatingRocks() {
       <div
         className="absolute top-[25%] left-[2%] w-[180px] h-[180px] opacity-30"
         style={{
-          transform: `translate(${mousePosition.x * -1.5}px, ${mousePosition.y * -1.5 + scrollY * 0.12}px) rotate(${-scrollY * 0.06}deg)`,
+          transform: `translate(${mousePosition.x * -1.5}px, ${mousePosition.y * -1.5}px)`,
           transition: 'transform 0.45s ease-out',
         }}
       >
