@@ -95,13 +95,14 @@ export default function CreativeBenefits() {
             style={{
               transform: `translate(${mousePosition.x * 1.2}px, ${mousePosition.y * 1.2}px)`,
               transition: 'transform 0.4s ease-out',
+              filter: 'drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3)) drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2))',
             }}
           >
             <Image
               src="/roca_pequeña.png"
               alt=""
               fill
-              className="object-contain drop-shadow-2xl"
+              className="object-contain"
             />
           </div>
 
@@ -110,13 +111,14 @@ export default function CreativeBenefits() {
             style={{
               transform: `translate(${mousePosition.x * -1}px, ${mousePosition.y * -1}px)`,
               transition: 'transform 0.5s ease-out',
+              filter: 'drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3)) drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2))',
             }}
           >
             <Image
               src="/roca_pequeña2.png"
               alt=""
               fill
-              className="object-contain drop-shadow-2xl"
+              className="object-contain"
             />
           </div>
         </div>
