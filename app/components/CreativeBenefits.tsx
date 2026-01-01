@@ -91,7 +91,7 @@ export default function CreativeBenefits() {
 
           {/* Floating Rocks in Benefits Section - Hidden on mobile */}
           <div
-            className="hidden md:block absolute top-[420px] right-[calc(66.666%-100px)] w-[180px] h-[180px] pointer-events-none z-20"
+            className="hidden md:block absolute -top-20 right-[10%] w-[200px] h-[200px] pointer-events-none"
             style={{
               transform: `translate(${mousePosition.x * 1.2}px, ${mousePosition.y * 1.2}px)`,
               transition: 'transform 0.4s ease-out',
@@ -108,7 +108,7 @@ export default function CreativeBenefits() {
           </div>
 
           <div
-            className="hidden md:block absolute top-32 left-[5%] w-[150px] h-[150px] pointer-events-none"
+            className="hidden md:block absolute top-[420px] left-[calc(33.333%-50px)] w-[140px] h-[140px] pointer-events-none z-20"
             style={{
               transform: `translate(${mousePosition.x * -1}px, ${mousePosition.y * -1}px)`,
               transition: 'transform 0.5s ease-out',
