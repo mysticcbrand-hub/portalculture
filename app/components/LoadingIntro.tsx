@@ -53,11 +53,13 @@ export default function LoadingIntro() {
           opacity: 0;
           animation: logoFadeIn 0.6s cubic-bezier(0.23, 1, 0.32, 1) 0.2s forwards;
           filter: 
-            drop-shadow(0 0 20px rgba(255, 255, 255, 0.8))
-            drop-shadow(0 0 40px rgba(255, 255, 255, 0.6))
-            drop-shadow(0 0 60px rgba(255, 255, 255, 0.4))
-            drop-shadow(0 0 80px rgba(255, 255, 255, 0.2))
-            drop-shadow(0 0 100px rgba(255, 255, 255, 0.1));
+            drop-shadow(0 0 15px rgba(255, 255, 255, 0.3))
+            drop-shadow(0 0 30px rgba(255, 255, 255, 0.2))
+            drop-shadow(0 0 45px rgba(255, 255, 255, 0.15))
+            drop-shadow(0 0 60px rgba(255, 255, 255, 0.1))
+            drop-shadow(0 0 80px rgba(255, 255, 255, 0.08))
+            drop-shadow(0 0 100px rgba(255, 255, 255, 0.05))
+            drop-shadow(0 0 120px rgba(255, 255, 255, 0.03));
         }
 
         @keyframes logoFadeIn {

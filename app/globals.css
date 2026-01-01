@@ -49,11 +49,11 @@
     letter-spacing: -0.01em;
   }
   
-  /* Typography hierarchy - Very Vogue for headlines */
+  /* Typography hierarchy - Scotch Display */
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Very Vogue', 'Scotch Display', Georgia, serif;
+    font-family: 'Scotch Display', Georgia, serif;
     font-weight: 400;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
     text-transform: uppercase;
   }
   
