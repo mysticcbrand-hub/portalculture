@@ -34,22 +34,14 @@ export default function LoadingIntro() {
   }
 
   return (
-    <div className="fixed inset-0 z-[10000] bg-black flex flex-col items-center justify-center intro-container">
-      {/* Logo Container */}
-      <div className="relative flex flex-col items-center justify-center">
-        {/* Logo */}
-        <div className="relative logo-container">
-          <img
-            src="/favicon.ico"
-            alt="Portal Culture"
-            className="w-20 h-20 object-contain logo-animate"
-          />
-        </div>
-
-        {/* Portal Culture Text */}
-        <h2 className="mt-8 text-xl md:text-2xl font-light tracking-[0.3em] chrome-gradient-text text-animate">
-          PORTAL CULTURE
-        </h2>
+    <div className="fixed inset-0 z-[10000] bg-black flex items-center justify-center intro-container">
+      {/* Logo Container - Centered */}
+      <div className="relative flex items-center justify-center">
+        <img
+          src="/favicon.ico"
+          alt="Portal Culture"
+          className="w-32 h-32 md:w-40 md:h-40 object-contain logo-animate"
+        />
       </div>
 
       <style jsx>{`
@@ -57,41 +49,20 @@ export default function LoadingIntro() {
           animation: fadeOut 0.8s cubic-bezier(0.23, 1, 0.32, 1) 2.5s forwards;
         }
 
-        .logo-container {
-          position: relative;
-        }
-
-        .logo-container::before {
-          content: '';
-          position: absolute;
-          inset: -10px;
-          background: radial-gradient(
-            circle,
-            rgba(255, 255, 255, 0.15) 0%,
-            rgba(192, 192, 192, 0.1) 40%,
-            transparent 70%
-          );
-          opacity: 0;
-          animation: glowPulse 2s cubic-bezier(0.23, 1, 0.32, 1) 1s infinite;
-        }
-
         .logo-animate {
-          filter: drop-shadow(0 0 20px rgba(192, 192, 192, 0.3));
+          opacity: 0;
           animation: 
-            logoFadeIn 1s cubic-bezier(0.23, 1, 0.32, 1) forwards,
-            logoBreath 4s cubic-bezier(0.23, 1, 0.32, 1) 1s infinite;
-          opacity: 0;
-        }
-
-        .text-animate {
-          animation: textFadeIn 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s forwards;
-          opacity: 0;
+            logoFadeIn 0.6s cubic-bezier(0.23, 1, 0.32, 1) 0.2s forwards,
+            colorTransition 2s cubic-bezier(0.23, 1, 0.32, 1) 0.8s forwards;
+          filter: 
+            drop-shadow(0 0 30px rgba(255, 255, 255, 0.4))
+            brightness(1);
         }
 
         @keyframes logoFadeIn {
           0% {
             opacity: 0;
-            transform: scale(0.92);
+            transform: scale(0.85);
           }
           100% {
             opacity: 1;
@@ -99,34 +70,29 @@ export default function LoadingIntro() {
           }
         }
 
-        @keyframes textFadeIn {
+        @keyframes colorTransition {
           0% {
-            opacity: 0;
-            transform: translateY(8px);
+            filter: 
+              drop-shadow(0 0 30px rgba(255, 255, 255, 0.6))
+              brightness(1.2)
+              hue-rotate(0deg)
+              saturate(1);
+          }
+          50% {
+            filter: 
+              drop-shadow(0 0 50px rgba(255, 215, 0, 0.8))
+              drop-shadow(0 0 80px rgba(255, 215, 0, 0.4))
+              brightness(1.5)
+              hue-rotate(45deg)
+              saturate(1.5);
           }
           100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes logoBreath {
-          0%, 100% {
-            filter: drop-shadow(0 0 20px rgba(192, 192, 192, 0.3));
-          }
-          50% {
-            filter: drop-shadow(0 0 30px rgba(192, 192, 192, 0.5));
-          }
-        }
-
-        @keyframes glowPulse {
-          0%, 100% {
-            opacity: 0;
-            transform: scale(1);
-          }
-          50% {
-            opacity: 1;
-            transform: scale(1.2);
+            filter: 
+              drop-shadow(0 0 60px rgba(255, 215, 0, 0.7))
+              drop-shadow(0 0 100px rgba(255, 215, 0, 0.3))
+              brightness(1.3)
+              hue-rotate(40deg)
+              saturate(1.4);
           }
         }
 
