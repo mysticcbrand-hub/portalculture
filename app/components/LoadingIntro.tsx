@@ -64,10 +64,6 @@ export default function LoadingIntro() {
           preload="auto"
           className="logo-video"
           loop
-          defaultMuted
-          webkit-playsinline="true"
-          x5-video-player-type="h5"
-          x5-video-player-fullscreen="false"
           onLoadedMetadata={(e) => {
             // Play as soon as metadata is loaded
             e.currentTarget.play().catch(() => {})
