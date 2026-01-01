@@ -25,9 +25,6 @@ export default function Home() {
       {/* Custom Cursor */}
       <CustomCursor />
       
-      {/* Floating Rocks - 3D Effect */}
-      <FloatingRocks />
-      
       {/* Creative Hero Section */}
       <CreativeHero onCtaClick={openModal} />
 
