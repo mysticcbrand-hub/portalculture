@@ -60,7 +60,7 @@ export default function LoadingIntro() {
 
   return (
     <div className="fixed inset-0 z-[10000] bg-black flex items-center justify-center intro-container">
-      {/* Logo - Video with loading line */}
+      {/* Logo - Video */}
       <div className="relative flex items-center justify-center logo-wrapper">
         <video
           ref={videoRef}
@@ -77,8 +77,6 @@ export default function LoadingIntro() {
         >
           <source src="/logo-3d.mp4" type="video/mp4" />
         </video>
-        {/* Loading line underneath */}
-        <div className="logo-underline"></div>
       </div>
 
       <style jsx>{`
@@ -89,32 +87,12 @@ export default function LoadingIntro() {
         .logo-wrapper {
           opacity: 0;
           animation: logoRise 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 20px;
         }
 
         .logo-video {
           width: clamp(200px, 50vw, 280px);
           height: clamp(200px, 50vw, 280px);
           object-fit: contain;
-        }
-
-        .logo-underline {
-          width: 0;
-          height: 2px;
-          background: linear-gradient(90deg, transparent, white, transparent);
-          animation: expandLine 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
-        }
-
-        @keyframes expandLine {
-          0% {
-            width: 0;
-          }
-          100% {
-            width: clamp(150px, 40vw, 200px);
-          }
         }
 
         @keyframes logoRise {
