@@ -13,27 +13,35 @@ export default function LoadingIntro() {
     // Add class to body for content fade-in coordination
     document.body.classList.add('intro-loading')
 
-    // Try to play video immediately
-    if (videoRef.current) {
-      const playVideo = () => {
-        const video = videoRef.current
-        if (video) {
-          video.play().catch(() => {
-            // Retry after a short delay
-            setTimeout(() => video.play().catch(() => {}), 50)
-          })
-        }
-      }
+    // Aggressive video play attempts
+    let playAttempts = 0
+    const maxAttempts = 10
+    
+    const tryPlayVideo = () => {
+      const video = videoRef.current
+      if (!video) return
       
-      // Multiple attempts to ensure playback
-      playVideo()
-      setTimeout(playVideo, 100)
-      setTimeout(playVideo, 200)
+      playAttempts++
+      
+      video.play().catch(() => {
+        // Keep trying if not reached max attempts
+        if (playAttempts < maxAttempts) {
+          setTimeout(tryPlayVideo, 100)
+        }
+      })
     }
+
+    // Start playing immediately and retry aggressively
+    const playInterval = setInterval(() => {
+      if (videoRef.current && videoRef.current.paused) {
+        tryPlayVideo()
+      }
+    }, 100)
 
     // Hide intro after 2.5 seconds
     const timer = setTimeout(() => {
       setIsVisible(false)
+      clearInterval(playInterval)
       // Remove loading class to trigger content fade-in
       document.body.classList.remove('intro-loading')
       setTimeout(() => {
@@ -43,6 +51,7 @@ export default function LoadingIntro() {
 
     return () => {
       clearTimeout(timer)
+      clearInterval(playInterval)
       document.body.style.overflow = 'unset'
       document.body.classList.remove('intro-loading')
     }
@@ -61,29 +70,27 @@ export default function LoadingIntro() {
           autoPlay
           muted
           playsInline
-          preload="auto"
+          preload="metadata"
           className="logo-video"
           loop
           onLoadedMetadata={(e) => {
-            // Play as soon as metadata is loaded
             e.currentTarget.play().catch(() => {})
           }}
           onCanPlay={(e) => {
-            // Play when can play
             e.currentTarget.play().catch(() => {})
           }}
-          onLoadedData={(e) => {
-            console.log('Video loaded and playing')
-            // Force play on mobile
-            const playPromise = e.currentTarget.play()
-            if (playPromise !== undefined) {
-              playPromise.catch(error => {
-                console.log('Autoplay prevented, retrying...', error)
-                setTimeout(() => e.currentTarget.play().catch(() => {}), 100)
-              })
-            }
+          onCanPlayThrough={(e) => {
+            e.currentTarget.play().catch(() => {})
           }}
-          onError={(e) => console.error('Video error:', e)}
+          onSuspend={(e) => {
+            // Try to resume if suspended
+            setTimeout(() => e.currentTarget.play().catch(() => {}), 50)
+          }}
+          onStalled={(e) => {
+            // Try to resume if stalled
+            e.currentTarget.load()
+            setTimeout(() => e.currentTarget.play().catch(() => {}), 50)
+          }}
         >
           <source src="/logo-3d.mp4" type="video/mp4" />
           Tu navegador no soporta video HTML5.
