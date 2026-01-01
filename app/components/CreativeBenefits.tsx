@@ -91,7 +91,7 @@ export default function CreativeBenefits() {
 
           {/* Floating Rocks in Benefits Section */}
           <div
-            className="absolute -top-20 right-[10%] w-[200px] h-[200px] opacity-40 pointer-events-none"
+            className="absolute -top-20 right-[10%] w-[200px] h-[200px] pointer-events-none"
             style={{
               transform: `translate(${mousePosition.x * 1.2}px, ${mousePosition.y * 1.2}px)`,
               transition: 'transform 0.4s ease-out',
@@ -101,12 +101,12 @@ export default function CreativeBenefits() {
               src="/roca_pequeña.png"
               alt=""
               fill
-              className="object-contain drop-shadow-xl"
+              className="object-contain drop-shadow-2xl"
             />
           </div>
 
           <div
-            className="absolute top-32 left-[5%] w-[150px] h-[150px] opacity-35 pointer-events-none"
+            className="absolute top-32 left-[5%] w-[150px] h-[150px] pointer-events-none"
             style={{
               transform: `translate(${mousePosition.x * -1}px, ${mousePosition.y * -1}px)`,
               transition: 'transform 0.5s ease-out',
@@ -116,7 +116,7 @@ export default function CreativeBenefits() {
               src="/roca_pequeña2.png"
               alt=""
               fill
-              className="object-contain drop-shadow-lg"
+              className="object-contain drop-shadow-2xl"
             />
           </div>
         </div>
