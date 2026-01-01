@@ -27,7 +27,7 @@ export default function CreativeHero({ onCtaClick }: CreativeHeroProps) {
   }, [])
 
   return (
-    <section className="relative min-h-screen flex items-center px-6 py-32">
+    <section className="relative min-h-screen flex items-center px-4 md:px-6 py-24 md:py-32">
       {/* Background Image - Solo en Hero */}
       <div className="absolute inset-0 overflow-hidden">
         <img 
@@ -47,27 +47,27 @@ export default function CreativeHero({ onCtaClick }: CreativeHeroProps) {
         </div>
 
         {/* Large Statement */}
-        <div ref={textRef} className="transition-transform duration-300 ease-out mb-16">
-          <h1 className="font-display text-[clamp(2.5rem,9vw,7rem)] font-normal leading-[1.15] tracking-normal mb-8" style={{ transform: 'scaleY(1.15)' }}>
+        <div ref={textRef} className="transition-transform duration-300 ease-out mb-12 md:mb-16">
+          <h1 className="font-display text-[clamp(3rem,8vw,7rem)] font-normal leading-[1.1] tracking-normal mb-6 md:mb-8" style={{ transform: 'scaleY(1.15)' }}>
             <span className="block text-white">Entra al</span>
             <span className="block text-white">Portal.</span>
           </h1>
         </div>
 
         {/* Subtext */}
-        <div className="max-w-2xl mb-16">
-          <p className="text-xl md:text-2xl leading-relaxed text-white/70 font-light">
+        <div className="max-w-2xl mb-12 md:mb-16">
+          <p className="text-lg md:text-xl lg:text-2xl leading-relaxed text-white/70 font-light">
             La comunidad gratis n.º1 donde jóvenes ambiciosos como tú transforman su vida.
           </p>
         </div>
 
         {/* CTA & Stats - Centrados */}
-        <div className="flex flex-col items-center gap-6">
+        <div className="flex flex-col items-center gap-4 md:gap-6">
           <a
             href="https://app-portalculture.vercel.app"
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative px-8 py-4 text-base font-medium overflow-hidden rounded-full
+            className="group relative px-6 md:px-8 py-3 md:py-4 text-sm md:text-base font-medium overflow-hidden rounded-full
                      border border-white/20 hover:border-white/40
                      transition-all duration-500
                      hover:scale-[1.02] inline-block"
@@ -79,7 +79,7 @@ export default function CreativeHero({ onCtaClick }: CreativeHeroProps) {
                           transition-opacity duration-700 -z-10 scale-150" />
           </a>
           
-          <div className="flex items-center gap-4 text-xs font-mono text-white/40 tracking-wider">
+          <div className="flex items-center gap-3 md:gap-4 text-[10px] md:text-xs font-mono text-white/40 tracking-wider">
             <span className="whitespace-nowrap">+15HR VALOR</span>
             <span>·</span>
             <span className="whitespace-nowrap">4.9/5 ★</span>

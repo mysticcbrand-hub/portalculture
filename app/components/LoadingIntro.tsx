@@ -43,9 +43,17 @@ export default function LoadingIntro() {
           playsInline
           preload="auto"
           className="logo-video"
+          webkit-playsinline="true"
           onLoadedData={(e) => {
             console.log('Video loaded and playing')
-            e.currentTarget.play()
+            // Force play on mobile
+            const playPromise = e.currentTarget.play()
+            if (playPromise !== undefined) {
+              playPromise.catch(error => {
+                console.log('Autoplay prevented, retrying...', error)
+                setTimeout(() => e.currentTarget.play(), 100)
+              })
+            }
           }}
           onError={(e) => console.error('Video error:', e)}
         >
@@ -65,8 +73,8 @@ export default function LoadingIntro() {
         }
 
         .logo-video {
-          width: 280px;
-          height: 280px;
+          width: clamp(200px, 50vw, 280px);
+          height: clamp(200px, 50vw, 280px);
           object-fit: contain;
         }
 

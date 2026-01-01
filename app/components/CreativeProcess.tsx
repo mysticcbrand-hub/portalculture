@@ -65,15 +65,15 @@ export default function CreativeProcess() {
           </div>
 
           {/* Right - Círculo Simple */}
-          <div className="relative h-[600px] flex items-center justify-center pointer-events-none">
-            <div className={`relative w-96 h-96 transition-transform duration-300 ${
+          <div className="relative h-[400px] md:h-[600px] flex items-center justify-center pointer-events-none overflow-visible">
+            <div className={`relative w-64 h-64 md:w-96 md:h-96 transition-transform duration-300 ${
               isClicking ? 'scale-95' : hoveredStep !== null ? 'scale-105' : 'scale-100'
             }`}>
               {/* Círculo base */}
               <div className="absolute inset-0 rounded-full border border-white/10" />
 
               {/* Progress ring */}
-              <svg className="absolute inset-0 -rotate-90" width="384" height="384" viewBox="0 0 384 384">
+              <svg className="absolute inset-0 -rotate-90 w-full h-full" viewBox="0 0 384 384">
                 <circle
                   cx="192"
                   cy="192"
@@ -105,7 +105,7 @@ export default function CreativeProcess() {
 
               {/* Número central */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-[8rem] font-bold text-white">
+                <span className="text-[5rem] md:text-[8rem] font-bold text-white">
                   {activeStep + 1}
                 </span>
               </div>
