@@ -20,10 +20,10 @@ export default function LoadingIntro() {
     // Add class to body for content fade-in coordination
     document.body.classList.add('intro-loading')
 
-    // Only try to play video on desktop
+    // Try to play video on all devices
     let playInterval: NodeJS.Timeout | undefined
     
-    if (!checkMobile() && videoRef.current) {
+    if (videoRef.current) {
       const tryPlayVideo = () => {
         const video = videoRef.current
         if (video && video.paused) {
@@ -60,31 +60,25 @@ export default function LoadingIntro() {
 
   return (
     <div className="fixed inset-0 z-[10000] bg-black flex items-center justify-center intro-container">
-      {/* Logo - Video on desktop, animated logo on mobile */}
+      {/* Logo - Video with loading line */}
       <div className="relative flex items-center justify-center logo-wrapper">
-        {isMobile ? (
-          // Mobile: Elegant text animation (instant load)
-          <div className="mobile-logo-text">
-            <div className="logo-text-line">PORTAL</div>
-            <div className="logo-text-line delay">CULTURE</div>
-            <div className="logo-underline"></div>
-          </div>
-        ) : (
-          // Desktop: Full video
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            playsInline
-            preload="metadata"
-            className="logo-video"
-            loop
-            onLoadedMetadata={(e) => e.currentTarget.play().catch(() => {})}
-            onCanPlay={(e) => e.currentTarget.play().catch(() => {})}
-          >
-            <source src="/logo-3d.mp4" type="video/mp4" />
-          </video>
-        )}
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          playsInline
+          preload="auto"
+          className="logo-video"
+          loop
+          poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 280'%3E%3Crect fill='%23000000' width='280' height='280'/%3E%3C/svg%3E"
+          onLoadedMetadata={(e) => e.currentTarget.play().catch(() => {})}
+          onCanPlay={(e) => e.currentTarget.play().catch(() => {})}
+          onLoadedData={(e) => e.currentTarget.play().catch(() => {})}
+        >
+          <source src="/logo-3d.mp4" type="video/mp4" />
+        </video>
+        {/* Loading line underneath */}
+        <div className="logo-underline"></div>
       </div>
 
       <style jsx>{`
@@ -95,6 +89,10 @@ export default function LoadingIntro() {
         .logo-wrapper {
           opacity: 0;
           animation: logoRise 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 20px;
         }
 
         .logo-video {
@@ -103,42 +101,11 @@ export default function LoadingIntro() {
           object-fit: contain;
         }
 
-        .mobile-logo-text {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .logo-text-line {
-          font-size: clamp(32px, 8vw, 48px);
-          font-weight: 700;
-          color: white;
-          letter-spacing: 0.1em;
-          opacity: 0;
-          animation: fadeSlideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        .logo-text-line.delay {
-          animation-delay: 0.3s;
-        }
-
         .logo-underline {
           width: 0;
           height: 2px;
           background: linear-gradient(90deg, transparent, white, transparent);
-          animation: expandLine 1s cubic-bezier(0.4, 0, 0.2, 1) 0.6s forwards;
-        }
-
-        @keyframes fadeSlideUp {
-          0% {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          animation: expandLine 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
         }
 
         @keyframes expandLine {
@@ -146,7 +113,7 @@ export default function LoadingIntro() {
             width: 0;
           }
           100% {
-            width: 200px;
+            width: clamp(150px, 40vw, 200px);
           }
         }
 
