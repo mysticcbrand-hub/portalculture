@@ -9,7 +9,6 @@ import Footer from './components/Footer'
 import Modal from './components/Modal'
 import CustomCursor from './components/CustomCursor'
 import LoadingIntro from './components/LoadingIntro'
-import FloatingRocks from './components/FloatingRocks'
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false)
