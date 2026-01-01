@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 export default function LoadingIntro() {
   const [isVisible, setIsVisible] = useState(true)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     // Prevent scrolling during intro
@@ -11,6 +12,24 @@ export default function LoadingIntro() {
     
     // Add class to body for content fade-in coordination
     document.body.classList.add('intro-loading')
+
+    // Try to play video immediately
+    if (videoRef.current) {
+      const playVideo = () => {
+        const video = videoRef.current
+        if (video) {
+          video.play().catch(() => {
+            // Retry after a short delay
+            setTimeout(() => video.play().catch(() => {}), 50)
+          })
+        }
+      }
+      
+      // Multiple attempts to ensure playback
+      playVideo()
+      setTimeout(playVideo, 100)
+      setTimeout(playVideo, 200)
+    }
 
     // Hide intro after 2.5 seconds
     const timer = setTimeout(() => {
@@ -38,12 +57,25 @@ export default function LoadingIntro() {
       {/* Logo 3D Video - Centered */}
       <div className="relative flex items-center justify-center logo-wrapper">
         <video
+          ref={videoRef}
           autoPlay
           muted
           playsInline
           preload="auto"
           className="logo-video"
+          loop
+          defaultMuted
           webkit-playsinline="true"
+          x5-video-player-type="h5"
+          x5-video-player-fullscreen="false"
+          onLoadedMetadata={(e) => {
+            // Play as soon as metadata is loaded
+            e.currentTarget.play().catch(() => {})
+          }}
+          onCanPlay={(e) => {
+            // Play when can play
+            e.currentTarget.play().catch(() => {})
+          }}
           onLoadedData={(e) => {
             console.log('Video loaded and playing')
             // Force play on mobile
@@ -51,7 +83,7 @@ export default function LoadingIntro() {
             if (playPromise !== undefined) {
               playPromise.catch(error => {
                 console.log('Autoplay prevented, retrying...', error)
-                setTimeout(() => e.currentTarget.play(), 100)
+                setTimeout(() => e.currentTarget.play().catch(() => {}), 100)
               })
             }
           }}
