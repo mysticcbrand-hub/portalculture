@@ -108,7 +108,7 @@ export default function CreativeBenefits() {
           </div>
 
           <div
-            className="hidden md:block absolute top-[420px] left-[calc(33.333%-50px)] w-[140px] h-[140px] pointer-events-none z-20"
+            className="hidden md:block absolute top-[280px] left-0 w-[140px] h-[140px] pointer-events-none z-20"
             style={{
               transform: `translate(${mousePosition.x * -1}px, ${mousePosition.y * -1}px)`,
               transition: 'transform 0.5s ease-out',
