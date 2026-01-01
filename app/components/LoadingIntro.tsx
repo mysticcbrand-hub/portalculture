@@ -63,13 +63,11 @@ export default function LoadingIntro() {
       {/* Logo - Video on desktop, animated logo on mobile */}
       <div className="relative flex items-center justify-center logo-wrapper">
         {isMobile ? (
-          // Mobile: Simple animated logo (instant load)
-          <div className="mobile-logo">
-            <svg width="280" height="280" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="140" cy="140" r="100" stroke="white" strokeWidth="2" opacity="0.3" className="pulse-ring" />
-              <circle cx="140" cy="140" r="70" fill="white" opacity="0.9" className="pulse-core" />
-              <text x="140" y="155" fontSize="48" fill="black" fontWeight="bold" textAnchor="middle" fontFamily="system-ui">PC</text>
-            </svg>
+          // Mobile: Elegant text animation (instant load)
+          <div className="mobile-logo-text">
+            <div className="logo-text-line">PORTAL</div>
+            <div className="logo-text-line delay">CULTURE</div>
+            <div className="logo-underline"></div>
           </div>
         ) : (
           // Desktop: Full video
@@ -105,43 +103,50 @@ export default function LoadingIntro() {
           object-fit: contain;
         }
 
-        .mobile-logo {
-          width: clamp(200px, 50vw, 280px);
-          height: clamp(200px, 50vw, 280px);
+        .mobile-logo-text {
           display: flex;
+          flex-direction: column;
           align-items: center;
-          justify-content: center;
+          gap: 8px;
         }
 
-        .pulse-ring {
-          animation: pulseRing 2s ease-in-out infinite;
-          transform-origin: center;
+        .logo-text-line {
+          font-size: clamp(32px, 8vw, 48px);
+          font-weight: 700;
+          color: white;
+          letter-spacing: 0.1em;
+          opacity: 0;
+          animation: fadeSlideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
-        .pulse-core {
-          animation: pulseCore 2s ease-in-out infinite;
-          transform-origin: center;
+        .logo-text-line.delay {
+          animation-delay: 0.3s;
         }
 
-        @keyframes pulseRing {
-          0%, 100% {
-            r: 100;
-            opacity: 0.3;
+        .logo-underline {
+          width: 0;
+          height: 2px;
+          background: linear-gradient(90deg, transparent, white, transparent);
+          animation: expandLine 1s cubic-bezier(0.4, 0, 0.2, 1) 0.6s forwards;
+        }
+
+        @keyframes fadeSlideUp {
+          0% {
+            opacity: 0;
+            transform: translateY(20px);
           }
-          50% {
-            r: 110;
-            opacity: 0.5;
-          }
-        }
-
-        @keyframes pulseCore {
-          0%, 100% {
-            r: 70;
-            opacity: 0.9;
-          }
-          50% {
-            r: 75;
+          100% {
             opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes expandLine {
+          0% {
+            width: 0;
+          }
+          100% {
+            width: 200px;
           }
         }
 
