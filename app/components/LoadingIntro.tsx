@@ -41,10 +41,16 @@ export default function LoadingIntro() {
           autoPlay
           muted
           playsInline
-          loop={false}
+          preload="auto"
           className="logo-video"
+          onLoadedData={(e) => {
+            console.log('Video loaded and playing')
+            e.currentTarget.play()
+          }}
+          onError={(e) => console.error('Video error:', e)}
         >
           <source src="/logo-3d.mp4" type="video/mp4" />
+          Tu navegador no soporta video HTML5.
         </video>
       </div>
 
@@ -62,10 +68,6 @@ export default function LoadingIntro() {
           width: 280px;
           height: 280px;
           object-fit: contain;
-          filter: 
-            drop-shadow(0 10px 30px rgba(255, 255, 255, 0.15))
-            drop-shadow(0 20px 60px rgba(255, 255, 255, 0.1))
-            drop-shadow(0 30px 90px rgba(255, 255, 255, 0.05));
         }
 
         @keyframes logoRise {
