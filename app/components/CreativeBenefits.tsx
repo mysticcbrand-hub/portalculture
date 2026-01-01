@@ -80,18 +80,18 @@ export default function CreativeBenefits() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
-        <div className="text-center mb-20 relative">
-          <p className="text-xs font-mono text-white/30 tracking-wider mb-4">/ 02 BENEFICIOS</p>
-          <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
+        <div className="text-center mb-16 md:mb-20 relative">
+          <p className="text-[10px] md:text-xs font-mono text-white/30 tracking-wider mb-3 md:mb-4">/ 02 BENEFICIOS</p>
+          <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent px-4">
             Dentro de Portal Culture
           </h2>
-          <p className="text-xl text-white/60 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base md:text-xl text-white/60 max-w-3xl mx-auto leading-relaxed px-4">
             No es solo contenido. Es una <span className="text-white font-semibold">experiencia completa</span> diseñada para tu crecimiento
           </p>
 
-          {/* Floating Rocks in Benefits Section */}
+          {/* Floating Rocks in Benefits Section - Hidden on mobile */}
           <div
-            className="absolute -top-20 right-[10%] w-[200px] h-[200px] pointer-events-none"
+            className="hidden md:block absolute top-[420px] right-[calc(66.666%-100px)] w-[180px] h-[180px] pointer-events-none z-20"
             style={{
               transform: `translate(${mousePosition.x * 1.2}px, ${mousePosition.y * 1.2}px)`,
               transition: 'transform 0.4s ease-out',
@@ -108,7 +108,7 @@ export default function CreativeBenefits() {
           </div>
 
           <div
-            className="absolute top-32 left-[5%] w-[150px] h-[150px] pointer-events-none"
+            className="hidden md:block absolute top-32 left-[5%] w-[150px] h-[150px] pointer-events-none"
             style={{
               transform: `translate(${mousePosition.x * -1}px, ${mousePosition.y * -1}px)`,
               transition: 'transform 0.5s ease-out',
