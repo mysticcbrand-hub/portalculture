@@ -9,7 +9,16 @@
 
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap');
 
-/* Scotch Display Condensed Roman - Custom font */
+/* Very Vogue - Custom font for headlines */
+@font-face {
+  font-family: 'Very Vogue';
+  src: url('/fonts/VeryVogue.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Scotch Display Condensed Roman - Fallback */
 @font-face {
   font-family: 'Scotch Display';
   src: url('/fonts/scotch-display.woff') format('woff');
@@ -40,11 +49,11 @@
     letter-spacing: -0.01em;
   }
   
-  /* Typography hierarchy - REAL Scotch Display Condensed */
+  /* Typography hierarchy - Very Vogue for headlines */
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Scotch Display', Georgia, serif;
+    font-family: 'Very Vogue', 'Scotch Display', Georgia, serif;
     font-weight: 400;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.02em;
     text-transform: uppercase;
   }
   
