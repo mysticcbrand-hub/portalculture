@@ -4,44 +4,41 @@ import { useEffect, useState, useRef } from 'react'
 
 export default function LoadingIntro() {
   const [isVisible, setIsVisible] = useState(true)
+  const [isMobile, setIsMobile] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
+    // Detect mobile device
+    const checkMobile = () => {
+      return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768
+    }
+    setIsMobile(checkMobile())
+
     // Prevent scrolling during intro
     document.body.style.overflow = 'hidden'
     
     // Add class to body for content fade-in coordination
     document.body.classList.add('intro-loading')
 
-    // Aggressive video play attempts
-    let playAttempts = 0
-    const maxAttempts = 10
+    // Only try to play video on desktop
+    let playInterval: NodeJS.Timeout | undefined
     
-    const tryPlayVideo = () => {
-      const video = videoRef.current
-      if (!video) return
-      
-      playAttempts++
-      
-      video.play().catch(() => {
-        // Keep trying if not reached max attempts
-        if (playAttempts < maxAttempts) {
-          setTimeout(tryPlayVideo, 100)
+    if (!checkMobile() && videoRef.current) {
+      const tryPlayVideo = () => {
+        const video = videoRef.current
+        if (video && video.paused) {
+          video.play().catch(() => {})
         }
-      })
-    }
-
-    // Start playing immediately and retry aggressively
-    const playInterval = setInterval(() => {
-      if (videoRef.current && videoRef.current.paused) {
-        tryPlayVideo()
       }
-    }, 100)
+
+      // Start playing immediately and retry
+      playInterval = setInterval(tryPlayVideo, 100)
+    }
 
     // Hide intro after 2.5 seconds
     const timer = setTimeout(() => {
       setIsVisible(false)
-      clearInterval(playInterval)
+      if (playInterval) clearInterval(playInterval)
       // Remove loading class to trigger content fade-in
       document.body.classList.remove('intro-loading')
       setTimeout(() => {
@@ -51,7 +48,7 @@ export default function LoadingIntro() {
 
     return () => {
       clearTimeout(timer)
-      clearInterval(playInterval)
+      if (playInterval) clearInterval(playInterval)
       document.body.style.overflow = 'unset'
       document.body.classList.remove('intro-loading')
     }
@@ -63,38 +60,33 @@ export default function LoadingIntro() {
 
   return (
     <div className="fixed inset-0 z-[10000] bg-black flex items-center justify-center intro-container">
-      {/* Logo 3D Video - Centered */}
+      {/* Logo - Video on desktop, animated logo on mobile */}
       <div className="relative flex items-center justify-center logo-wrapper">
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          playsInline
-          preload="metadata"
-          className="logo-video"
-          loop
-          onLoadedMetadata={(e) => {
-            e.currentTarget.play().catch(() => {})
-          }}
-          onCanPlay={(e) => {
-            e.currentTarget.play().catch(() => {})
-          }}
-          onCanPlayThrough={(e) => {
-            e.currentTarget.play().catch(() => {})
-          }}
-          onSuspend={(e) => {
-            // Try to resume if suspended
-            setTimeout(() => e.currentTarget.play().catch(() => {}), 50)
-          }}
-          onStalled={(e) => {
-            // Try to resume if stalled
-            e.currentTarget.load()
-            setTimeout(() => e.currentTarget.play().catch(() => {}), 50)
-          }}
-        >
-          <source src="/logo-3d.mp4" type="video/mp4" />
-          Tu navegador no soporta video HTML5.
-        </video>
+        {isMobile ? (
+          // Mobile: Simple animated logo (instant load)
+          <div className="mobile-logo">
+            <svg width="280" height="280" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="140" cy="140" r="100" stroke="white" strokeWidth="2" opacity="0.3" className="pulse-ring" />
+              <circle cx="140" cy="140" r="70" fill="white" opacity="0.9" className="pulse-core" />
+              <text x="140" y="155" fontSize="48" fill="black" fontWeight="bold" textAnchor="middle" fontFamily="system-ui">PC</text>
+            </svg>
+          </div>
+        ) : (
+          // Desktop: Full video
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            playsInline
+            preload="metadata"
+            className="logo-video"
+            loop
+            onLoadedMetadata={(e) => e.currentTarget.play().catch(() => {})}
+            onCanPlay={(e) => e.currentTarget.play().catch(() => {})}
+          >
+            <source src="/logo-3d.mp4" type="video/mp4" />
+          </video>
+        )}
       </div>
 
       <style jsx>{`
@@ -111,6 +103,46 @@ export default function LoadingIntro() {
           width: clamp(200px, 50vw, 280px);
           height: clamp(200px, 50vw, 280px);
           object-fit: contain;
+        }
+
+        .mobile-logo {
+          width: clamp(200px, 50vw, 280px);
+          height: clamp(200px, 50vw, 280px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .pulse-ring {
+          animation: pulseRing 2s ease-in-out infinite;
+          transform-origin: center;
+        }
+
+        .pulse-core {
+          animation: pulseCore 2s ease-in-out infinite;
+          transform-origin: center;
+        }
+
+        @keyframes pulseRing {
+          0%, 100% {
+            r: 100;
+            opacity: 0.3;
+          }
+          50% {
+            r: 110;
+            opacity: 0.5;
+          }
+        }
+
+        @keyframes pulseCore {
+          0%, 100% {
+            r: 70;
+            opacity: 0.9;
+          }
+          50% {
+            r: 75;
+            opacity: 1;
+          }
         }
 
         @keyframes logoRise {
