@@ -95,7 +95,7 @@ export default function CreativeBenefits() {
             style={{
               transform: `translate(${mousePosition.x * 1.2}px, ${mousePosition.y * 1.2}px)`,
               transition: 'transform 0.4s ease-out',
-              filter: 'drop-shadow(0 30px 60px rgba(0, 0, 0, 0.9)) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.8)) drop-shadow(0 10px 20px rgba(0, 0, 0, 0.7))',
+              filter: 'drop-shadow(0 35px 70px rgba(0, 0, 0, 0.4)) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3)) drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2))',
             }}
           >
             <Image
@@ -112,7 +112,7 @@ export default function CreativeBenefits() {
             style={{
               transform: `translate(${mousePosition.x * -1}px, ${mousePosition.y * -1}px)`,
               transition: 'transform 0.5s ease-out',
-              filter: 'drop-shadow(0 30px 60px rgba(0, 0, 0, 0.9)) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.8)) drop-shadow(0 10px 20px rgba(0, 0, 0, 0.7))',
+              filter: 'drop-shadow(0 35px 70px rgba(0, 0, 0, 0.4)) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3)) drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2))',
             }}
           >
             <Image
