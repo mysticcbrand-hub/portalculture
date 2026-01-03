@@ -151,10 +151,6 @@ export default function AccesoPage() {
             onMouseLeave={() => setHoveredOption(null)}
             className="group relative backdrop-blur-xl bg-white/5 border-2 border-white/20 rounded-3xl p-8 md:p-10 transition-all duration-500 hover:bg-white/10 hover:border-white/30 hover:scale-105"
           >
-            {/* Premium badge */}
-            <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full text-xs font-bold text-black uppercase tracking-wider">
-              ⚡ Recomendado
-            </div>
 
             {/* Strong glow effect */}
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-2xl" />
@@ -186,7 +182,7 @@ export default function AccesoPage() {
                 <svg className="w-6 h-6 text-yellow-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Discord + 5 Cursos Premium</span>
+                <span>Discord + 5 Cursos Premium + Instantáneos</span>
               </li>
               <li className="flex items-start gap-3 text-white/90">
                 <svg className="w-6 h-6 text-yellow-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -204,18 +200,17 @@ export default function AccesoPage() {
             </button>
 
             <p className="text-xs text-white/60 text-center mt-4">
-              🔒 Pago seguro con Whop · Garantía 7 días
+              🔒 Pago seguro con Whop · Valor Infinito
             </p>
           </div>
         </div>
 
         {/* Trust badges */}
         <div className="mt-16 text-center">
-          <p className="text-white/40 text-sm mb-4">Más de 500 miembros activos</p>
           <div className="flex items-center justify-center gap-8 text-white/30">
             <span className="text-xs">🔒 Pago Seguro</span>
             <span className="text-xs">⚡ Acceso Instantáneo</span>
-            <span className="text-xs">💯 Garantía 7 días</span>
+            <span className="text-xs">💯 Valor Infinito</span>
           </div>
         </div>
       </div>
