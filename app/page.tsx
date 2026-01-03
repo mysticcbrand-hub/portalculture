@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import NewHero from './components/NewHero'
-import CompactBenefits from './components/CompactBenefits'
-import FinalCTA from './components/FinalCTA'
+import CreativeHero from './components/CreativeHero'
+import CreativeBenefits from './components/CreativeBenefits'
+import CreativeProcess from './components/CreativeProcess'
+import CreativeCTA from './components/CreativeCTA'
 import Footer from './components/Footer'
 import Modal from './components/Modal'
 import CustomCursor from './components/CustomCursor'
@@ -23,14 +24,17 @@ export default function Home() {
       {/* Custom Cursor */}
       <CustomCursor />
       
-      {/* New Hero Section with Editorial Photo */}
-      <NewHero onCtaClick={openModal} />
+      {/* Creative Hero Section */}
+      <CreativeHero onCtaClick={openModal} />
 
-      {/* Compact Benefits Section */}
-      <CompactBenefits />
+      {/* Creative Benefits Section */}
+      <CreativeBenefits />
 
-      {/* Final CTA Section */}
-      <FinalCTA onCtaClick={openModal} />
+      {/* Creative Process Section */}
+      <CreativeProcess />
+
+      {/* Creative CTA Section */}
+      <CreativeCTA onCtaClick={openModal} />
 
       {/* Footer */}
       <Footer />
