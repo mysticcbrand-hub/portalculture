@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import CustomCursor from '../components/CustomCursor'
 
 export default function AccesoPage() {
   const [hoveredOption, setHoveredOption] = useState<number | null>(null)
@@ -17,8 +18,12 @@ export default function AccesoPage() {
   }
 
   return (
-    <main className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden bg-black" style={{ cursor: 'auto' }}>
-      {/* Mesh Gradient Background - Same as landing */}
+    <>
+      {/* Custom Cursor */}
+      <CustomCursor />
+      
+      <main className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden bg-black">
+        {/* Mesh Gradient Background - Same as landing */}
       <div className="absolute inset-0 overflow-hidden bg-black">
         <div className="absolute inset-0">
           {/* Blob 1 - Burnt Orange */}
@@ -240,6 +245,7 @@ export default function AccesoPage() {
           66% { transform: translate(70px, 60px) scale(0.88); }
         }
       `}</style>
-    </main>
+      </main>
+    </>
   )
 }
