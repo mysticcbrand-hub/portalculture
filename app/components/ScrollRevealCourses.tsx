@@ -187,8 +187,8 @@ export default function ScrollRevealCourses() {
             
             // Calculate scroll-driven transforms
             const scrollScale = 1 - Math.abs(progress) * 0.05 // Scale down as it moves away from center
-            const scrollOpacity = 1 - Math.abs(progress) * 0.3 // Fade as it moves away
-            const scrollBlur = Math.abs(progress) * 3 // Blur effect
+            const scrollOpacity = 1 - Math.abs(progress) * 0.2 // Fade as it moves away (reduced)
+            const scrollBlur = Math.abs(progress) > 0.5 ? Math.abs(progress) * 1.5 : 0 // Blur only when far (max 1.5px)
             const scrollY = progress * 30 // Subtle parallax
             const scrollRotateX = progress * -3 // Perspective rotation based on scroll
 
