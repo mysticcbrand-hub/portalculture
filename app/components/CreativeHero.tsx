@@ -32,11 +32,11 @@ export default function CreativeHero({ onCtaClick }: CreativeHeroProps) {
       <div className="absolute inset-0 overflow-hidden bg-black">
         {/* Animated Mesh Gradient Blobs */}
         <div className="absolute inset-0">
-          {/* Blob 1 - Purple */}
+          {/* Blob 1 - Burnt Orange/Brown */}
           <div 
-            className="absolute w-[900px] h-[900px] rounded-full blur-[140px] opacity-30"
+            className="absolute w-[900px] h-[900px] rounded-full blur-[140px] opacity-25"
             style={{
-              background: 'radial-gradient(circle, #8b5cf6 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #c2410c 0%, transparent 70%)',
               top: '-10%',
               left: '15%',
               animation: 'meshFloat1 20s ease-in-out infinite',
@@ -45,7 +45,7 @@ export default function CreativeHero({ onCtaClick }: CreativeHeroProps) {
           
           {/* Blob 2 - Blue */}
           <div 
-            className="absolute w-[750px] h-[750px] rounded-full blur-[120px] opacity-25"
+            className="absolute w-[750px] h-[750px] rounded-full blur-[120px] opacity-28"
             style={{
               background: 'radial-gradient(circle, #3b82f6 0%, transparent 70%)',
               bottom: '0%',
@@ -54,22 +54,22 @@ export default function CreativeHero({ onCtaClick }: CreativeHeroProps) {
             }}
           />
           
-          {/* Blob 3 - Pink */}
+          {/* Blob 3 - Muted Teal */}
           <div 
-            className="absolute w-[650px] h-[650px] rounded-full blur-[100px] opacity-20"
+            className="absolute w-[650px] h-[650px] rounded-full blur-[100px] opacity-18"
             style={{
-              background: 'radial-gradient(circle, #ec4899 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #0d9488 0%, transparent 70%)',
               top: '35%',
               right: '25%',
               animation: 'meshFloat3 22s ease-in-out infinite',
             }}
           />
           
-          {/* Blob 4 - Cyan */}
+          {/* Blob 4 - Deep Slate Blue */}
           <div 
-            className="absolute w-[550px] h-[550px] rounded-full blur-[90px] opacity-18"
+            className="absolute w-[550px] h-[550px] rounded-full blur-[90px] opacity-20"
             style={{
-              background: 'radial-gradient(circle, #06b6d4 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #1e40af 0%, transparent 70%)',
               bottom: '25%',
               left: '5%',
               animation: 'meshFloat4 24s ease-in-out infinite',
