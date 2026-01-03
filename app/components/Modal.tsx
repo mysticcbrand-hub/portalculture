@@ -82,11 +82,14 @@ export default function Modal({ isOpen, onClose }: ModalProps) {
 
         {/* Header */}
         <div className="text-center mb-8">
+          <div className="inline-block px-4 py-1.5 bg-red-500/20 border border-red-500/30 rounded-full text-red-400 text-sm font-semibold mb-4">
+            ⚡ PLAZAS LIMITADAS
+          </div>
           <h2 className="text-3xl md:text-4xl font-bold chrome-gradient-text mb-3">
             Solicita tu acceso
           </h2>
           <p className="text-base opacity-70">
-            Empieza el proceso de selección ahora
+            El precio aumenta pronto · Asegura tu plaza ahora
           </p>
         </div>
 
@@ -139,8 +142,8 @@ export default function Modal({ isOpen, onClose }: ModalProps) {
             {isSubmitting ? 'Enviando...' : 'Enviar Solicitud'}
           </button>
 
-          <p className="text-center text-sm opacity-40">
-            100% gratuito · Proceso de selección activo
+          <p className="text-center text-sm">
+            <span className="text-red-400 font-semibold">⚡ PLAZAS LIMITADAS</span> · <span className="text-yellow-400">Precio sube pronto</span>
           </p>
         </form>
       </div>
