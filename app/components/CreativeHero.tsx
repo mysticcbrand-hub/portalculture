@@ -28,15 +28,93 @@ export default function CreativeHero({ onCtaClick }: CreativeHeroProps) {
 
   return (
     <section className="relative min-h-screen flex items-center px-4 md:px-6 py-24 md:py-32">
-      {/* Background Image - Solo en Hero */}
-      <div className="absolute inset-0 overflow-hidden">
-        <img 
-          src="/imagenweb1.png" 
-          alt="Background" 
-          className="w-full h-full object-cover opacity-50"
+      {/* Premium Mesh Gradient Background */}
+      <div className="absolute inset-0 overflow-hidden bg-black">
+        {/* Animated Mesh Gradient Blobs */}
+        <div className="absolute inset-0">
+          {/* Blob 1 - Purple */}
+          <div 
+            className="absolute w-[900px] h-[900px] rounded-full blur-[140px] opacity-30"
+            style={{
+              background: 'radial-gradient(circle, #8b5cf6 0%, transparent 70%)',
+              top: '-10%',
+              left: '15%',
+              animation: 'meshFloat1 20s ease-in-out infinite',
+            }}
+          />
+          
+          {/* Blob 2 - Blue */}
+          <div 
+            className="absolute w-[750px] h-[750px] rounded-full blur-[120px] opacity-25"
+            style={{
+              background: 'radial-gradient(circle, #3b82f6 0%, transparent 70%)',
+              bottom: '0%',
+              right: '10%',
+              animation: 'meshFloat2 18s ease-in-out infinite',
+            }}
+          />
+          
+          {/* Blob 3 - Pink */}
+          <div 
+            className="absolute w-[650px] h-[650px] rounded-full blur-[100px] opacity-20"
+            style={{
+              background: 'radial-gradient(circle, #ec4899 0%, transparent 70%)',
+              top: '35%',
+              right: '25%',
+              animation: 'meshFloat3 22s ease-in-out infinite',
+            }}
+          />
+          
+          {/* Blob 4 - Cyan */}
+          <div 
+            className="absolute w-[550px] h-[550px] rounded-full blur-[90px] opacity-18"
+            style={{
+              background: 'radial-gradient(circle, #06b6d4 0%, transparent 70%)',
+              bottom: '25%',
+              left: '5%',
+              animation: 'meshFloat4 24s ease-in-out infinite',
+            }}
+          />
+        </div>
+        
+        {/* Depth overlays */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/90" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40" />
+        
+        {/* Grain texture */}
+        <div 
+          className="absolute inset-0 opacity-[0.03] mix-blend-overlay"
+          style={{
+            backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'4.5\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
+          }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/90" />
       </div>
+
+      <style jsx>{`
+        @keyframes meshFloat1 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(60px, -100px) scale(1.15); }
+          66% { transform: translate(-40px, 80px) scale(0.95); }
+        }
+        
+        @keyframes meshFloat2 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(-80px, 90px) scale(1.1); }
+          66% { transform: translate(50px, -60px) scale(0.92); }
+        }
+        
+        @keyframes meshFloat3 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(90px, 50px) scale(1.12); }
+          66% { transform: translate(-60px, -80px) scale(0.9); }
+        }
+        
+        @keyframes meshFloat4 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(-50px, -90px) scale(1.18); }
+          66% { transform: translate(70px, 60px) scale(0.88); }
+        }
+      `}</style>
 
       <div className="relative z-10 max-w-7xl mx-auto w-full">
         {/* Section Label */}
