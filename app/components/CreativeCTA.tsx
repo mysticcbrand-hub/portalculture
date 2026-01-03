@@ -68,12 +68,12 @@ export default function CreativeCTA({ onCtaClick }: CreativeCTAProps) {
         </a>
 
         {/* Sub Info */}
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm font-mono text-white/40">
-          <span>100% gratuito</span>
-          <span>·</span>
-          <span>Respuesta en 24h</span>
-          <span>·</span>
-          <span>Sin compromiso</span>
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm font-mono">
+          <span className="text-red-400 font-semibold">⚡ PLAZAS LIMITADAS</span>
+          <span className="text-white/40">·</span>
+          <span className="text-yellow-400 font-semibold">Precio sube pronto</span>
+          <span className="text-white/40">·</span>
+          <span className="text-white/40">Asegura tu plaza</span>
         </div>
       </div>
     </section>
