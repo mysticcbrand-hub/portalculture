@@ -99,14 +99,24 @@ export default function WhatYouGet() {
                   
                   {/* Image Container */}
                   <div className="relative h-48 md:h-56 overflow-hidden bg-gradient-to-br from-zinc-800 to-zinc-900">
-                    {/* Placeholder for now - will be replaced with actual image */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-6xl opacity-20">
-                        {card.id === 1 && '💬'}
-                        {card.id === 2 && '📚'}
-                        {card.id === 3 && '🎮'}
+                    {/* Image */}
+                    {card.id === 1 && (
+                      <Image
+                        src="/discord-preview.jpg"
+                        alt={card.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    )}
+                    {/* Placeholder for cards 2 and 3 */}
+                    {card.id !== 1 && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-6xl opacity-20">
+                          {card.id === 2 && '📚'}
+                          {card.id === 3 && '🎮'}
+                        </div>
                       </div>
-                    </div>
+                    )}
                     
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
