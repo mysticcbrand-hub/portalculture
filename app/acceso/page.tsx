@@ -158,7 +158,7 @@ export default function AccesoPage() {
           >
 
             {/* Strong glow effect */}
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-2xl" />
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-yellow-500/15 to-orange-500/15 opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10 blur-3xl" />
 
             <div className="mb-6">
               <span className="text-sm font-mono text-yellow-400 uppercase tracking-wider">Opción 2</span>
