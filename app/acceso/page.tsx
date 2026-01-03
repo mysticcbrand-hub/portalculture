@@ -2,19 +2,21 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import CustomCursor from '../components/CustomCursor'
+import dynamic from 'next/dynamic'
+
+const CustomCursor = dynamic(() => import('../components/CustomCursor'), { ssr: false })
 
 export default function AccesoPage() {
   const [hoveredOption, setHoveredOption] = useState<number | null>(null)
 
   const handleWaitlist = () => {
-    // Scroll to typeform on homepage or open modal
-    window.opener?.postMessage({ action: 'openTypeform' }, '*')
-    window.close()
+    // Redirect to app typeform page (same tab)
+    window.location.href = 'https://app-portalculture.vercel.app'
   }
 
   const handleFastPass = () => {
-    window.location.href = 'https://whop.com/portalacademy/acceso-inmediato/'
+    // Open Whop in new tab
+    window.open('https://whop.com/portalacademy/acceso-inmediato/', '_blank')
   }
 
   return (
