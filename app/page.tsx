@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import CreativeHero from './components/CreativeHero'
 import CreativeBenefits from './components/CreativeBenefits'
-import WhatYouGet from './components/WhatYouGet'
+import ScrollRevealCourses from './components/ScrollRevealCourses'
 import CreativeCTA from './components/CreativeCTA'
 import Footer from './components/Footer'
 import Modal from './components/Modal'
@@ -30,8 +30,8 @@ export default function Home() {
       {/* Creative Benefits Section */}
       <CreativeBenefits />
 
-      {/* What You Get Section - NEW */}
-      <WhatYouGet />
+      {/* Scroll Reveal Courses - 5 Templos */}
+      <ScrollRevealCourses />
 
       {/* Creative CTA Section */}
       <CreativeCTA onCtaClick={openModal} />
