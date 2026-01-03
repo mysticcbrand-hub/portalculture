@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import CreativeHero from './components/CreativeHero'
 import CreativeBenefits from './components/CreativeBenefits'
-import CreativeProcess from './components/CreativeProcess'
+import WhatYouGet from './components/WhatYouGet'
 import CreativeCTA from './components/CreativeCTA'
 import Footer from './components/Footer'
 import Modal from './components/Modal'
@@ -30,8 +30,8 @@ export default function Home() {
       {/* Creative Benefits Section */}
       <CreativeBenefits />
 
-      {/* Creative Process Section */}
-      <CreativeProcess />
+      {/* What You Get Section - NEW */}
+      <WhatYouGet />
 
       {/* Creative CTA Section */}
       <CreativeCTA onCtaClick={openModal} />
