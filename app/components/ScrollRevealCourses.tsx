@@ -56,7 +56,9 @@ const courses: Course[] = [
 
 export default function ScrollRevealCourses() {
   const cardsRef = useRef<(HTMLDivElement | null)[]>([])
+  const sectionRef = useRef<HTMLDivElement>(null)
   const [mousePositions, setMousePositions] = useState<{ [key: number]: { x: number; y: number; spotX: number; spotY: number } }>({})
+  const [scrollProgress, setScrollProgress] = useState<{ [key: number]: number }>({})
 
   useEffect(() => {
     const observerOptions = {
@@ -83,6 +85,45 @@ export default function ScrollRevealCourses() {
         if (card) observer.unobserve(card)
       })
     }
+  }, [])
+
+  // Scroll-driven animations
+  useEffect(() => {
+    let ticking = false
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          cardsRef.current.forEach((card, index) => {
+            if (!card) return
+
+            const rect = card.getBoundingClientRect()
+            const windowHeight = window.innerHeight
+            const cardCenter = rect.top + rect.height / 2
+            const windowCenter = windowHeight / 2
+
+            // Calculate progress: -1 (top of screen) to 1 (bottom of screen)
+            const progress = (cardCenter - windowCenter) / windowCenter
+            
+            // Only animate when card is in viewport
+            if (rect.top < windowHeight && rect.bottom > 0) {
+              setScrollProgress(prev => ({
+                ...prev,
+                [index]: progress
+              }))
+            }
+          })
+          
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll() // Initial call
+    
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, courseId: number) => {
@@ -139,9 +180,17 @@ export default function ScrollRevealCourses() {
         </div>
 
         {/* Course Cards */}
-        <div className="space-y-32 md:space-y-40 max-w-4xl mx-auto">
+        <div className="space-y-32 md:space-y-40 max-w-4xl mx-auto" ref={sectionRef}>
           {courses.map((course, index) => {
             const pos = mousePositions[course.id] || { x: 0, y: 0, spotX: 50, spotY: 50 }
+            const progress = scrollProgress[index] || 0
+            
+            // Calculate scroll-driven transforms
+            const scrollScale = 1 - Math.abs(progress) * 0.05 // Scale down as it moves away from center
+            const scrollOpacity = 1 - Math.abs(progress) * 0.3 // Fade as it moves away
+            const scrollBlur = Math.abs(progress) * 3 // Blur effect
+            const scrollY = progress * 30 // Subtle parallax
+            const scrollRotateX = progress * -3 // Perspective rotation based on scroll
 
             return (
               <div
@@ -153,7 +202,9 @@ export default function ScrollRevealCourses() {
                 onMouseMove={(e) => handleMouseMove(e, course.id)}
                 onMouseLeave={() => handleMouseLeave(course.id)}
                 style={{
-                  transform: `perspective(1000px) rotateX(${pos.x}deg) rotateY(${pos.y}deg) scale3d(1, 1, 1) translateZ(0)`,
+                  transform: `perspective(1000px) rotateX(${pos.x + scrollRotateX}deg) rotateY(${pos.y}deg) scale3d(${scrollScale}, ${scrollScale}, 1) translateY(${scrollY}px) translateZ(0)`,
+                  opacity: scrollOpacity,
+                  filter: `blur(${scrollBlur}px)`,
                   // @ts-ignore
                   '--spot-x': `${pos.spotX}%`,
                   '--spot-y': `${pos.spotY}%`,
