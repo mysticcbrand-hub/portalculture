@@ -182,7 +182,7 @@ export default function AccesoPage() {
                 <svg className="w-6 h-6 text-yellow-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Discord + 5 Cursos Premium + Instantáneos</span>
+                <span>Discord + 5 Cursos desbloqueados al instante</span>
               </li>
               <li className="flex items-start gap-3 text-white/90">
                 <svg className="w-6 h-6 text-yellow-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
