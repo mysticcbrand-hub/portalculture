@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 
 interface CreativeHeroProps {
-  onCtaClick: () => void
+  onCtaClick?: () => void
 }
 
 export default function CreativeHero({ onCtaClick }: CreativeHeroProps) {
