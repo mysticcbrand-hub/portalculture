@@ -176,7 +176,7 @@ export default function ScrollRevealCourses() {
               Cursos Exclusivos
             </span>
           </h2>
-          <p className="text-xl md:text-2xl text-white/70 font-light">Formación que transforma</p>
+          <p className="text-xl md:text-2xl text-white/70 font-light">Diseñados para resolver todos tus problemas</p>
         </div>
 
         {/* Course Cards */}
