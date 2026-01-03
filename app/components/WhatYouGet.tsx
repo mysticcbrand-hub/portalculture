@@ -27,13 +27,14 @@ const cards: Card[] = [
   {
     id: 2,
     title: '5 Cursos Premium',
-    description: 'Contenido exclusivo valorado en +$500',
+    description: 'Los 5 Templos del Conocimiento',
     image: '/courses-preview.jpg', // Placeholder - reemplazar con tu captura
     features: [
-      'Mindset de Alto Rendimiento',
-      'Productividad Extrema',
-      'Finanzas Personales',
-      'Networking & Influencia',
+      'Templo de Atenas',
+      'Templo de Ares',
+      'Templo de Apolo',
+      'Templo de Zeus',
+      'Templo de Adonis',
     ],
   },
   {
@@ -52,6 +53,27 @@ const cards: Card[] = [
 
 export default function WhatYouGet() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, cardId: number) => {
+    if (hoveredCard !== cardId) return
+    
+    const card = e.currentTarget
+    const rect = card.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const centerX = rect.width / 2
+    const centerY = rect.height / 2
+    
+    const rotateX = ((y - centerY) / centerY) * -15 // Increased from -10 to -15
+    const rotateY = ((x - centerX) / centerX) * 15 // Increased from 10 to 15
+    
+    setMousePosition({ x: rotateX, y: rotateY })
+  }
+
+  const resetMousePosition = () => {
+    setMousePosition({ x: 0, y: 0 })
+  }
 
   return (
     <section className="relative py-24 md:py-32 overflow-hidden">
@@ -79,18 +101,22 @@ export default function WhatYouGet() {
             <div
               key={card.id}
               onMouseEnter={() => setHoveredCard(card.id)}
-              onMouseLeave={() => setHoveredCard(null)}
+              onMouseLeave={() => {
+                setHoveredCard(null)
+                resetMousePosition()
+              }}
+              onMouseMove={(e) => handleMouseMove(e, card.id)}
               className="group relative"
               style={{
-                perspective: '1000px',
+                perspective: '1500px',
               }}
             >
               <div
-                className="relative h-full transition-all duration-500 ease-out"
+                className="relative h-full transition-all duration-200 ease-out"
                 style={{
                   transform: hoveredCard === card.id 
-                    ? 'rotateX(5deg) rotateY(-5deg) translateY(-10px)' 
-                    : 'rotateX(0) rotateY(0) translateY(0)',
+                    ? `rotateX(${mousePosition.x}deg) rotateY(${mousePosition.y}deg) translateZ(20px)` 
+                    : 'rotateX(0) rotateY(0) translateZ(0)',
                   transformStyle: 'preserve-3d',
                 }}
               >
