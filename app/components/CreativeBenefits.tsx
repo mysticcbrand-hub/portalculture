@@ -47,7 +47,7 @@ const benefits = [
   {
     number: '06',
     title: 'Acceso de Por Vida',
-    description: 'Accede gratis. Beneficios para siempre. Sin cuotas',
+    description: 'Accede ahora. Beneficios para siempre. Sin cuotas',
     icon: '∞',
     color: 'from-white/10 to-gray-500/20',
     glow: 'group-hover:shadow-white/20'
@@ -177,7 +177,6 @@ export default function CreativeBenefits() {
         {/* Bottom Statement */}
         <div className="text-center mt-20 p-12 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl">
           <p className="text-2xl md:text-3xl font-light text-white/80 leading-relaxed">
-            <span className="text-white font-semibold">100% gratuito</span>.{' '}
             <span className="text-white font-semibold">Valor infinito</span>.{' '}
             <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent font-bold">
               Cambia tu vida hoy

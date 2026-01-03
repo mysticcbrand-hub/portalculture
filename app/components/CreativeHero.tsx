@@ -135,7 +135,7 @@ export default function CreativeHero({ onCtaClick }: CreativeHeroProps) {
         {/* Subtext */}
         <div className="max-w-2xl mb-12 md:mb-16">
           <p className="text-lg md:text-xl lg:text-2xl leading-relaxed text-white/70 font-light">
-            La comunidad gratis n.º1 donde jóvenes ambiciosos como tú transforman su vida.
+            La comunidad n.º1 donde jóvenes ambiciosos como tú transforman su vida.
           </p>
         </div>
 
