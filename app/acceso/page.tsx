@@ -12,9 +12,20 @@ export default function AccesoPage() {
     window.close()
   }
 
-  const handleFastPass = () => {
-    // Redirect to Stripe Checkout (we'll implement this next)
-    window.location.href = '/api/checkout'
+  const handleFastPass = async () => {
+    try {
+      const response = await fetch('/api/checkout')
+      const data = await response.json()
+      
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        alert('Error al crear la sesión de pago. Por favor intenta de nuevo.')
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      alert('Error al procesar el pago. Por favor intenta de nuevo.')
+    }
   }
 
   return (
