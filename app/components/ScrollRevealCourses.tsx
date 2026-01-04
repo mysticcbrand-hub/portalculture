@@ -212,14 +212,34 @@ export default function ScrollRevealCourses() {
               >
                 {/* Backdrop blur card */}
                 <div className="relative backdrop-blur-xl bg-white/[0.03] border border-white/[0.08] rounded-3xl p-8 md:p-12 min-h-[280px] overflow-hidden">
-                  {/* Background Image for Adonis */}
+                  {/* Background Images for all courses */}
+                  {course.id === 1 && (
+                    <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-500">
+                      <img src="/atenas-bg.png" alt="" className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                    </div>
+                  )}
+                  {course.id === 2 && (
+                    <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-500">
+                      <img src="/ares-bg.png" alt="" className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                    </div>
+                  )}
+                  {course.id === 3 && (
+                    <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-500">
+                      <img src="/apolo-bg.png" alt="" className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                    </div>
+                  )}
+                  {course.id === 4 && (
+                    <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-500">
+                      <img src="/zeus-bg.png" alt="" className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                    </div>
+                  )}
                   {course.id === 5 && (
                     <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-500">
-                      <img 
-                        src="/adonis-bg.png" 
-                        alt="" 
-                        className="w-full h-full object-cover"
-                      />
+                      <img src="/adonis-bg.png" alt="" className="w-full h-full object-cover" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
                     </div>
                   )}
