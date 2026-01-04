@@ -16,7 +16,7 @@ export default function AccesoPage() {
 
   const handleFastPass = () => {
     // Open Whop in new tab
-    window.open('https://whop.com/portalacademy/acceso-inmediato/', '_blank')
+    window.open('https://whop.com/portalculture/acceso-inmediato/', '_blank')
   }
 
   return (
