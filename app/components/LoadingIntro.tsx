@@ -20,35 +20,58 @@ export default function LoadingIntro() {
     // Add class to body for content fade-in coordination
     document.body.classList.add('intro-loading')
 
-    // Try to play video on all devices
-    let playInterval: NodeJS.Timeout | undefined
-    
-    if (videoRef.current) {
-      const tryPlayVideo = () => {
-        const video = videoRef.current
-        if (video && video.paused) {
-          video.play().catch(() => {})
-        }
+    // Aggressive video play strategy
+    const video = videoRef.current
+    if (video) {
+      // Force all attributes
+      video.muted = true
+      video.playsInline = true
+      video.autoplay = true
+      
+      // Multiple play attempts with delays
+      const playVideo = () => {
+        video.play().catch(() => {
+          // Retry after small delay
+          setTimeout(() => video.play().catch(() => {}), 50)
+        })
       }
+      
+      // Immediate attempt
+      playVideo()
+      
+      // Retry after 100ms
+      setTimeout(playVideo, 100)
+      
+      // Retry after 200ms
+      setTimeout(playVideo, 200)
+      
+      // Continuous retry every 100ms
+      const playInterval = setInterval(() => {
+        if (video.paused) {
+          playVideo()
+        }
+      }, 100)
 
-      // Start playing immediately and retry
-      playInterval = setInterval(tryPlayVideo, 100)
+      // Hide intro after 2.5 seconds
+      const timer = setTimeout(() => {
+        clearInterval(playInterval)
+        setIsVisible(false)
+        // Remove loading class to trigger content fade-in
+        document.body.classList.remove('intro-loading')
+        setTimeout(() => {
+          document.body.style.overflow = 'unset'
+        }, 800)
+      }, 2500)
+
+      return () => {
+        clearTimeout(timer)
+        clearInterval(playInterval)
+        document.body.style.overflow = 'unset'
+        document.body.classList.remove('intro-loading')
+      }
     }
 
-    // Hide intro after 2.5 seconds
-    const timer = setTimeout(() => {
-      setIsVisible(false)
-      if (playInterval) clearInterval(playInterval)
-      // Remove loading class to trigger content fade-in
-      document.body.classList.remove('intro-loading')
-      setTimeout(() => {
-        document.body.style.overflow = 'unset'
-      }, 800)
-    }, 2500)
-
     return () => {
-      clearTimeout(timer)
-      if (playInterval) clearInterval(playInterval)
       document.body.style.overflow = 'unset'
       document.body.classList.remove('intro-loading')
     }
@@ -71,9 +94,22 @@ export default function LoadingIntro() {
           className="logo-video"
           loop
           poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 280'%3E%3Crect fill='%23000000' width='280' height='280'/%3E%3C/svg%3E"
-          onLoadedMetadata={(e) => e.currentTarget.play().catch(() => {})}
-          onCanPlay={(e) => e.currentTarget.play().catch(() => {})}
-          onLoadedData={(e) => e.currentTarget.play().catch(() => {})}
+          onLoadedMetadata={(e) => {
+            e.currentTarget.muted = true
+            e.currentTarget.play().catch(() => {})
+          }}
+          onCanPlay={(e) => {
+            e.currentTarget.muted = true
+            e.currentTarget.play().catch(() => {})
+          }}
+          onLoadedData={(e) => {
+            e.currentTarget.muted = true  
+            e.currentTarget.play().catch(() => {})
+          }}
+          onClick={(e) => {
+            // Fallback: if user clicks, play
+            e.currentTarget.play().catch(() => {})
+          }}
         >
           <source src="/logo-3d.mp4" type="video/mp4" />
         </video>
