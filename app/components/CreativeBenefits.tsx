@@ -214,7 +214,7 @@ export default function CreativeBenefits() {
               <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-white/0 via-white/50 to-white/0
                              transition-all duration-700 ${hoveredIndex === index ? 'opacity-100' : 'opacity-0'}`} />
             </div>
-          )})
+          )})}
         </div>
 
         {/* Bottom Statement */}
