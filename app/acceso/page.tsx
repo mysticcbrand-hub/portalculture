@@ -25,53 +25,66 @@ export default function AccesoPage() {
       <CustomCursor />
       
       <main className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden bg-black">
-        {/* Mesh Gradient Background - Same as landing */}
+        {/* Mesh Gradient Background - Anti-banding */}
       <div className="absolute inset-0 overflow-hidden bg-black">
         <div className="absolute inset-0">
           {/* Blob 1 - Burnt Orange */}
           <div 
-            className="absolute w-[900px] h-[900px] rounded-full blur-[140px] opacity-25"
+            className="absolute w-[900px] h-[900px] rounded-full opacity-25"
             style={{
-              background: 'radial-gradient(circle, #c2410c 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #c2410c 0%, #a03808 30%, #7d2a06 50%, transparent 70%)',
               top: '-10%',
               left: '15%',
               animation: 'meshFloat1 20s ease-in-out infinite',
+              filter: 'blur(140px) saturate(1.2)',
             }}
           />
           
           {/* Blob 2 - Blue */}
           <div 
-            className="absolute w-[750px] h-[750px] rounded-full blur-[120px] opacity-28"
+            className="absolute w-[750px] h-[750px] rounded-full opacity-28"
             style={{
-              background: 'radial-gradient(circle, #3b82f6 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #3b82f6 0%, #2563eb 30%, #1d4ed8 50%, transparent 70%)',
               bottom: '0%',
               right: '10%',
               animation: 'meshFloat2 18s ease-in-out infinite',
+              filter: 'blur(120px) saturate(1.2)',
             }}
           />
           
           {/* Blob 3 - Teal */}
           <div 
-            className="absolute w-[650px] h-[650px] rounded-full blur-[100px] opacity-18"
+            className="absolute w-[650px] h-[650px] rounded-full opacity-18"
             style={{
-              background: 'radial-gradient(circle, #0d9488 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #0d9488 0%, #0f766e 30%, #115e59 50%, transparent 70%)',
               top: '35%',
               right: '25%',
               animation: 'meshFloat3 22s ease-in-out infinite',
+              filter: 'blur(100px) saturate(1.2)',
             }}
           />
           
           {/* Blob 4 - Slate Blue */}
           <div 
-            className="absolute w-[550px] h-[550px] rounded-full blur-[90px] opacity-20"
+            className="absolute w-[550px] h-[550px] rounded-full opacity-20"
             style={{
-              background: 'radial-gradient(circle, #1e40af 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #1e40af 0%, #1e3a8a 30%, #1e3a8a 50%, transparent 70%)',
               bottom: '25%',
               left: '5%',
               animation: 'meshFloat4 24s ease-in-out infinite',
+              filter: 'blur(90px) saturate(1.2)',
             }}
           />
         </div>
+        
+        {/* Noise dithering overlay */}
+        <div 
+          className="absolute inset-0 opacity-[0.015] mix-blend-overlay"
+          style={{
+            backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'6.5\' numOctaves=\'2\' /%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
+            backgroundSize: '200px 200px',
+          }}
+        />
         
         {/* Depth overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/90" />
