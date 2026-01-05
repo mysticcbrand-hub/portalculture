@@ -303,39 +303,44 @@ export default function ScrollRevealCourses() {
           transition: opacity 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .course-card {
-          position: relative;
+        .course-card > div {
+          transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s;
+          box-shadow: 
+            0 1px 2px rgba(0,0,0,0.3),
+            0 2px 4px rgba(0,0,0,0.3),
+            0 4px 8px rgba(0,0,0,0.3),
+            0 8px 16px rgba(0,0,0,0.3),
+            0 16px 32px rgba(0,0,0,0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+          background-image: 
+            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='6.5' numOctaves='1' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+          background-size: 200px 200px;
+          background-blend-mode: overlay;
         }
 
-        .course-card::after {
+        .course-card > div::before {
           content: '';
           position: absolute;
-          inset: -40px;
-          border-radius: 40px;
-          background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
-          opacity: 0;
-          transition: opacity 0.6s ease;
-          pointer-events: none;
-          filter: blur(40px);
+          inset: 0;
+          background: inherit;
+          filter: blur(1px);
+          opacity: 0.5;
           z-index: -1;
-        }
-
-        .course-card:hover::after {
-          opacity: 1;
-        }
-
-        .course-card > div {
-          transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s, background-color 0.3s, box-shadow 0.5s;
-          position: relative;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+          border-radius: inherit;
         }
 
         .course-card:hover > div {
-          border-color: rgba(255, 255, 255, 0.18);
-          background: rgba(255, 255, 255, 0.05);
           box-shadow: 
-            0 20px 60px rgba(0, 0, 0, 0.8),
-            0 4px 20px rgba(0, 0, 0, 0.5);
+            0 2px 4px rgba(0,0,0,0.4),
+            0 4px 8px rgba(0,0,0,0.4),
+            0 8px 16px rgba(0,0,0,0.4),
+            0 16px 32px rgba(0,0,0,0.4),
+            0 32px 64px rgba(0,0,0,0.4),
+            0 0 20px rgba(255,255,255,0.03),
+            0 0 40px rgba(255,255,255,0.02),
+            0 0 60px rgba(255,255,255,0.01),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+          border-color: rgba(255, 255, 255, 0.15);
         }
 
         .tag {
