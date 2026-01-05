@@ -244,11 +244,6 @@ export default function ScrollRevealCourses() {
                     </div>
                   )}
                   
-                  {/* Spotlight effect */}
-                  <div className="spotlight" />
-
-                  {/* Chrome border glow */}
-                  <div className="chrome-glow" />
 
                   {/* Big number background */}
                   <div
@@ -309,44 +304,14 @@ export default function ScrollRevealCourses() {
         }
 
         .course-card > div {
-          transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05),
-            0 0 0 rgba(192, 192, 192, 0);
+          transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.5s, border-color 0.3s;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
         .course-card:hover > div {
-          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 60px rgba(192, 192, 192, 0.15),
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 255, 255, 0.08),
             inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        }
-
-        .spotlight {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(500px circle at var(--spot-x) var(--spot-y), rgba(255, 255, 255, 0.08), transparent 40%);
-          opacity: 0;
-          transition: opacity 0.3s;
-          border-radius: inherit;
-          pointer-events: none;
-        }
-
-        .course-card:hover .spotlight {
-          opacity: 1;
-        }
-
-        .chrome-glow {
-          content: '';
-          position: absolute;
-          inset: -1px;
-          background: linear-gradient(135deg, rgba(192, 192, 192, 0.4), rgba(255, 255, 255, 0.6), rgba(192, 192, 192, 0.4));
-          border-radius: inherit;
-          opacity: 0;
-          transition: opacity 0.4s;
-          z-index: -1;
-        }
-
-        .course-card:hover .chrome-glow {
-          opacity: 1;
+          border-color: rgba(255, 255, 255, 0.15);
         }
 
         .tag {
