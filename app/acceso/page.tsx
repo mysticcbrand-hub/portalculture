@@ -169,11 +169,11 @@ export default function AccesoPage() {
           <div
             onMouseEnter={() => setHoveredOption(2)}
             onMouseLeave={() => setHoveredOption(null)}
-            className="group relative backdrop-blur-xl bg-white/5 border-2 border-white/20 rounded-3xl p-8 md:p-10 transition-all duration-500 hover:bg-white/10 hover:border-white/30 hover:scale-105"
+            className="group relative backdrop-blur-xl bg-white/5 border-2 border-white/20 rounded-3xl p-8 md:p-10 transition-all duration-500 hover:bg-white/10 hover:border-white/30 hover:scale-105 overflow-hidden"
           >
 
             {/* Strong glow effect */}
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-yellow-500/15 to-orange-500/15 opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10 blur-3xl" />
+            <div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-yellow-500/20 to-orange-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-2xl" style={{ zIndex: -1 }} />
 
             <div className="mb-6">
               <span className="text-sm font-mono text-yellow-400 uppercase tracking-wider">Opción 2</span>
