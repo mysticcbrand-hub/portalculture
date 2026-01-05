@@ -305,13 +305,21 @@ export default function ScrollRevealCourses() {
 
         .course-card > div {
           transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.5s, border-color 0.3s;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+          box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.6), 
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
         .course-card:hover > div {
-          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 255, 255, 0.08),
+          box-shadow: 
+            0 20px 60px rgba(0, 0, 0, 0.8),
+            0 0 20px rgba(255, 255, 255, 0.06),
+            0 0 40px rgba(255, 255, 255, 0.04),
+            0 0 60px rgba(255, 255, 255, 0.02),
+            0 0 80px rgba(255, 255, 255, 0.01),
             inset 0 1px 0 rgba(255, 255, 255, 0.1);
           border-color: rgba(255, 255, 255, 0.15);
+          filter: contrast(1.02) brightness(1.02);
         }
 
         .tag {
