@@ -304,48 +304,38 @@ export default function ScrollRevealCourses() {
         }
 
         .course-card {
-          filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.6));
-        }
-
-        .course-card:hover {
-          filter: 
-            drop-shadow(0 20px 60px rgba(0, 0, 0, 0.8))
-            drop-shadow(0 0 30px rgba(255, 255, 255, 0.05))
-            drop-shadow(0 0 60px rgba(255, 255, 255, 0.03));
-        }
-
-        .course-card > div {
-          transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s, background-color 0.3s;
           position: relative;
         }
 
-        .course-card > div::before {
+        .course-card::after {
           content: '';
           position: absolute;
-          inset: 0;
-          border-radius: inherit;
-          padding: 1px;
-          background: linear-gradient(145deg, 
-            transparent 0%,
-            rgba(255, 255, 255, 0.05) 30%,
-            rgba(255, 255, 255, 0.1) 50%,
-            rgba(255, 255, 255, 0.05) 70%,
-            transparent 100%
-          );
-          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor;
-          mask-composite: exclude;
+          inset: -40px;
+          border-radius: 40px;
+          background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
           opacity: 0;
-          transition: opacity 0.5s ease;
+          transition: opacity 0.6s ease;
+          pointer-events: none;
+          filter: blur(40px);
+          z-index: -1;
         }
 
-        .course-card:hover > div::before {
+        .course-card:hover::after {
           opacity: 1;
         }
 
+        .course-card > div {
+          transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s, background-color 0.3s, box-shadow 0.5s;
+          position: relative;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+        }
+
         .course-card:hover > div {
-          border-color: rgba(255, 255, 255, 0.15);
-          background: rgba(255, 255, 255, 0.06);
+          border-color: rgba(255, 255, 255, 0.18);
+          background: rgba(255, 255, 255, 0.05);
+          box-shadow: 
+            0 20px 60px rgba(0, 0, 0, 0.8),
+            0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
         .tag {
