@@ -8,7 +8,7 @@ const benefits = [
     number: '01',
     title: '5 Cursos Exclusivos',
     description: 'Formación premium que transforma tu mentalidad y resultados',
-    icon: '📚',
+    icon: '/CURSOS.png',
     color: 'from-blue-500/20 to-purple-500/20',
     glow: 'group-hover:shadow-blue-500/20'
   },
@@ -16,7 +16,7 @@ const benefits = [
     number: '02',
     title: 'Desafíos Semanales',
     description: 'Compite, crece y gana premios junto a la comunidad',
-    icon: '🏆',
+    icon: '/DESAFIOS.png',
     color: 'from-yellow-500/20 to-orange-500/20',
     glow: 'group-hover:shadow-yellow-500/20'
   },
@@ -24,7 +24,7 @@ const benefits = [
     number: '03',
     title: 'Sistema de Niveles',
     description: 'Progresa, desbloquea recompensas exclusivas y destaca',
-    icon: '⚡',
+    icon: '/NIVELES.png',
     color: 'from-purple-500/20 to-pink-500/20',
     glow: 'group-hover:shadow-purple-500/20'
   },
@@ -32,7 +32,7 @@ const benefits = [
     number: '04',
     title: 'Valor Diario',
     description: 'Cada miembro aporta. Crecimiento colectivo real y medible',
-    icon: '💎',
+    icon: '/VALOR.png',
     color: 'from-cyan-500/20 to-blue-500/20',
     glow: 'group-hover:shadow-cyan-500/20'
   },
@@ -40,7 +40,7 @@ const benefits = [
     number: '05',
     title: 'Red de Contactos',
     description: 'Rodéate de personas ambiciosas que van en tu dirección',
-    icon: '🤝',
+    icon: '/REDDECONTACTOS.png',
     color: 'from-green-500/20 to-emerald-500/20',
     glow: 'group-hover:shadow-green-500/20'
   },
@@ -48,7 +48,7 @@ const benefits = [
     number: '06',
     title: 'Acceso de Por Vida',
     description: 'Accede ahora. Beneficios para siempre. Sin cuotas',
-    icon: '∞',
+    icon: '/ACCESO.png',
     color: 'from-white/10 to-gray-500/20',
     glow: 'group-hover:shadow-white/20'
   }
@@ -187,8 +187,14 @@ export default function CreativeBenefits() {
                                transition-colors duration-500 tracking-wider">
                   {benefit.number}
                 </span>
-                <div className="text-4xl transform group-hover:scale-110 transition-transform duration-500">
-                  {benefit.icon}
+                <div className="w-12 h-12 transform group-hover:scale-110 transition-transform duration-500">
+                  <Image 
+                    src={benefit.icon} 
+                    alt={benefit.title}
+                    width={48}
+                    height={48}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
               </div>
 
