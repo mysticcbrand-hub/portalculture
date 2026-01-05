@@ -57,6 +57,7 @@ const benefits = [
 export default function CreativeBenefits() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [cardRotations, setCardRotations] = useState<{ [key: number]: { x: number; y: number } }>({})
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -69,6 +70,31 @@ export default function CreativeBenefits() {
     window.addEventListener('mousemove', handleMouseMove)
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
+
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>, index: number) => {
+    const card = e.currentTarget
+    const rect = card.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+
+    const xPercent = x / rect.width
+    const yPercent = y / rect.height
+
+    const rotateY = (xPercent - 0.5) * 10
+    const rotateX = (0.5 - yPercent) * 10
+
+    setCardRotations((prev) => ({
+      ...prev,
+      [index]: { x: rotateX, y: rotateY },
+    }))
+  }
+
+  const handleCardMouseLeave = (index: number) => {
+    setCardRotations((prev) => ({
+      ...prev,
+      [index]: { x: 0, y: 0 },
+    }))
+  }
 
   return (
     <section id="beneficios" className="py-32 px-6 relative overflow-hidden">
@@ -127,18 +153,29 @@ export default function CreativeBenefits() {
 
         {/* Premium Grid - Bento Style */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {benefits.map((benefit, index) => (
+          {benefits.map((benefit, index) => {
+            const rotation = cardRotations[index] || { x: 0, y: 0 }
+            
+            return (
             <div
               key={index}
               onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
+              onMouseLeave={() => {
+                setHoveredIndex(null)
+                handleCardMouseLeave(index)
+              }}
+              onMouseMove={(e) => handleCardMouseMove(e, index)}
               className={`group relative p-8 rounded-2xl border border-white/10 
                          bg-gradient-to-br ${benefit.color}
                          backdrop-blur-xl
-                         hover:border-white/30 hover:scale-[1.02]
-                         transition-all duration-700 ease-out
+                         hover:border-white/30
+                         transition-all duration-200 ease-out
                          shadow-2xl ${benefit.glow}
                          ${index === 5 ? 'md:col-span-2 lg:col-span-1' : ''}`}
+              style={{
+                transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
+                transformStyle: 'preserve-3d',
+              }}
             >
               {/* Glow Effect */}
               <div className={`absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-0 
@@ -171,7 +208,7 @@ export default function CreativeBenefits() {
               <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-white/0 via-white/50 to-white/0
                              transition-all duration-700 ${hoveredIndex === index ? 'opacity-100' : 'opacity-0'}`} />
             </div>
-          ))}
+          )})
         </div>
 
         {/* Bottom Statement */}
