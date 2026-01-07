@@ -4,6 +4,7 @@ import { useState } from 'react'
 import CreativeHero from './components/CreativeHero'
 import CreativeBenefits from './components/CreativeBenefits'
 import ScrollRevealCourses from './components/ScrollRevealCourses'
+import AvatarComparison from './components/AvatarComparison'
 import CreativeCTA from './components/CreativeCTA'
 import Footer from './components/Footer'
 import Modal from './components/Modal'
@@ -32,6 +33,9 @@ export default function Home() {
 
       {/* Scroll Reveal Courses - 5 Templos */}
       <ScrollRevealCourses />
+
+      {/* Avatar Comparison Section */}
+      <AvatarComparison />
 
       {/* Creative CTA Section */}
       <CreativeCTA onCtaClick={openModal} />
