@@ -18,7 +18,7 @@ const courses: Course[] = [
     title: 'Templo de Atenas',
     description: 'Invoca tu vida ideal y reconfigura tu mente',
     tags: [{ text: 'Nuevo', variant: 'new' }, { text: 'Esencial', variant: 'premium' }],
-    icon: '/ATENAS.png',
+    icon: '/icons/ATENAS.png',
   },
   {
     id: 2,
@@ -26,7 +26,7 @@ const courses: Course[] = [
     title: 'Templo de Ares',
     description: 'Construye un físico de Dios Griego con rutinas y planes nutricionales',
     tags: [{ text: 'Premium', variant: 'premium' }],
-    icon: '/ARES.png',
+    icon: '/icons/ARES.png',
   },
   {
     id: 3,
@@ -34,7 +34,7 @@ const courses: Course[] = [
     title: 'Templo de Apolo',
     description: 'Eleva tu carisma, haciendo que la gente ame estar contigo',
     tags: [{ text: 'Actualizado', variant: 'updated' }],
-    icon: '/APOLO.png',
+    icon: '/icons/APOLO.png',
   },
   {
     id: 4,
@@ -42,7 +42,7 @@ const courses: Course[] = [
     title: 'Templo de Zeus',
     description: 'Conviértete en ultraproductivo y nunca más te sentirás estancado',
     tags: [{ text: 'Popular', variant: 'popular' }],
-    icon: '/ZEUS.png',
+    icon: '/icons/ZEUS.png',
   },
   {
     id: 5,
@@ -50,7 +50,7 @@ const courses: Course[] = [
     title: 'Templo de Adonis',
     description: 'Conviértete en el hombre masculino que atrae a mujeres sin quererlo',
     tags: [{ text: 'Nuevo', variant: 'new' }, { text: 'Premium', variant: 'premium' }],
-    icon: '/ADONIS.png',
+    icon: '/icons/ADONIS.png',
   },
 ]
 

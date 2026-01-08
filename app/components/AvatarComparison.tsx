@@ -132,20 +132,17 @@ export default function AvatarComparison() {
 
             {/* Avatar Figure */}
             <div className="flex justify-center mb-8">
-              <div className="relative w-32 h-48 md:w-40 md:h-56">
-                <svg
-                  viewBox="0 0 100 150"
-                  className="w-full h-full opacity-30"
-                  style={{ filter: 'drop-shadow(0 0 0px transparent)' }}
-                >
-                  {/* Sad posture - hunched */}
-                  <ellipse cx="50" cy="30" rx="18" ry="22" fill="rgba(255, 255, 255, 0.15)" />
-                  <rect x="42" y="52" width="16" height="35" rx="8" fill="rgba(255, 255, 255, 0.15)" />
-                  <rect x="30" y="52" width="12" height="30" rx="6" transform="rotate(-10 36 67)" fill="rgba(255, 255, 255, 0.15)" />
-                  <rect x="58" y="52" width="12" height="30" rx="6" transform="rotate(10 64 67)" fill="rgba(255, 255, 255, 0.15)" />
-                  <rect x="38" y="87" width="10" height="35" rx="5" fill="rgba(255, 255, 255, 0.15)" />
-                  <rect x="52" y="87" width="10" height="35" rx="5" fill="rgba(255, 255, 255, 0.15)" />
-                </svg>
+              <div className="relative w-48 h-64 md:w-56 md:h-72">
+                <Image
+                  src="/avatars/triste.jpg"
+                  alt="El que va solo"
+                  width={224}
+                  height={288}
+                  className="w-full h-full object-cover rounded-2xl opacity-30"
+                  style={{ 
+                    filter: 'grayscale(100%) brightness(0.6) sepia(100%) hue-rotate(-50deg) saturate(300%)',
+                  }}
+                />
               </div>
             </div>
 
@@ -220,29 +217,17 @@ export default function AvatarComparison() {
 
             {/* Avatar Figure */}
             <div className="flex justify-center mb-8">
-              <div className="relative w-32 h-48 md:w-40 md:h-56 animate-pulse-avatar">
-                <svg
-                  viewBox="0 0 100 150"
-                  className="w-full h-full"
-                  style={{
-                    filter: 'drop-shadow(0 0 30px rgba(102, 126, 234, 0.6))'
+              <div className="relative w-48 h-64 md:w-56 md:h-72 animate-pulse-avatar">
+                <Image
+                  src="/avatars/chad.jpg"
+                  alt="El que está dentro"
+                  width={224}
+                  height={288}
+                  className="w-full h-full object-cover rounded-2xl"
+                  style={{ 
+                    filter: 'drop-shadow(0 0 30px rgba(102, 126, 234, 0.6)) brightness(1.1) contrast(1.1)',
                   }}
-                >
-                  <defs>
-                    <linearGradient id="chromeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#C0C0C0" />
-                      <stop offset="50%" stopColor="#FFFFFF" />
-                      <stop offset="100%" stopColor="#A8A8A8" />
-                    </linearGradient>
-                  </defs>
-                  {/* Confident posture - standing tall */}
-                  <ellipse cx="50" cy="25" rx="18" ry="22" fill="url(#chromeGradient)" />
-                  <rect x="42" y="47" width="16" height="38" rx="8" fill="url(#chromeGradient)" />
-                  <rect x="25" y="47" width="12" height="32" rx="6" transform="rotate(-20 31 63)" fill="url(#chromeGradient)" />
-                  <rect x="63" y="47" width="12" height="32" rx="6" transform="rotate(20 69 63)" fill="url(#chromeGradient)" />
-                  <rect x="38" y="85" width="10" height="40" rx="5" fill="url(#chromeGradient)" />
-                  <rect x="52" y="85" width="10" height="40" rx="5" fill="url(#chromeGradient)" />
-                </svg>
+                />
               </div>
             </div>
 
