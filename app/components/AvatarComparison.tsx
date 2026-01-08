@@ -223,7 +223,7 @@ export default function AvatarComparison() {
                 className="object-cover"
                 style={{ 
                   objectPosition: 'center center',
-                  transform: 'scale(1.5) translateY(5%)',
+                  transform: 'scale(1.5) translateY(20%)',
                   transformOrigin: 'center center'
                 }}
               />
