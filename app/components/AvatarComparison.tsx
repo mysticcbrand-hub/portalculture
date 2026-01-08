@@ -221,7 +221,11 @@ export default function AvatarComparison() {
                 alt="" 
                 fill
                 className="object-cover"
-                style={{ objectPosition: 'center' }}
+                style={{ 
+                  objectPosition: 'center bottom',
+                  transform: 'scale(1.3)',
+                  transformOrigin: 'center bottom'
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
             </div>
