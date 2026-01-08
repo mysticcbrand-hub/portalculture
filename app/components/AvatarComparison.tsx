@@ -6,21 +6,20 @@ import Image from 'next/image'
 interface Metric {
   name: string
   value: number
-  color: 'red' | 'green'
 }
 
 const metrics1: Metric[] = [
-  { name: 'Motivación', value: 20, color: 'red' },
-  { name: 'Progreso', value: 15, color: 'red' },
-  { name: 'Constancia', value: 25, color: 'red' },
-  { name: 'Network', value: 10, color: 'red' }
+  { name: 'Motivación', value: 20 },
+  { name: 'Progreso', value: 15 },
+  { name: 'Constancia', value: 25 },
+  { name: 'Network', value: 10 }
 ]
 
 const metrics2: Metric[] = [
-  { name: 'Motivación', value: 95, color: 'green' },
-  { name: 'Progreso', value: 90, color: 'green' },
-  { name: 'Constancia', value: 95, color: 'green' },
-  { name: 'Network', value: 100, color: 'green' }
+  { name: 'Motivación', value: 95 },
+  { name: 'Progreso', value: 90 },
+  { name: 'Constancia', value: 95 },
+  { name: 'Network', value: 100 }
 ]
 
 export default function AvatarComparison() {
@@ -37,14 +36,14 @@ export default function AvatarComparison() {
           if (entry.isIntersecting) {
             setIsVisible(true)
             
-            // Animate metrics for Avatar 1 (slow)
+            // Animate metrics for Avatar 1
             metrics1.forEach((metric, index) => {
               setTimeout(() => {
                 animateCounter(setAnimatedMetrics1, index, metric.value, 1500)
               }, index * 200)
             })
             
-            // Animate metrics for Avatar 2 (fast with bounce)
+            // Animate metrics for Avatar 2
             metrics2.forEach((metric, index) => {
               setTimeout(() => {
                 animateCounter(setAnimatedMetrics2, index, metric.value, 800)
@@ -124,8 +123,8 @@ export default function AvatarComparison() {
     >
       {/* Ambient Background */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-500/3 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/3 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -147,143 +146,159 @@ export default function AvatarComparison() {
           <div
             onMouseMove={(e) => handleCardMouseMove(e, 1)}
             onMouseLeave={() => handleCardMouseLeave(1)}
-            className={`group relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-12 transition-all duration-200 ${
-              isVisible ? 'opacity-100' : 'opacity-0'
-            }`}
+            className="group relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 transition-all duration-200 overflow-hidden"
             style={{
               transform: `perspective(1000px) rotateX(${cardRotations[1]?.x || 0}deg) rotateY(${cardRotations[1]?.y || 0}deg)`,
               transformStyle: 'preserve-3d'
             }}
           >
-            {/* Avatar Figure */}
-            <div className="flex justify-center mb-8">
-              <div className="relative w-48 h-64 md:w-56 md:h-72">
-                <Image
-                  src="/avatars/triste.png"
-                  alt="El que va solo"
-                  width={280}
-                  height={360}
-                  className="w-full h-full object-contain drop-shadow-2xl"
-                  style={{ 
-                    filter: 'grayscale(80%) brightness(0.7) opacity(0.5)',
-                  }}
-                />
-              </div>
+            {/* Background image with effects - same as course cards */}
+            <div className="absolute inset-0 opacity-35 md:opacity-20 group-hover:opacity-45 md:group-hover:opacity-30 transition-opacity duration-500">
+              <Image 
+                src="/avatars/triste.png" 
+                alt="" 
+                fill
+                className="object-cover"
+                style={{ objectPosition: 'center' }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
             </div>
 
-            {/* Title */}
-            <h3 className="text-2xl md:text-3xl font-semibold text-white/50 text-center mb-8">
-              El que va solo
-            </h3>
-
-            {/* Metrics */}
-            <div className="space-y-5">
-              {metrics1.map((metric, index) => (
-                <div key={metric.name} className="metric">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-white/60">{metric.name}</span>
-                    <span className="text-sm font-mono text-white/60">
-                      {animatedMetrics1[index]}%
-                    </span>
-                  </div>
-                  <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-red-600 to-red-800 rounded-full transition-all duration-1500 ease-out"
-                      style={{
-                        width: isVisible ? `${animatedMetrics1[index]}%` : '0%',
-                        opacity: 0.6,
-                        transitionDelay: `${index * 200}ms`
-                      }}
-                    />
-                  </div>
+            {/* Content */}
+            <div className="relative z-10">
+              {/* Avatar Figure - Large and centered */}
+              <div className="flex justify-center mb-8">
+                <div className="relative w-56 h-72 md:w-64 md:h-80">
+                  <Image
+                    src="/avatars/triste.png"
+                    alt="El que va solo"
+                    fill
+                    className="object-contain"
+                  />
                 </div>
-              ))}
-            </div>
+              </div>
 
-            {/* Quote */}
-            <p className="mt-8 text-base md:text-lg italic text-white/40 text-center">
-              "Algún día lo conseguiré"
-            </p>
+              {/* Title */}
+              <h3 className="text-2xl md:text-3xl font-semibold text-white/60 text-center mb-8">
+                El que va solo
+              </h3>
+
+              {/* Metrics */}
+              <div className="space-y-5">
+                {metrics1.map((metric, index) => (
+                  <div key={metric.name}>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm text-white/60">{metric.name}</span>
+                      <span className="text-sm font-mono text-white/60">
+                        {animatedMetrics1[index]}%
+                      </span>
+                    </div>
+                    <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-red-500 to-red-700 rounded-full transition-all duration-1500 ease-out"
+                        style={{
+                          width: isVisible ? `${animatedMetrics1[index]}%` : '0%',
+                          opacity: 0.7,
+                          transitionDelay: `${index * 200}ms`
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Quote */}
+              <p className="mt-8 text-base italic text-white/50 text-center">
+                "Algún día lo conseguiré"
+              </p>
+            </div>
           </div>
 
           {/* Avatar 2 - El que está dentro */}
           <div
             onMouseMove={(e) => handleCardMouseMove(e, 2)}
             onMouseLeave={() => handleCardMouseLeave(2)}
-            className={`group relative backdrop-blur-xl bg-white/5 border border-white/20 rounded-3xl p-12 transition-all duration-200 ${
-              isVisible ? 'opacity-100' : 'opacity-0'
-            }`}
+            className="group relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 transition-all duration-200 overflow-hidden"
             style={{
               transform: `perspective(1000px) rotateX(${cardRotations[2]?.x || 0}deg) rotateY(${cardRotations[2]?.y || 0}deg)`,
-              transformStyle: 'preserve-3d',
-              boxShadow: '0 0 60px rgba(102, 126, 234, 0.1)'
+              transformStyle: 'preserve-3d'
             }}
           >
-            {/* Avatar Figure */}
-            <div className="flex justify-center mb-8">
-              <div className="relative w-48 h-64 md:w-56 md:h-72">
-                <Image
-                  src="/avatars/chad.png"
-                  alt="El que está dentro"
-                  width={280}
-                  height={360}
-                  className="w-full h-full object-contain drop-shadow-2xl"
-                  style={{ 
-                    filter: 'drop-shadow(0 0 20px rgba(102, 126, 234, 0.4)) brightness(1.05)',
-                  }}
-                />
-              </div>
+            {/* Background image with effects - same as course cards */}
+            <div className="absolute inset-0 opacity-35 md:opacity-20 group-hover:opacity-45 md:group-hover:opacity-30 transition-opacity duration-500">
+              <Image 
+                src="/avatars/chad.png" 
+                alt="" 
+                fill
+                className="object-cover"
+                style={{ objectPosition: 'center' }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
             </div>
 
-            {/* Title with chrome gradient */}
-            <h3 
-              className="text-2xl md:text-3xl font-semibold text-center mb-8"
-              style={{
-                background: 'linear-gradient(135deg, #C0C0C0, #FFFFFF, #A8A8A8)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
-              }}
-            >
-              El que está dentro
-            </h3>
+            {/* Content */}
+            <div className="relative z-10">
+              {/* Avatar Figure - Large and centered */}
+              <div className="flex justify-center mb-8">
+                <div className="relative w-56 h-72 md:w-64 md:h-80">
+                  <Image
+                    src="/avatars/chad.png"
+                    alt="El que está dentro"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              </div>
 
-            {/* Metrics */}
-            <div className="space-y-5">
-              {metrics2.map((metric, index) => (
-                <div key={metric.name} className="metric">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-white/90">{metric.name}</span>
-                    <span className="text-sm font-mono text-white/90 font-semibold">
-                      {animatedMetrics2[index]}%
-                    </span>
-                  </div>
-                  <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden relative">
-                    <div
-                      className="h-full bg-gradient-to-r from-green-400 via-green-500 to-green-600 rounded-full transition-all ease-out relative overflow-hidden"
-                      style={{
-                        width: isVisible ? `${animatedMetrics2[index]}%` : '0%',
-                        transitionDuration: '800ms',
-                        transitionDelay: `${index * 150}ms`,
-                        transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-                        boxShadow: '0 0 20px rgba(74, 222, 128, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3)'
-                      }}
-                    >
-                      {/* Shimmer effect */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" 
+              {/* Title with chrome gradient */}
+              <h3 
+                className="text-2xl md:text-3xl font-semibold text-center mb-8"
+                style={{
+                  background: 'linear-gradient(135deg, #C0C0C0, #FFFFFF, #A8A8A8)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}
+              >
+                El que está dentro
+              </h3>
+
+              {/* Metrics */}
+              <div className="space-y-5">
+                {metrics2.map((metric, index) => (
+                  <div key={metric.name}>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm text-white/90">{metric.name}</span>
+                      <span className="text-sm font-mono text-white/90 font-semibold">
+                        {animatedMetrics2[index]}%
+                      </span>
+                    </div>
+                    <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden relative">
+                      <div
+                        className="h-full bg-gradient-to-r from-green-400 via-green-500 to-green-600 rounded-full transition-all ease-out relative overflow-hidden"
                         style={{
-                          backgroundSize: '200% 100%'
+                          width: isVisible ? `${animatedMetrics2[index]}%` : '0%',
+                          transitionDuration: '800ms',
+                          transitionDelay: `${index * 150}ms`,
+                          transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+                          boxShadow: '0 0 20px rgba(74, 222, 128, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3)'
                         }}
-                      />
+                      >
+                        {/* Shimmer effect */}
+                        <div 
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" 
+                          style={{ backgroundSize: '200% 100%' }}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            {/* Quote */}
-            <p className="mt-8 text-base md:text-lg italic text-white font-medium text-center">
-              "Ya estoy en ello"
-            </p>
+              {/* Quote */}
+              <p className="mt-8 text-base italic text-white font-medium text-center">
+                "Ya estoy en ello"
+              </p>
+            </div>
           </div>
         </div>
 
@@ -301,17 +316,7 @@ export default function AvatarComparison() {
           </p>
           <a
             href="/acceso"
-            className="inline-block px-12 py-4 text-lg font-semibold bg-white/5 border border-white/20 rounded-xl text-white transition-all duration-500 hover:scale-105 hover:-translate-y-1"
-            style={{
-              boxShadow: '0 0 0 rgba(102, 126, 234, 0)',
-              transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = '0 0 60px rgba(102, 126, 234, 0.4), 0 0 100px rgba(102, 126, 234, 0.2)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = '0 0 0 rgba(102, 126, 234, 0)'
-            }}
+            className="inline-block px-12 py-4 text-lg font-semibold bg-white/5 border border-white/20 rounded-xl text-white transition-all duration-500 hover:scale-105 hover:-translate-y-1 hover:border-white/40"
           >
             Transformarme ahora
           </a>
@@ -332,19 +337,10 @@ export default function AvatarComparison() {
         }
 
         @media (prefers-reduced-motion: reduce) {
-          *,
-          *::before,
-          *::after {
+          * {
             animation-duration: 0.01ms !important;
             transition-duration: 0.01ms !important;
           }
-        }
-
-        /* GPU acceleration */
-        .group {
-          will-change: transform;
-          transform: translateZ(0);
-          backface-visibility: hidden;
         }
       `}</style>
     </section>
