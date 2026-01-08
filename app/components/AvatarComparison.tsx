@@ -167,20 +167,8 @@ export default function AvatarComparison() {
 
             {/* Content */}
             <div className="relative z-10">
-              {/* Avatar Figure - Large and centered */}
-              <div className="flex justify-center mb-8">
-                <div className="relative w-56 h-72 md:w-64 md:h-80">
-                  <Image
-                    src="/avatars/triste.png"
-                    alt="El que va solo"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-              </div>
-
               {/* Title */}
-              <h3 className="text-2xl md:text-3xl font-semibold text-white/60 text-center mb-8">
+              <h3 className="text-2xl md:text-3xl font-semibold text-white/60 text-center mb-8 mt-[450px] md:mt-[520px]">
                 El que va solo
               </h3>
 
@@ -219,9 +207,9 @@ export default function AvatarComparison() {
           <div
             onMouseMove={(e) => handleCardMouseMove(e, 2)}
             onMouseLeave={() => handleCardMouseLeave(2)}
-            className="group relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 transition-all duration-300 ease-out overflow-hidden hover:scale-[1.02]"
+            className="group relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 transition-all duration-300 ease-out overflow-hidden hover:scale-[1.05]"
             style={{
-              transform: `perspective(1000px) rotateX(${cardRotations[2]?.x || 0}deg) rotateY(${cardRotations[2]?.y || 0}deg) scale(${cardRotations[2] ? 1.02 : 1})`,
+              transform: `perspective(1000px) rotateX(${cardRotations[2]?.x || 0}deg) rotateY(${cardRotations[2]?.y || 0}deg) scale(${cardRotations[2] ? 1.05 : 1})`,
               transformStyle: 'preserve-3d',
               transition: 'transform 0.3s ease-out'
             }}
@@ -240,21 +228,9 @@ export default function AvatarComparison() {
 
             {/* Content */}
             <div className="relative z-10">
-              {/* Avatar Figure - Large and centered */}
-              <div className="flex justify-center mb-8">
-                <div className="relative w-56 h-72 md:w-64 md:h-80">
-                  <Image
-                    src="/avatars/chad.png"
-                    alt="El que está dentro"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-              </div>
-
               {/* Title with chrome gradient */}
               <h3 
-                className="text-2xl md:text-3xl font-semibold text-center mb-8"
+                className="text-2xl md:text-3xl font-semibold text-center mb-8 mt-[450px] md:mt-[520px]"
                 style={{
                   background: 'linear-gradient(135deg, #C0C0C0, #FFFFFF, #A8A8A8)',
                   WebkitBackgroundClip: 'text',
