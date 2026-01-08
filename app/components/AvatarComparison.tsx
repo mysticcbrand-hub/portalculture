@@ -123,11 +123,16 @@ export default function AvatarComparison() {
     >
       {/* Ambient Background */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/3 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/3 rounded-full blur-3xl" />
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
+        {/* Section Number */}
+        <div className="flex justify-center mb-8">
+          <span className="text-6xl md:text-7xl font-bold text-white/5">04</span>
+        </div>
+
         {/* Header */}
         <h2 
           className="text-4xl md:text-5xl font-semibold text-center mb-24"
