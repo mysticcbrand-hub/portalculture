@@ -146,10 +146,11 @@ export default function AvatarComparison() {
           <div
             onMouseMove={(e) => handleCardMouseMove(e, 1)}
             onMouseLeave={() => handleCardMouseLeave(1)}
-            className="group relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 transition-all duration-200 overflow-hidden"
+            className="group relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 transition-all duration-300 ease-out overflow-hidden hover:scale-[1.02]"
             style={{
-              transform: `perspective(1000px) rotateX(${cardRotations[1]?.x || 0}deg) rotateY(${cardRotations[1]?.y || 0}deg)`,
-              transformStyle: 'preserve-3d'
+              transform: `perspective(1000px) rotateX(${cardRotations[1]?.x || 0}deg) rotateY(${cardRotations[1]?.y || 0}deg) scale(${cardRotations[1] ? 1.02 : 1})`,
+              transformStyle: 'preserve-3d',
+              transition: 'transform 0.3s ease-out'
             }}
           >
             {/* Background image with effects - same as course cards */}
@@ -218,10 +219,11 @@ export default function AvatarComparison() {
           <div
             onMouseMove={(e) => handleCardMouseMove(e, 2)}
             onMouseLeave={() => handleCardMouseLeave(2)}
-            className="group relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 transition-all duration-200 overflow-hidden"
+            className="group relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 transition-all duration-300 ease-out overflow-hidden hover:scale-[1.02]"
             style={{
-              transform: `perspective(1000px) rotateX(${cardRotations[2]?.x || 0}deg) rotateY(${cardRotations[2]?.y || 0}deg)`,
-              transformStyle: 'preserve-3d'
+              transform: `perspective(1000px) rotateX(${cardRotations[2]?.x || 0}deg) rotateY(${cardRotations[2]?.y || 0}deg) scale(${cardRotations[2] ? 1.02 : 1})`,
+              transformStyle: 'preserve-3d',
+              transition: 'transform 0.3s ease-out'
             }}
           >
             {/* Background image with effects - same as course cards */}
