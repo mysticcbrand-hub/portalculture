@@ -94,15 +94,15 @@ export default function AvatarComparison() {
     <section
       ref={sectionRef}
       id="comparacion"
-      className="py-32 px-6 relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center relative overflow-hidden py-20 px-4"
     >
-      {/* Ambient Background */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
+      {/* Full screen ambient background */}
+      <div className="absolute inset-0 bg-black">
+        <div className="absolute top-0 left-0 w-full h-full bg-red-900/5 blur-3xl" />
+        <div className="absolute top-0 right-0 w-full h-full bg-blue-900/5 blur-3xl" />
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="max-w-[1800px] w-full mx-auto relative z-10">
         {/* Header */}
         <h2 className="text-4xl md:text-5xl font-semibold text-center mb-24 opacity-0 animate-fade-in"
           style={{
@@ -116,43 +116,43 @@ export default function AvatarComparison() {
           ¿Cuál prefieres ser?
         </h2>
 
-        {/* Avatars Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-24">
+        {/* Avatars Grid - Full Height */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 mb-16">
           {/* Avatar 1 - El que va solo */}
           <div
-            className={`avatar-alone-container relative p-8 md:p-12 rounded-3xl border border-white/5 bg-black/60 backdrop-blur-xl transition-all duration-1000 ${
+            className={`avatar-alone-container relative min-h-[600px] md:min-h-[800px] flex flex-col items-center justify-center p-8 transition-all duration-1000 ${
               isVisible ? 'opacity-100 translate-x-0 scale-100 blur-0' : 'opacity-0 -translate-x-12 scale-90 blur-sm'
             }`}
             style={{
               transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)'
             }}
           >
-            {/* Red ambient glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-red-500/5 rounded-full blur-3xl -z-10" />
+            {/* Red ambient glow - massive */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-red-600/10 rounded-full blur-3xl -z-10" />
 
-            {/* Avatar Figure */}
-            <div className="flex justify-center mb-8">
-              <div className="relative w-48 h-64 md:w-56 md:h-72">
+            {/* Avatar Figure - HUGE */}
+            <div className="flex justify-center mb-8 relative z-10">
+              <div className="relative w-64 h-80 md:w-80 md:h-96">
                 <Image
-                  src="/avatars/triste.jpg"
+                  src="/avatars/triste.png"
                   alt="El que va solo"
-                  width={224}
-                  height={288}
-                  className="w-full h-full object-cover rounded-2xl opacity-30"
+                  width={400}
+                  height={500}
+                  className="w-full h-full object-contain"
                   style={{ 
-                    filter: 'grayscale(100%) brightness(0.6) sepia(100%) hue-rotate(-50deg) saturate(300%)',
+                    filter: 'grayscale(100%) brightness(0.5) contrast(1.2) sepia(80%) hue-rotate(-30deg) saturate(200%) opacity(0.4)',
                   }}
                 />
               </div>
             </div>
 
             {/* Title */}
-            <h3 className="text-2xl md:text-3xl font-semibold text-white/50 text-center mb-8">
+            <h3 className="text-3xl md:text-4xl font-bold text-white/40 text-center mb-12">
               El que va solo
             </h3>
 
             {/* Metrics */}
-            <div className="space-y-6">
+            <div className="space-y-6 w-full max-w-md">
               {metrics1.map((metric, index) => (
                 <div key={metric.name} className="metric">
                   <div className="flex justify-between items-center mb-2">
@@ -176,38 +176,37 @@ export default function AvatarComparison() {
             </div>
 
             {/* Quote */}
-            <p className="mt-8 text-base italic text-white/40 pl-4 border-l-2 border-white/10 py-2">
+            <p className="mt-10 text-lg md:text-xl italic text-white/50 text-center max-w-md">
               "Algún día lo conseguiré"
             </p>
           </div>
 
           {/* Avatar 2 - El que está dentro */}
           <div
-            className={`avatar-together-container relative p-8 md:p-12 rounded-3xl border border-white/20 bg-white/5 backdrop-blur-xl transition-all duration-1000 ${
+            className={`avatar-together-container relative min-h-[600px] md:min-h-[800px] flex flex-col items-center justify-center p-8 transition-all duration-1000 ${
               isVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-12 scale-95'
             }`}
             style={{
               transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-              transitionDelay: '0.3s',
-              boxShadow: '0 0 60px rgba(102, 126, 234, 0.15), 0 0 100px rgba(102, 126, 234, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+              transitionDelay: '0.3s'
             }}
           >
-            {/* Blue ambient glow with pulse */}
+            {/* Blue ambient glow with pulse - MASSIVE */}
             <div 
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-3xl -z-10 animate-ambient-pulse"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] rounded-full blur-3xl -z-10 animate-ambient-pulse"
               style={{
-                background: 'radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%)'
+                background: 'radial-gradient(circle, rgba(102, 126, 234, 0.2) 0%, transparent 70%)'
               }}
             />
 
-            {/* Particles orbiting */}
+            {/* Particles orbiting - bigger radius */}
             <div className="particles-container absolute inset-0 pointer-events-none">
               {[0, 1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className="particle absolute top-1/2 left-1/2 w-1 h-1 bg-blue-400 rounded-full"
+                  className="particle absolute top-1/2 left-1/2 w-2 h-2 bg-blue-400 rounded-full"
                   style={{
-                    boxShadow: '0 0 10px rgba(102, 126, 234, 0.8)',
+                    boxShadow: '0 0 15px rgba(102, 126, 234, 0.8)',
                     animation: `orbit 8s linear infinite`,
                     animationDelay: `${i * 1.6}s`
                   }}
@@ -215,17 +214,17 @@ export default function AvatarComparison() {
               ))}
             </div>
 
-            {/* Avatar Figure */}
-            <div className="flex justify-center mb-8">
-              <div className="relative w-48 h-64 md:w-56 md:h-72 animate-pulse-avatar">
+            {/* Avatar Figure - HUGE */}
+            <div className="flex justify-center mb-8 relative z-10">
+              <div className="relative w-64 h-80 md:w-80 md:h-96 animate-pulse-avatar">
                 <Image
-                  src="/avatars/chad.jpg"
+                  src="/avatars/chad.png"
                   alt="El que está dentro"
-                  width={224}
-                  height={288}
-                  className="w-full h-full object-cover rounded-2xl"
+                  width={400}
+                  height={500}
+                  className="w-full h-full object-contain"
                   style={{ 
-                    filter: 'drop-shadow(0 0 30px rgba(102, 126, 234, 0.6)) brightness(1.1) contrast(1.1)',
+                    filter: 'drop-shadow(0 0 40px rgba(102, 126, 234, 0.8)) drop-shadow(0 0 80px rgba(102, 126, 234, 0.4)) brightness(1.2) contrast(1.1)',
                   }}
                 />
               </div>
@@ -233,19 +232,19 @@ export default function AvatarComparison() {
 
             {/* Title with chrome gradient */}
             <h3 
-              className="text-2xl md:text-3xl font-semibold text-center mb-8"
+              className="text-3xl md:text-4xl font-bold text-center mb-12"
               style={{
                 background: 'linear-gradient(135deg, #C0C0C0, #FFFFFF, #A8A8A8)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
-                filter: 'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3))'
+                filter: 'drop-shadow(0 0 30px rgba(255, 255, 255, 0.5))'
               }}
             >
               El que está dentro
             </h3>
 
             {/* Metrics */}
-            <div className="space-y-6">
+            <div className="space-y-6 w-full max-w-md">
               {metrics2.map((metric, index) => (
                 <div key={metric.name} className="metric">
                   <div className="flex justify-between items-center mb-2">
@@ -278,14 +277,14 @@ export default function AvatarComparison() {
             </div>
 
             {/* Quote */}
-            <p className="mt-8 text-base italic text-white font-medium pl-4 border-l-2 border-green-500/50 py-2 bg-green-500/5">
+            <p className="mt-10 text-lg md:text-xl italic text-white font-semibold text-center max-w-md">
               "Ya estoy en ello"
             </p>
           </div>
         </div>
 
         {/* CTA */}
-        <div className="text-center mt-24 p-8 md:p-12 bg-white/2 rounded-3xl border border-white/5">
+        <div className="text-center mt-16 p-10 md:p-16">
           <p 
             className="text-2xl md:text-3xl font-semibold mb-8"
             style={{
