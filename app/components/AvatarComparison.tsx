@@ -146,6 +146,12 @@ export default function AvatarComparison() {
 
                 {/* Avatar - Full size with vignette - usando img nativo para evitar Next.js processing */}
                 <div className="absolute inset-0 -z-10 overflow-hidden flex items-center justify-center" style={{ backgroundColor: 'transparent' }}>
+                  {/* Red glow on hover (blur gradient) */}
+                  <div 
+                    className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-red-500/5 
+                             opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 -z-10"
+                  />
+                  
                   <img
                     src="/avatars/triste.png"
                     alt="Antes"
@@ -236,7 +242,13 @@ export default function AvatarComparison() {
                 </div>
 
                 {/* Avatar - Full size with vignette - usando img nativo para evitar Next.js processing */}
-                <div className="absolute inset-0 -z-10 overflow-hidden flex items-center justify-center" style={{ backgroundColor: 'transparent' }}>
+                <div className="absolute inset-0 -z-10 overflow-hidden flex items-end justify-center" style={{ backgroundColor: 'transparent', paddingBottom: '5%' }}>
+                  {/* Green glow on hover (blur gradient) */}
+                  <div 
+                    className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-green-500/10 
+                             opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 -z-10"
+                  />
+                  
                   <img
                     src="/avatars/chad.png"
                     alt="Después"
@@ -244,9 +256,9 @@ export default function AvatarComparison() {
                       width: '100%',
                       height: '100%',
                       objectFit: 'contain',
-                      objectPosition: 'center center',
+                      objectPosition: 'center bottom',
                       opacity: 0.4,
-                      transform: 'scale(1.1)',
+                      transform: 'scale(1.5)',
                       pointerEvents: 'none'
                     }}
                   />
