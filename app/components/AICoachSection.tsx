@@ -6,6 +6,7 @@ export default function AICoachSection() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [cardRotation, setCardRotation] = useState({ x: 0, y: 0 })
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -32,6 +33,23 @@ export default function AICoachSection() {
     window.addEventListener('mousemove', handleMouseMove)
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
+
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget
+    const rect = card.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const centerX = rect.width / 2
+    const centerY = rect.height / 2
+    const rotateX = (y - centerY) / 15
+    const rotateY = (centerX - x) / 15
+
+    setCardRotation({ x: rotateX, y: rotateY })
+  }
+
+  const handleCardMouseLeave = () => {
+    setCardRotation({ x: 0, y: 0 })
+  }
 
   return (
     <section 
@@ -129,7 +147,15 @@ export default function AICoachSection() {
             />
 
             {/* Chat interface mockup */}
-            <div className="relative bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl">
+            <div 
+              className="relative bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl transition-transform duration-200 ease-out"
+              onMouseMove={handleCardMouseMove}
+              onMouseLeave={handleCardMouseLeave}
+              style={{
+                transform: `perspective(1000px) rotateX(${cardRotation.x}deg) rotateY(${cardRotation.y}deg)`,
+                transformStyle: 'preserve-3d',
+              }}
+            >
               {/* Header */}
               <div className="flex items-center gap-4 mb-6 pb-6 border-b border-white/10">
                 <div className="relative">
@@ -152,25 +178,24 @@ export default function AICoachSection() {
               <div className="space-y-4">
                 {/* User message */}
                 <div className="flex justify-end">
-                  <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 backdrop-blur-sm border border-purple-500/20 rounded-2xl rounded-tr-sm px-4 py-3 max-w-[80%]">
-                    <p className="text-sm text-white/90">¿Cómo empiezo a construir disciplina?</p>
+                  <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 backdrop-blur-sm border border-purple-500/20 rounded-2xl rounded-tr-sm px-4 py-3 max-w-[85%]">
+                    <p className="text-sm text-white/90">Oye Nova, ¿cómo puedo ganar músculo rápido?</p>
                   </div>
                 </div>
 
                 {/* AI response with typing indicator */}
                 <div className="flex justify-start">
-                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[85%]">
+                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[90%]">
                     <p className="text-sm text-white/90 leading-relaxed">
-                      Escucha bien 👉 La disciplina no "se construye". Se **PRACTICA** cada día! 💪
+                      Escucha bien 👉 ¡Olvídate de los atajos! Ganar músculo rápido existe, pero requiere un enfoque BRUTAL y consistente. No es magia, es ciencia y disciplina. 😤
                       <br /><br />
-                      Empieza micro:
-                      <br />• Haz tu cama → 2 min
-                      <br />• 10 flexiones → 1 min  
-                      <br />• Lee 5 páginas → 5 min
+                      La verdad directa es que necesitas un triple ataque: entrenamiento INTENSO, nutrición CALCULADA y descanso PRIORITARIO. ¿Estás dispuesto a comprometerte con los tres? 💥
                       <br /><br />
-                      Hazlo HOY! 🔥
+                      Aquí tienes el protocolo de choque en 5 pasos:
+                      <br /><br />
+                      <strong>Entrenamiento de Fuerza:</strong> 3-4 veces por semana. Enfócate en ejercicios compuestos (sentadillas, peso muerto, press de banca, dominadas). Sobrecarga progresiva SEMANAL. Aumenta el peso, las repeticiones o las series. 💪
                     </p>
-                    <span className="inline-block mt-2 text-[10px] text-white/30">Hace 2s</span>
+                    <span className="inline-block mt-2 text-[10px] text-white/30">Hace 1s</span>
                   </div>
                 </div>
               </div>
