@@ -232,6 +232,7 @@ export default function AvatarComparison() {
                       objectFit: 'cover',
                       objectPosition: 'center bottom',
                       opacity: 0.4,
+                      transform: 'translateY(5%)',
                       pointerEvents: 'none'
                     }}
                   />
