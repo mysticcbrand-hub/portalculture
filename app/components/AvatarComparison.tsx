@@ -151,15 +151,12 @@ export default function AvatarComparison() {
                     alt="Antes"
                     width={1856}
                     height={2304}
-                    className="w-full h-full object-contain grayscale"
-                    style={{
-                      filter: 'brightness(0.4) contrast(1.1) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.6))'
-                    }}
-                    priority
+                    className="w-full h-full object-contain grayscale opacity-40"
+                    unoptimized
                   />
                   {/* Dark vignette overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-black/90 pointer-events-none" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/10 to-black/70 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 pointer-events-none" />
                 </div>
 
                 {/* Title */}
@@ -236,22 +233,19 @@ export default function AvatarComparison() {
 
                 {/* Avatar - Full size with vignette, scaled larger and positioned bottom */}
                 <div className="absolute inset-0 -z-10 overflow-hidden flex items-end justify-center">
-                  <div style={{ transform: 'scale(1.3) translateY(5%)', width: '100%', height: '100%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+                  <div style={{ transform: 'scale(1.4) translateY(10%)', width: '100%', height: '100%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
                     <Image
                       src="/avatars/chad.png"
                       alt="Después"
                       width={1856}
                       height={2304}
-                      className="w-full h-full object-contain"
-                      style={{
-                        filter: 'brightness(0.5) contrast(1.15) drop-shadow(0 30px 60px rgba(0, 0, 0, 0.7))'
-                      }}
-                      priority
+                      className="w-full h-full object-contain opacity-35"
+                      unoptimized
                     />
                   </div>
                   {/* Dark vignette overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-black/90 pointer-events-none" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/10 to-black/70 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 pointer-events-none" />
                 </div>
 
                 {/* Title */}
