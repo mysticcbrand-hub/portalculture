@@ -173,7 +173,7 @@ Hazlo. Ahora. 🔥`
                   <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 rounded-full border-2 border-black" />
                 </div>
                 <div>
-                  <h3 className="text-white font-semibold">NOVA</h3>
+                  <h3 className="text-white font-semibold">NOVA™</h3>
                   <p className="text-xs text-white/40">Tu coach personal</p>
                 </div>
               </div>
@@ -292,7 +292,7 @@ Hazlo. Ahora. 🔥`
             {/* Description */}
             <div className="space-y-4 mb-10 text-white/60 text-lg leading-relaxed">
               <p>
-                NOVA no es un bot cualquiera. Es tu mentor del desarrollo colectivo entrenado con libros y cientos de horas de conocimiento con las mejores estrategias para ti.
+                NOVA™ no es un bot cualquiera. Es tu mentor del desarrollo colectivo entrenado con libros y cientos de horas de conocimiento con las mejores estrategias para ti.
               </p>
               <p>
                 Responde con sistemas reales, pasos accionables y la energía que necesitas para transformar tu vida.
@@ -324,7 +324,7 @@ Hazlo. Ahora. 🔥`
                        bg-white/5 border border-white/10 hover:border-white/20
                        transition-all duration-500 hover:scale-[1.02]"
             >
-              <span className="relative z-10">Accede a NOVA</span>
+              <span className="relative z-10">Accede a NOVA™</span>
               <svg 
                 className="w-4 h-4 relative z-10 transition-transform duration-300 group-hover:translate-x-1" 
                 fill="none" 
