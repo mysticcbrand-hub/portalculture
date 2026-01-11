@@ -154,12 +154,6 @@ export default function AvatarComparison() {
                     }}
                   />
                   
-                  {/* Red glow on hover - SOBRE la imagen */}
-                  <div 
-                    className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-red-500/5 
-                             opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 pointer-events-none"
-                  />
-                  
                   {/* Dark vignette overlay */}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 pointer-events-none" />
@@ -217,11 +211,6 @@ export default function AvatarComparison() {
                 transformStyle: 'preserve-3d',
               }}
             >
-              {/* Green glow on hover */}
-              <div 
-                className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-green-500/10 
-                         opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 -z-10"
-              />
 
 
               {/* Content */}
@@ -246,12 +235,6 @@ export default function AvatarComparison() {
                       transform: 'scale(1.8)',
                       pointerEvents: 'none'
                     }}
-                  />
-                  
-                  {/* Green glow on hover - SOBRE la imagen */}
-                  <div 
-                    className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-green-500/10 
-                             opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 pointer-events-none"
                   />
                   
                   {/* Dark vignette overlay */}
