@@ -146,12 +146,6 @@ export default function AvatarComparison() {
 
                 {/* Avatar - Full size with vignette - usando img nativo para evitar Next.js processing */}
                 <div className="absolute inset-0 -z-10 overflow-hidden flex items-center justify-center" style={{ backgroundColor: 'transparent' }}>
-                  {/* Red glow on hover (blur gradient) */}
-                  <div 
-                    className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-red-500/5 
-                             opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 -z-10"
-                  />
-                  
                   <img
                     src="/avatars/triste.png"
                     alt="Antes"
@@ -164,6 +158,13 @@ export default function AvatarComparison() {
                       pointerEvents: 'none'
                     }}
                   />
+                  
+                  {/* Red glow on hover - SOBRE la imagen */}
+                  <div 
+                    className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-red-500/5 
+                             opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 pointer-events-none"
+                  />
+                  
                   {/* Dark vignette overlay */}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 pointer-events-none" />
@@ -243,12 +244,6 @@ export default function AvatarComparison() {
 
                 {/* Avatar - Full size with vignette - usando img nativo para evitar Next.js processing */}
                 <div className="absolute inset-0 -z-10 overflow-hidden flex items-end justify-center" style={{ backgroundColor: 'transparent', paddingBottom: '5%' }}>
-                  {/* Green glow on hover (blur gradient) */}
-                  <div 
-                    className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-green-500/10 
-                             opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 -z-10"
-                  />
-                  
                   <img
                     src="/avatars/chad.png"
                     alt="Después"
@@ -262,6 +257,13 @@ export default function AvatarComparison() {
                       pointerEvents: 'none'
                     }}
                   />
+                  
+                  {/* Green glow on hover - SOBRE la imagen */}
+                  <div 
+                    className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-green-500/10 
+                             opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 pointer-events-none"
+                  />
+                  
                   {/* Dark vignette overlay */}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 pointer-events-none" />
