@@ -58,6 +58,8 @@ export default function CreativeBenefits() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [cardRotations, setCardRotations] = useState<{ [key: number]: { x: number; y: number } }>({})
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([])
+  const sectionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -69,6 +71,45 @@ export default function CreativeBenefits() {
 
     window.addEventListener('mousemove', handleMouseMove)
     return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
+
+  // Stacking scroll animation estilo Apple
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sectionRef.current) return
+
+      const section = sectionRef.current
+      const rect = section.getBoundingClientRect()
+      const windowHeight = window.innerHeight
+
+      // Calcular cuando la sección está en vista
+      if (rect.top < windowHeight && rect.bottom > 0) {
+        cardsRef.current.forEach((card, index) => {
+          if (!card) return
+
+          const cardRect = card.getBoundingClientRect()
+          const cardCenter = cardRect.top + cardRect.height / 2
+          const distanceFromCenter = Math.abs(windowHeight / 2 - cardCenter)
+          const maxDistance = windowHeight / 2
+
+          // Calcular progreso (0 = centro de pantalla, 1 = fuera de vista)
+          const progress = Math.min(distanceFromCenter / maxDistance, 1)
+
+          // Aplicar transformaciones suaves
+          const scale = 0.95 + (1 - progress) * 0.05
+          const opacity = 0.4 + (1 - progress) * 0.6
+          const translateY = progress * 20
+
+          card.style.transform = `scale(${scale}) translateY(${translateY}px)`
+          card.style.opacity = opacity.toString()
+        })
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll() // Call inicial
+
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>, index: number) => {
