@@ -41,8 +41,8 @@ export default function AICoachSection() {
     const y = e.clientY - rect.top
     const centerX = rect.width / 2
     const centerY = rect.height / 2
-    const rotateX = (y - centerY) / 15
-    const rotateY = (centerX - x) / 15
+    const rotateX = (y - centerY) / 25 // Más sutil (antes /15)
+    const rotateY = (centerX - x) / 25 // Más sutil (antes /15)
 
     setCardRotation({ x: rotateX, y: rotateY })
   }
@@ -230,12 +230,9 @@ export default function AICoachSection() {
             </h2>
 
             {/* Description */}
-            <div className="space-y-4 mb-10 text-white/60 text-lg leading-relaxed">
+            <div className="mb-10 text-white/60 text-lg leading-relaxed">
               <p>
-                NOVA no es un chatbot genérico. Es tu mentor personal entrenado con conocimiento de Atomic Habits, Huberman Lab y las mejores estrategias de desarrollo personal.
-              </p>
-              <p>
-                Responde con ciencia real, pasos accionables y la energía que necesitas para transformar tu vida.
+                NOVA no es un bot cualquiera. Es tu mentor del desarrollo colectivo entrenado con libros y cientos de horas de conocimiento de las mejores estrategias para ti.
               </p>
             </div>
 
