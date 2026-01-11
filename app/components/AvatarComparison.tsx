@@ -145,15 +145,20 @@ export default function AvatarComparison() {
                 </div>
 
                 {/* Avatar - Full size with vignette */}
-                <div className="absolute inset-0 -z-10 overflow-hidden flex items-center justify-center">
-                  <Image
-                    src="/avatars/triste.png"
-                    alt="Antes"
-                    width={1856}
-                    height={2304}
-                    className="w-full h-full object-contain grayscale opacity-40"
-                    unoptimized
-                  />
+                <div className="absolute inset-0 -z-10 overflow-hidden" style={{ backgroundColor: 'transparent' }}>
+                  <div style={{ position: 'relative', width: '100%', height: '100%', backgroundColor: 'transparent' }}>
+                    <Image
+                      src="/avatars/triste.png"
+                      alt="Antes"
+                      fill
+                      unoptimized
+                      style={{ 
+                        objectFit: 'contain',
+                        filter: 'grayscale(100%)',
+                        opacity: 0.4
+                      }}
+                    />
+                  </div>
                   {/* Dark vignette overlay */}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 pointer-events-none" />
@@ -232,15 +237,24 @@ export default function AvatarComparison() {
                 </div>
 
                 {/* Avatar - Full size with vignette, scaled larger and positioned bottom */}
-                <div className="absolute inset-0 -z-10 overflow-hidden flex items-end justify-center">
-                  <div style={{ transform: 'scale(1.4) translateY(10%)', width: '100%', height: '100%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+                <div className="absolute inset-0 -z-10 overflow-hidden" style={{ backgroundColor: 'transparent' }}>
+                  <div style={{ 
+                    position: 'relative', 
+                    width: '100%', 
+                    height: '100%', 
+                    backgroundColor: 'transparent',
+                    transform: 'scale(1.4) translateY(10%)'
+                  }}>
                     <Image
                       src="/avatars/chad.png"
                       alt="Después"
-                      width={1856}
-                      height={2304}
-                      className="w-full h-full object-contain opacity-35"
+                      fill
                       unoptimized
+                      style={{ 
+                        objectFit: 'contain',
+                        objectPosition: 'center bottom',
+                        opacity: 0.35
+                      }}
                     />
                   </div>
                   {/* Dark vignette overlay */}
