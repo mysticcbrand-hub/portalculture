@@ -282,7 +282,7 @@ Hazlo. Ahora. 🔥`
             {/* Description */}
             <div className="space-y-4 mb-10 text-white/60 text-lg leading-relaxed">
               <p>
-                NOVA no es un bot cualquiera. Es tu mentor del desarrollo colectivo entrenado con libros y cientos de horas de conocimiento de las mejores estrategias para ti.
+                NOVA no es un bot cualquiera. Es tu mentor del desarrollo colectivo entrenado con libros y cientos de horas de conocimiento con las mejores estrategias para ti.
               </p>
               <p>
                 Responde con sistemas reales, pasos accionables y la energía que necesitas para transformar tu vida.
