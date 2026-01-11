@@ -200,7 +200,7 @@ export default function CreativeBenefits() {
             return (
             <div
               key={index}
-              ref={(el) => (cardsRef.current[index] = el)}
+              ref={(el) => { cardsRef.current[index] = el }}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => {
                 setHoveredIndex(null)
