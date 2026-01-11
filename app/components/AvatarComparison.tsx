@@ -146,17 +146,16 @@ export default function AvatarComparison() {
 
                 {/* Avatar - Full size with vignette */}
                 <div className="absolute inset-0 -z-10 overflow-hidden">
-                  <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="absolute inset-0 flex items-center justify-center opacity-40">
                     <img 
                       src="/avatars/triste.png" 
                       alt="Antes"
-                      className="h-full w-auto object-contain grayscale"
-                      style={{ filter: 'brightness(0.4)' }}
+                      className="h-[110%] w-auto object-contain grayscale mix-blend-luminosity"
                     />
                   </div>
                   {/* Dark vignette overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-black/90 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/10 to-black/70 pointer-events-none" />
                 </div>
 
                 {/* Title */}
@@ -233,17 +232,17 @@ export default function AvatarComparison() {
 
                 {/* Avatar - Full size with vignette, scaled larger and positioned bottom */}
                 <div className="absolute inset-0 -z-10 overflow-hidden">
-                  <div className="absolute inset-0 flex items-end justify-center">
+                  <div className="absolute inset-0 flex items-end justify-center opacity-35">
                     <img 
                       src="/avatars/chad.png" 
                       alt="Después"
-                      className="h-full w-auto object-contain"
-                      style={{ transform: 'scale(1.4)', filter: 'brightness(0.5)' }}
+                      className="h-[120%] w-auto object-contain mix-blend-luminosity"
+                      style={{ transform: 'scale(1.5) translateY(5%)' }}
                     />
                   </div>
                   {/* Dark vignette overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-black/90 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/10 to-black/70 pointer-events-none" />
                 </div>
 
                 {/* Title */}
