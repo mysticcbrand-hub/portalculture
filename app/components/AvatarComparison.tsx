@@ -146,14 +146,17 @@ export default function AvatarComparison() {
 
                 {/* Avatar - Full size with vignette */}
                 <div className="absolute inset-0 -z-10 overflow-hidden">
-                  <img 
-                    src="/avatars/triste.png" 
-                    alt="Antes"
-                    className="w-full h-full object-contain object-center grayscale opacity-30"
-                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <img 
+                      src="/avatars/triste.png" 
+                      alt="Antes"
+                      className="h-full w-auto object-contain grayscale"
+                      style={{ filter: 'brightness(0.4)' }}
+                    />
+                  </div>
                   {/* Dark vignette overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/90" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/70" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 pointer-events-none" />
                 </div>
 
                 {/* Title */}
@@ -230,15 +233,17 @@ export default function AvatarComparison() {
 
                 {/* Avatar - Full size with vignette, scaled larger and positioned bottom */}
                 <div className="absolute inset-0 -z-10 overflow-hidden">
-                  <img 
-                    src="/avatars/chad.png" 
-                    alt="Después"
-                    className="w-full h-full object-contain object-bottom opacity-25"
-                    style={{ transform: 'scale(1.3)' }}
-                  />
+                  <div className="absolute inset-0 flex items-end justify-center">
+                    <img 
+                      src="/avatars/chad.png" 
+                      alt="Después"
+                      className="h-full w-auto object-contain"
+                      style={{ transform: 'scale(1.4)', filter: 'brightness(0.5)' }}
+                    />
+                  </div>
                   {/* Dark vignette overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/90" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/70" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 pointer-events-none" />
                 </div>
 
                 {/* Title */}
