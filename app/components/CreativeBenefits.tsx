@@ -138,7 +138,7 @@ export default function CreativeBenefits() {
   }
 
   return (
-    <section id="beneficios" className="py-32 px-6 relative overflow-hidden">
+    <section ref={sectionRef} id="beneficios" className="py-32 px-6 relative overflow-hidden">
       {/* Ambient Background */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
@@ -200,13 +200,14 @@ export default function CreativeBenefits() {
             return (
             <div
               key={index}
+              ref={(el) => (cardsRef.current[index] = el)}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => {
                 setHoveredIndex(null)
                 handleCardMouseLeave(index)
               }}
               onMouseMove={(e) => handleCardMouseMove(e, index)}
-              className={`group relative p-8 rounded-2xl border border-white/10 
+              className={`group relative p-8 rounded-2xl border border-white/10 transition-all duration-300 
                          bg-gradient-to-br ${benefit.color}
                          backdrop-blur-xl
                          hover:border-white/30
