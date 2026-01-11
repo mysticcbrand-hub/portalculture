@@ -204,10 +204,6 @@ export default function CreativeBenefits() {
                 handleCardMouseLeave(index)
               }}
               onMouseMove={(e) => handleCardMouseMove(e, index)}
-              style={{
-                transformOrigin: 'center bottom',
-                willChange: 'transform, opacity, filter'
-              }}
               className={`group relative p-8 rounded-2xl border border-white/10 
                          bg-gradient-to-br ${benefit.color}
                          backdrop-blur-xl
@@ -218,6 +214,8 @@ export default function CreativeBenefits() {
               style={{
                 transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
                 transformStyle: 'preserve-3d',
+                transformOrigin: 'center bottom',
+                willChange: 'transform, opacity, filter'
               }}
             >
               {/* Glow Effect */}
