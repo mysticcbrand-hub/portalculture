@@ -243,7 +243,7 @@ export default function AvatarComparison() {
                     width: '100%', 
                     height: '100%', 
                     backgroundColor: 'transparent',
-                    transform: 'scale(1.4) translateY(10%)'
+                    transform: 'scale(2.5) translateY(20%)'
                   }}>
                     <Image
                       src="/avatars/chad.png"
@@ -253,7 +253,7 @@ export default function AvatarComparison() {
                       style={{ 
                         objectFit: 'contain',
                         objectPosition: 'center bottom',
-                        opacity: 0.35
+                        opacity: 0.8
                       }}
                     />
                   </div>
