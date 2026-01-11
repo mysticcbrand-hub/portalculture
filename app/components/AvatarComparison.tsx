@@ -130,11 +130,6 @@ export default function AvatarComparison() {
                 transformStyle: 'preserve-3d',
               }}
             >
-              {/* Red glow on hover */}
-              <div 
-                className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-red-500/5 
-                         opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 -z-10"
-              />
 
               {/* Content */}
               <div className="relative h-full flex flex-col">
@@ -228,11 +223,6 @@ export default function AvatarComparison() {
                          opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 -z-10"
               />
 
-              {/* Shine effect */}
-              <div 
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent 
-                         opacity-0 group-hover:opacity-100 transition-opacity duration-1000 animate-shine"
-              />
 
               {/* Content */}
               <div className="relative h-full flex flex-col">
@@ -243,7 +233,7 @@ export default function AvatarComparison() {
                 </div>
 
                 {/* Avatar - Full size with vignette - usando img nativo para evitar Next.js processing */}
-                <div className="absolute inset-0 -z-10 overflow-hidden flex items-end justify-center" style={{ backgroundColor: 'transparent', paddingBottom: '5%' }}>
+                <div className="absolute inset-0 -z-10 overflow-hidden flex items-end justify-center" style={{ backgroundColor: 'transparent', paddingBottom: '15%' }}>
                   <img
                     src="/avatars/chad.png"
                     alt="Después"
@@ -253,7 +243,7 @@ export default function AvatarComparison() {
                       objectFit: 'contain',
                       objectPosition: 'center bottom',
                       opacity: 0.4,
-                      transform: 'scale(1.5)',
+                      transform: 'scale(1.8)',
                       pointerEvents: 'none'
                     }}
                   />
