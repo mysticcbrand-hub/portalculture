@@ -145,11 +145,11 @@ export default function AvatarComparison() {
                 </div>
 
                 {/* Avatar - Full size with vignette */}
-                <div className="absolute inset-0 -z-10">
+                <div className="absolute inset-0 -z-10 overflow-hidden">
                   <img 
                     src="/avatars/triste.png" 
                     alt="Antes"
-                    className="w-full h-full object-cover grayscale opacity-30"
+                    className="w-full h-full object-contain object-center grayscale opacity-30"
                   />
                   {/* Dark vignette overlay */}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/90" />
@@ -228,12 +228,13 @@ export default function AvatarComparison() {
                   <span className="text-sm font-mono text-green-400">DESPUÉS</span>
                 </div>
 
-                {/* Avatar - Full size with vignette */}
-                <div className="absolute inset-0 -z-10">
+                {/* Avatar - Full size with vignette, scaled larger and positioned bottom */}
+                <div className="absolute inset-0 -z-10 overflow-hidden">
                   <img 
                     src="/avatars/chad.png" 
                     alt="Después"
-                    className="w-full h-full object-cover opacity-25"
+                    className="w-full h-full object-contain object-bottom opacity-25"
+                    style={{ transform: 'scale(1.3)' }}
                   />
                   {/* Dark vignette overlay */}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/90" />
