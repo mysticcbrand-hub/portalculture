@@ -146,11 +146,17 @@ export default function AvatarComparison() {
 
                 {/* Avatar - Full size with vignette */}
                 <div className="absolute inset-0 -z-10 overflow-hidden">
-                  <div className="absolute inset-0 flex items-center justify-center opacity-40">
-                    <img 
-                      src="/avatars/triste.png" 
+                  <div className="absolute inset-0">
+                    <Image
+                      src="/avatars/triste.png"
                       alt="Antes"
-                      className="h-[110%] w-auto object-contain grayscale mix-blend-luminosity"
+                      fill
+                      className="object-contain grayscale"
+                      style={{
+                        filter: 'brightness(0.4) contrast(1.1) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.6))',
+                        objectPosition: 'center center'
+                      }}
+                      priority
                     />
                   </div>
                   {/* Dark vignette overlay */}
@@ -232,12 +238,17 @@ export default function AvatarComparison() {
 
                 {/* Avatar - Full size with vignette, scaled larger and positioned bottom */}
                 <div className="absolute inset-0 -z-10 overflow-hidden">
-                  <div className="absolute inset-0 flex items-end justify-center opacity-35">
-                    <img 
-                      src="/avatars/chad.png" 
+                  <div className="absolute inset-0" style={{ transform: 'scale(1.3) translateY(5%)' }}>
+                    <Image
+                      src="/avatars/chad.png"
                       alt="Después"
-                      className="h-[120%] w-auto object-contain mix-blend-luminosity"
-                      style={{ transform: 'scale(1.5) translateY(5%)' }}
+                      fill
+                      className="object-contain"
+                      style={{
+                        filter: 'brightness(0.5) contrast(1.15) drop-shadow(0 30px 60px rgba(0, 0, 0, 0.7))',
+                        objectPosition: 'center bottom'
+                      }}
+                      priority
                     />
                   </div>
                   {/* Dark vignette overlay */}
