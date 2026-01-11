@@ -227,12 +227,11 @@ export default function AvatarComparison() {
                     src="/avatars/chad2.png"
                     alt="Después"
                     style={{ 
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'contain',
+                      width: '120%',
+                      height: '120%',
+                      objectFit: 'cover',
                       objectPosition: 'center center',
                       opacity: 0.4,
-                      transform: 'scale(2.0)',
                       pointerEvents: 'none'
                     }}
                   />
