@@ -232,7 +232,7 @@ export default function AvatarComparison() {
                       objectFit: 'contain',
                       objectPosition: 'center bottom',
                       opacity: 0.4,
-                      transform: 'scale(1.8)',
+                      transform: 'scale(1.8) translateY(15%)',
                       pointerEvents: 'none'
                     }}
                   />
