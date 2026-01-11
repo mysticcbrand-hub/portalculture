@@ -3,54 +3,21 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 
-interface Metric {
-  name: string
-  value: number
+interface CardRotation {
+  [key: number]: { x: number; y: number }
 }
 
-const metrics1: Metric[] = [
-  { name: 'Motivación', value: 20 },
-  { name: 'Progreso', value: 15 },
-  { name: 'Constancia', value: 25 },
-  { name: 'Network', value: 10 }
-]
-
-const metrics2: Metric[] = [
-  { name: 'Motivación', value: 95 },
-  { name: 'Progreso', value: 90 },
-  { name: 'Constancia', value: 95 },
-  { name: 'Network', value: 100 }
-]
-
 export default function AvatarComparison() {
+  const sectionRef = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
-  const [animatedMetrics1, setAnimatedMetrics1] = useState(metrics1.map(() => 0))
-  const [animatedMetrics2, setAnimatedMetrics2] = useState(metrics2.map(() => 0))
-  const [cardRotations, setCardRotations] = useState<{ [key: number]: { x: number; y: number } }>({})
-  const sectionRef = useRef<HTMLElement>(null)
+  const [cardRotations, setCardRotations] = useState<CardRotation>({})
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true)
-            
-            // Animate metrics for Avatar 1
-            metrics1.forEach((metric, index) => {
-              setTimeout(() => {
-                animateCounter(setAnimatedMetrics1, index, metric.value, 1500)
-              }, index * 200)
-            })
-            
-            // Animate metrics for Avatar 2
-            metrics2.forEach((metric, index) => {
-              setTimeout(() => {
-                animateCounter(setAnimatedMetrics2, index, metric.value, 800)
-              }, index * 150)
-            })
-          }
-        })
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
       },
       { threshold: 0.2 }
     )
@@ -62,272 +29,295 @@ export default function AvatarComparison() {
     return () => observer.disconnect()
   }, [])
 
-  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>, index: number) => {
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>, cardId: number) => {
     const card = e.currentTarget
     const rect = card.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
+    const centerX = rect.width / 2
+    const centerY = rect.height / 2
+    const rotateX = (y - centerY) / 25
+    const rotateY = (centerX - x) / 25
 
-    const xPercent = x / rect.width
-    const yPercent = y / rect.height
-
-    const rotateY = (xPercent - 0.5) * 10
-    const rotateX = (0.5 - yPercent) * 10
-
-    setCardRotations((prev) => ({
+    setCardRotations(prev => ({
       ...prev,
-      [index]: { x: rotateX, y: rotateY },
+      [cardId]: { x: rotateX, y: rotateY }
     }))
   }
 
-  const handleCardMouseLeave = (index: number) => {
-    setCardRotations((prev) => ({
+  const handleCardMouseLeave = (cardId: number) => {
+    setCardRotations(prev => ({
       ...prev,
-      [index]: { x: 0, y: 0 },
+      [cardId]: { x: 0, y: 0 }
     }))
   }
 
-  const animateCounter = (
-    setter: React.Dispatch<React.SetStateAction<number[]>>,
-    index: number,
-    target: number,
-    duration: number
-  ) => {
-    let start = 0
-    const increment = target / (duration / 16)
-    
-    const timer = setInterval(() => {
-      start += increment
-      if (start >= target) {
-        setter((prev) => {
-          const newValues = [...prev]
-          newValues[index] = target
-          return newValues
-        })
-        clearInterval(timer)
-      } else {
-        setter((prev) => {
-          const newValues = [...prev]
-          newValues[index] = Math.floor(start)
-          return newValues
-        })
-      }
-    }, 16)
+  const stats = {
+    before: [
+      { label: 'Confianza', value: 25, color: 'from-red-500 to-red-600' },
+      { label: 'Disciplina', value: 20, color: 'from-red-500 to-red-600' },
+      { label: 'Progreso', value: 15, color: 'from-red-500 to-red-600' },
+      { label: 'Red social', value: 10, color: 'from-red-500 to-red-600' },
+    ],
+    after: [
+      { label: 'Confianza', value: 95, color: 'from-green-400 to-green-600' },
+      { label: 'Disciplina', value: 90, color: 'from-green-400 to-green-600' },
+      { label: 'Progreso', value: 92, color: 'from-green-400 to-green-600' },
+      { label: 'Red social', value: 98, color: 'from-green-400 to-green-600' },
+    ],
   }
 
   return (
-    <section
+    <section 
       ref={sectionRef}
-      id="comparacion"
-      className="py-32 px-6 relative overflow-hidden"
+      className="relative min-h-screen flex items-center px-4 md:px-6 py-32 md:py-40 overflow-hidden"
     >
-      {/* Ambient Background */}
-      <div className="absolute inset-0">
+      {/* Background */}
+      <div className="absolute inset-0 bg-black">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/3 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/3 rounded-full blur-3xl" />
+        
+        {/* Grain */}
+        <div 
+          className="absolute inset-0 opacity-[0.02] mix-blend-overlay"
+          style={{
+            backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'4.5\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
+          }}
+        />
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        {/* Section Number */}
-        <div className="flex justify-center mb-8">
-          <span className="text-6xl md:text-7xl font-bold text-white/5">04</span>
+      <div className="relative z-10 max-w-7xl mx-auto w-full">
+        {/* Label */}
+        <div className="mb-12">
+          <span className="font-mono text-xs tracking-wider text-white/30">/ 04</span>
         </div>
 
         {/* Header */}
-        <h2 
-          className="text-4xl md:text-5xl font-semibold text-center mb-24"
-          style={{
-            background: 'linear-gradient(135deg, #C0C0C0, #FFFFFF, #A8A8A8)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
-          }}
+        <div 
+          className={`text-center max-w-3xl mx-auto mb-20 transition-all duration-1000 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
         >
-          ¿Cuál prefieres ser?
-        </h2>
+          <h2 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] font-normal leading-[1.1] tracking-tight mb-6" style={{ transform: 'scaleY(1.1)' }}>
+            <span className="block text-white">¿Cuál prefieres</span>
+            <span className="block text-white/60">ser?</span>
+          </h2>
+          
+          <p className="text-white/60 text-lg leading-relaxed">
+            Una comunidad que te impulsa puede transformar tu vida por completo. <br className="hidden md:block" />
+            El apoyo colectivo no es opcional. Es tu ventaja competitiva.
+          </p>
+        </div>
 
-        {/* Avatars Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-24">
-          {/* Avatar 1 - El que va solo */}
+        {/* Comparison Grid - Square Cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20">
+          
+          {/* BEFORE Card */}
           <div
+            className={`group relative transition-all duration-1000 ${
+              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
             onMouseMove={(e) => handleCardMouseMove(e, 1)}
             onMouseLeave={() => handleCardMouseLeave(1)}
-            className="group relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 transition-all duration-300 ease-out overflow-hidden hover:scale-[1.02]"
-            style={{
-              transform: `perspective(1000px) rotateX(${cardRotations[1]?.x || 0}deg) rotateY(${cardRotations[1]?.y || 0}deg) scale(${cardRotations[1] ? 1.02 : 1})`,
-              transformStyle: 'preserve-3d',
-              transition: 'transform 0.3s ease-out'
-            }}
           >
-            {/* Background image with effects - same as course cards */}
-            <div className="absolute inset-0 opacity-35 md:opacity-20 group-hover:opacity-45 md:group-hover:opacity-30 transition-opacity duration-500">
-              <Image 
-                src="/avatars/triste.png" 
-                alt="" 
-                fill
-                className="object-cover"
-                style={{ objectPosition: 'center' }}
+            <div
+              className="relative aspect-square p-8 md:p-10 rounded-2xl border border-white/10 
+                       bg-white/[0.02] backdrop-blur-xl
+                       hover:bg-white/[0.04] hover:border-red-500/30
+                       transition-all duration-500 ease-out overflow-hidden"
+              style={{
+                transform: `perspective(1000px) rotateX(${cardRotations[1]?.x || 0}deg) rotateY(${cardRotations[1]?.y || 0}deg)`,
+                transformStyle: 'preserve-3d',
+              }}
+            >
+              {/* Red glow on hover */}
+              <div 
+                className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-red-500/5 
+                         opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 -z-10"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
-            </div>
 
-            {/* Content */}
-            <div className="relative z-10">
-              {/* Title */}
-              <h3 className="text-2xl md:text-3xl font-semibold text-white/60 text-center mb-8 mt-[450px] md:mt-[520px]">
-                El que va solo
-              </h3>
+              {/* Content */}
+              <div className="relative h-full flex flex-col">
+                {/* Badge */}
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 w-fit mb-6">
+                  <span className="text-2xl">😔</span>
+                  <span className="text-sm font-mono text-red-400">ANTES</span>
+                </div>
 
-              {/* Metrics */}
-              <div className="space-y-5">
-                {metrics1.map((metric, index) => (
-                  <div key={metric.name}>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-white/60">{metric.name}</span>
-                      <span className="text-sm font-mono text-white/60">
-                        {animatedMetrics1[index]}%
-                      </span>
-                    </div>
-                    <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-red-500 to-red-700 rounded-full transition-all duration-1500 ease-out"
-                        style={{
-                          width: isVisible ? `${animatedMetrics1[index]}%` : '0%',
-                          opacity: 0.7,
-                          transitionDelay: `${index * 200}ms`
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
+                {/* Avatar */}
+                <div className="relative w-32 h-32 mx-auto mb-6 rounded-2xl overflow-hidden border-2 border-white/10">
+                  <img 
+                    src="/avatars/triste.png" 
+                    alt="Antes"
+                    className="w-full h-full object-cover grayscale"
+                  />
+                </div>
 
-              {/* Quote */}
-              <p className="mt-8 text-base italic text-white/50 text-center">
-                "Algún día lo conseguiré"
-              </p>
-            </div>
-          </div>
+                {/* Title */}
+                <h3 className="text-2xl md:text-3xl font-bold text-white/90 mb-6 text-center">
+                  Solo. Sin rumbo.
+                </h3>
 
-          {/* Avatar 2 - El que está dentro */}
-          <div
-            onMouseMove={(e) => handleCardMouseMove(e, 2)}
-            onMouseLeave={() => handleCardMouseLeave(2)}
-            className="group relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 transition-all duration-300 ease-out overflow-hidden hover:scale-[1.05]"
-            style={{
-              transform: `perspective(1000px) rotateX(${cardRotations[2]?.x || 0}deg) rotateY(${cardRotations[2]?.y || 0}deg) scale(${cardRotations[2] ? 1.05 : 1})`,
-              transformStyle: 'preserve-3d',
-              transition: 'transform 0.3s ease-out'
-            }}
-          >
-            {/* Background image with effects - same as course cards */}
-            <div className="absolute inset-0 opacity-35 md:opacity-20 group-hover:opacity-45 md:group-hover:opacity-30 transition-opacity duration-500">
-              <Image 
-                src="/avatars/chad.png" 
-                alt="" 
-                fill
-                className="object-cover"
-                style={{ 
-                  objectPosition: 'center center',
-                  transform: 'scale(1.7) translateY(15%)',
-                  transformOrigin: 'center center'
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
-            </div>
-
-            {/* Content */}
-            <div className="relative z-10">
-              {/* Title with chrome gradient */}
-              <h3 
-                className="text-2xl md:text-3xl font-semibold text-center mb-8 mt-[450px] md:mt-[520px]"
-                style={{
-                  background: 'linear-gradient(135deg, #C0C0C0, #FFFFFF, #A8A8A8)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
-                }}
-              >
-                El que está dentro
-              </h3>
-
-              {/* Metrics */}
-              <div className="space-y-5">
-                {metrics2.map((metric, index) => (
-                  <div key={metric.name}>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-white/90">{metric.name}</span>
-                      <span className="text-sm font-mono text-white/90 font-semibold">
-                        {animatedMetrics2[index]}%
-                      </span>
-                    </div>
-                    <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden relative">
-                      <div
-                        className="h-full bg-gradient-to-r from-green-400 via-green-500 to-green-600 rounded-full transition-all ease-out relative overflow-hidden"
-                        style={{
-                          width: isVisible ? `${animatedMetrics2[index]}%` : '0%',
-                          transitionDuration: '800ms',
-                          transitionDelay: `${index * 150}ms`,
-                          transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-                          boxShadow: '0 0 20px rgba(74, 222, 128, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3)'
-                        }}
-                      >
-                        {/* Shimmer effect */}
+                {/* Stats */}
+                <div className="space-y-4 flex-1">
+                  {stats.before.map((stat, idx) => (
+                    <div key={idx}>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm text-white/50">{stat.label}</span>
+                        <span className="text-sm font-mono text-white/30">{stat.value}%</span>
+                      </div>
+                      <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
                         <div 
-                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" 
-                          style={{ backgroundSize: '200% 100%' }}
+                          className={`h-full bg-gradient-to-r ${stat.color} rounded-full transition-all duration-1000 ease-out`}
+                          style={{ 
+                            width: isVisible ? `${stat.value}%` : '0%',
+                            transitionDelay: `${idx * 100}ms`
+                          }}
                         />
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              {/* Quote */}
-              <p className="mt-8 text-base italic text-white font-medium text-center">
-                "Ya estoy en ello"
-              </p>
+                {/* Footer note */}
+                <p className="text-xs text-white/30 text-center mt-6">
+                  Sin apoyo, el progreso es lento y solitario
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* AFTER Card */}
+          <div
+            className={`group relative transition-all duration-1000 delay-200 ${
+              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
+            onMouseMove={(e) => handleCardMouseMove(e, 2)}
+            onMouseLeave={() => handleCardMouseLeave(2)}
+          >
+            <div
+              className="relative aspect-square p-8 md:p-10 rounded-2xl border border-white/10 
+                       bg-white/[0.02] backdrop-blur-xl
+                       hover:bg-white/[0.04] hover:border-green-500/30
+                       transition-all duration-500 ease-out overflow-hidden"
+              style={{
+                transform: `perspective(1000px) rotateX(${cardRotations[2]?.x || 0}deg) rotateY(${cardRotations[2]?.y || 0}deg) scale(${cardRotations[2] ? 1.02 : 1})`,
+                transformStyle: 'preserve-3d',
+              }}
+            >
+              {/* Green glow on hover */}
+              <div 
+                className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-green-500/10 
+                         opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 -z-10"
+              />
+
+              {/* Shine effect */}
+              <div 
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent 
+                         opacity-0 group-hover:opacity-100 transition-opacity duration-1000"
+                style={{
+                  transform: 'translateX(-100%) skewX(-20deg)',
+                  animation: 'shine 2s ease-in-out infinite',
+                }}
+              />
+
+              <style jsx>{`
+                @keyframes shine {
+                  0% { transform: translateX(-100%) skewX(-20deg); }
+                  100% { transform: translateX(200%) skewX(-20deg); }
+                }
+              `}</style>
+
+              {/* Content */}
+              <div className="relative h-full flex flex-col">
+                {/* Badge */}
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 w-fit mb-6">
+                  <span className="text-2xl">🔥</span>
+                  <span className="text-sm font-mono text-green-400">DESPUÉS</span>
+                </div>
+
+                {/* Avatar */}
+                <div className="relative w-32 h-32 mx-auto mb-6 rounded-2xl overflow-hidden border-2 border-green-500/30 shadow-lg shadow-green-500/20">
+                  <img 
+                    src="/avatars/chad.png" 
+                    alt="Después"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                {/* Title */}
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 text-center">
+                  Imparable. En comunidad.
+                </h3>
+
+                {/* Stats */}
+                <div className="space-y-4 flex-1">
+                  {stats.after.map((stat, idx) => (
+                    <div key={idx}>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm text-white/70">{stat.label}</span>
+                        <span className="text-sm font-mono text-green-400">{stat.value}%</span>
+                      </div>
+                      <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden relative">
+                        <div 
+                          className={`h-full bg-gradient-to-r ${stat.color} rounded-full transition-all duration-1000 ease-out relative overflow-hidden`}
+                          style={{ 
+                            width: isVisible ? `${stat.value}%` : '0%',
+                            transitionDelay: `${idx * 100 + 200}ms`
+                          }}
+                        >
+                          {/* Shimmer effect */}
+                          <div 
+                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"
+                            style={{ animation: 'shimmer 2s ease-in-out infinite' }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Footer note */}
+                <p className="text-xs text-green-400/70 text-center mt-6 font-medium">
+                  Con comunidad, el crecimiento se multiplica ×10
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
         {/* CTA */}
-        <div className="text-center mt-24 p-8 md:p-12 bg-white/2 rounded-3xl border border-white/5">
-          <p 
-            className="text-2xl md:text-3xl font-semibold mb-8"
-            style={{
-              background: 'linear-gradient(135deg, #C0C0C0, #FFFFFF, #A8A8A8)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}
-          >
-            ¿Cuánto tiempo más quieres ser el de la izquierda?
-          </p>
-          <a
-            href="/acceso"
-            className="inline-block px-12 py-4 text-lg font-semibold bg-white/5 border border-white/20 rounded-xl text-white transition-all duration-500 hover:scale-105 hover:-translate-y-1 hover:border-white/40"
-          >
-            Transformarme ahora
-          </a>
-          <p className="text-sm text-white/50 mt-4">
-            Plazas limitadas · Acceso gratuito
-          </p>
+        <div 
+          className={`text-center transition-all duration-1000 delay-400 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
+          <div className="max-w-2xl mx-auto p-10 rounded-2xl bg-white/[0.02] border border-white/10">
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+              La diferencia está en la comunidad
+            </h3>
+            <p className="text-white/60 mb-8">
+              No es solo acceso. Es tener personas que entienden tu lucha, te empujan cuando flaqueas y celebran tus victorias.
+            </p>
+            <a
+              href="/acceso"
+              className="inline-flex items-center gap-3 px-8 py-4 text-base font-semibold 
+                       bg-white/5 border border-white/20 rounded-full text-white 
+                       transition-all duration-500 hover:scale-105 hover:-translate-y-1 hover:border-white/40 hover:bg-white/10"
+            >
+              Solicitar acceso
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
 
       <style jsx>{`
         @keyframes shimmer {
-          0% { background-position: -200% 0; }
-          100% { background-position: 200% 0; }
-        }
-
-        .animate-shimmer {
-          animation: shimmer 2s infinite;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          * {
-            animation-duration: 0.01ms !important;
-            transition-duration: 0.01ms !important;
-          }
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
         }
       `}</style>
     </section>
