@@ -145,20 +145,18 @@ export default function AvatarComparison() {
                 </div>
 
                 {/* Avatar - Full size with vignette */}
-                <div className="absolute inset-0 -z-10 overflow-hidden">
-                  <div className="absolute inset-0">
-                    <Image
-                      src="/avatars/triste.png"
-                      alt="Antes"
-                      fill
-                      className="object-contain grayscale"
-                      style={{
-                        filter: 'brightness(0.4) contrast(1.1) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.6))',
-                        objectPosition: 'center center'
-                      }}
-                      priority
-                    />
-                  </div>
+                <div className="absolute inset-0 -z-10 overflow-hidden flex items-center justify-center">
+                  <Image
+                    src="/avatars/triste.png"
+                    alt="Antes"
+                    width={1856}
+                    height={2304}
+                    className="w-full h-full object-contain grayscale"
+                    style={{
+                      filter: 'brightness(0.4) contrast(1.1) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.6))'
+                    }}
+                    priority
+                  />
                   {/* Dark vignette overlay */}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-black/90 pointer-events-none" />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/10 to-black/70 pointer-events-none" />
@@ -237,16 +235,16 @@ export default function AvatarComparison() {
                 </div>
 
                 {/* Avatar - Full size with vignette, scaled larger and positioned bottom */}
-                <div className="absolute inset-0 -z-10 overflow-hidden">
-                  <div className="absolute inset-0" style={{ transform: 'scale(1.3) translateY(5%)' }}>
+                <div className="absolute inset-0 -z-10 overflow-hidden flex items-end justify-center">
+                  <div style={{ transform: 'scale(1.3) translateY(5%)', width: '100%', height: '100%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
                     <Image
                       src="/avatars/chad.png"
                       alt="Después"
-                      fill
-                      className="object-contain"
+                      width={1856}
+                      height={2304}
+                      className="w-full h-full object-contain"
                       style={{
-                        filter: 'brightness(0.5) contrast(1.15) drop-shadow(0 30px 60px rgba(0, 0, 0, 0.7))',
-                        objectPosition: 'center bottom'
+                        filter: 'brightness(0.5) contrast(1.15) drop-shadow(0 30px 60px rgba(0, 0, 0, 0.7))'
                       }}
                       priority
                     />
