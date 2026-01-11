@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import CreativeHero from './components/CreativeHero'
 import CreativeBenefits from './components/CreativeBenefits'
+import AICoachSection from './components/AICoachSection'
 import ScrollRevealCourses from './components/ScrollRevealCourses'
 import AvatarComparison from './components/AvatarComparison'
 import CreativeCTA from './components/CreativeCTA'
@@ -30,6 +31,9 @@ export default function Home() {
 
       {/* Creative Benefits Section */}
       <CreativeBenefits />
+
+      {/* AI Coach Section - NOVA */}
+      <AICoachSection />
 
       {/* Scroll Reveal Courses - 5 Templos */}
       <ScrollRevealCourses />
