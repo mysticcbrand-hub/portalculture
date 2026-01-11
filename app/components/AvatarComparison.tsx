@@ -214,19 +214,8 @@ export default function AvatarComparison() {
               {/* Shine effect */}
               <div 
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent 
-                         opacity-0 group-hover:opacity-100 transition-opacity duration-1000"
-                style={{
-                  transform: 'translateX(-100%) skewX(-20deg)',
-                  animation: 'shine 2s ease-in-out infinite',
-                }}
+                         opacity-0 group-hover:opacity-100 transition-opacity duration-1000 animate-shine"
               />
-
-              <style jsx>{`
-                @keyframes shine {
-                  0% { transform: translateX(-100%) skewX(-20deg); }
-                  100% { transform: translateX(200%) skewX(-20deg); }
-                }
-              `}</style>
 
               {/* Content */}
               <div className="relative h-full flex flex-col">
@@ -267,10 +256,7 @@ export default function AvatarComparison() {
                           }}
                         >
                           {/* Shimmer effect */}
-                          <div 
-                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"
-                            style={{ animation: 'shimmer 2s ease-in-out infinite' }}
-                          />
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
                         </div>
                       </div>
                     </div>
@@ -313,13 +299,6 @@ export default function AvatarComparison() {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-      `}</style>
     </section>
   )
 }

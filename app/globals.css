@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) skewX(-20deg); }
+  100% { transform: translateX(200%) skewX(-20deg); }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.animate-shine {
+  animation: shine 2s ease-in-out infinite;
+}
+
 /* ============================================
    PREMIUM LANDING PAGE - GLOBAL STYLES
    Chrome aesthetics, 3D effects, Apple-level polish
