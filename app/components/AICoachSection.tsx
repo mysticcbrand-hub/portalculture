@@ -133,8 +133,12 @@ export default function AICoachSection() {
               {/* Header */}
               <div className="flex items-center gap-4 mb-6 pb-6 border-b border-white/10">
                 <div className="relative">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
-                    <span className="text-2xl">⚡</span>
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center overflow-hidden">
+                    <img 
+                      src="/ai.png" 
+                      alt="NOVA AI" 
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 rounded-full border-2 border-black" />
                 </div>
@@ -191,7 +195,7 @@ export default function AICoachSection() {
           >
             {/* Label */}
             <div className="mb-6">
-              <span className="font-mono text-xs tracking-wider text-white/30">/ NOVA AI</span>
+              <span className="font-mono text-xs tracking-wider text-white/30">/ 04</span>
             </div>
 
             {/* Headline */}

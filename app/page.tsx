@@ -32,11 +32,11 @@ export default function Home() {
       {/* Creative Benefits Section */}
       <CreativeBenefits />
 
-      {/* AI Coach Section - NOVA */}
-      <AICoachSection />
-
       {/* Scroll Reveal Courses - 5 Templos */}
       <ScrollRevealCourses />
+
+      {/* AI Coach Section - NOVA */}
+      <AICoachSection />
 
       {/* Avatar Comparison Section */}
       <AvatarComparison />
