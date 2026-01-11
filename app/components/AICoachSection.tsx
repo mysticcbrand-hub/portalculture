@@ -203,6 +203,16 @@ Hazlo. Ahora. 🔥`
                 </div>
               </div>
 
+              {/* Typing indicator */}
+              <div className="mt-4 flex items-center gap-2 text-xs text-white/40">
+                <div className="flex gap-1">
+                  <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                </div>
+                <span>NOVA está escribiendo...</span>
+              </div>
+
               {/* Navigation */}
               <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-between">
                 <span className="text-xs text-white/30 font-mono">
