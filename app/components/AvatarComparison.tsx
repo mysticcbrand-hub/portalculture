@@ -144,21 +144,20 @@ export default function AvatarComparison() {
                   <span className="text-sm font-mono text-red-400">ANTES</span>
                 </div>
 
-                {/* Avatar - Full size with vignette */}
-                <div className="absolute inset-0 -z-10 overflow-hidden" style={{ backgroundColor: 'transparent' }}>
-                  <div style={{ position: 'relative', width: '100%', height: '100%', backgroundColor: 'transparent' }}>
-                    <Image
-                      src="/avatars/triste.png"
-                      alt="Antes"
-                      fill
-                      unoptimized
-                      style={{ 
-                        objectFit: 'contain',
-                        filter: 'grayscale(100%)',
-                        opacity: 0.4
-                      }}
-                    />
-                  </div>
+                {/* Avatar - Full size with vignette - usando img nativo para evitar Next.js processing */}
+                <div className="absolute inset-0 -z-10 overflow-hidden flex items-center justify-center" style={{ backgroundColor: 'transparent' }}>
+                  <img
+                    src="/avatars/triste.png"
+                    alt="Antes"
+                    style={{ 
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      filter: 'grayscale(100%)',
+                      opacity: 0.4,
+                      pointerEvents: 'none'
+                    }}
+                  />
                   {/* Dark vignette overlay */}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 pointer-events-none" />
@@ -236,27 +235,21 @@ export default function AvatarComparison() {
                   <span className="text-sm font-mono text-green-400">DESPUÉS</span>
                 </div>
 
-                {/* Avatar - Full size with vignette, scaled larger and positioned bottom */}
-                <div className="absolute inset-0 -z-10 overflow-hidden" style={{ backgroundColor: 'transparent' }}>
-                  <div style={{ 
-                    position: 'relative', 
-                    width: '100%', 
-                    height: '100%', 
-                    backgroundColor: 'transparent',
-                    transform: 'scale(2.5) translateY(20%)'
-                  }}>
-                    <Image
-                      src="/avatars/chad.png"
-                      alt="Después"
-                      fill
-                      unoptimized
-                      style={{ 
-                        objectFit: 'contain',
-                        objectPosition: 'center bottom',
-                        opacity: 0.8
-                      }}
-                    />
-                  </div>
+                {/* Avatar - Full size with vignette - usando img nativo para evitar Next.js processing */}
+                <div className="absolute inset-0 -z-10 overflow-hidden flex items-end justify-center" style={{ backgroundColor: 'transparent' }}>
+                  <img
+                    src="/avatars/chad.png"
+                    alt="Después"
+                    style={{ 
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      objectPosition: 'center bottom',
+                      opacity: 0.8,
+                      transform: 'scale(2.5) translateY(20%)',
+                      pointerEvents: 'none'
+                    }}
+                  />
                   {/* Dark vignette overlay */}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 pointer-events-none" />
