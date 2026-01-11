@@ -73,37 +73,34 @@ export default function CreativeBenefits() {
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
 
-  // Stacking scroll animation estilo Apple
+  // Swoosh up animation estilo Apple
   useEffect(() => {
     const handleScroll = () => {
-      if (!sectionRef.current) return
+      cardsRef.current.forEach((card, index) => {
+        if (!card) return
 
-      const section = sectionRef.current
-      const rect = section.getBoundingClientRect()
-      const windowHeight = window.innerHeight
+        const cardRect = card.getBoundingClientRect()
+        const windowHeight = window.innerHeight
+        const cardTop = cardRect.top
 
-      // Calcular cuando la sección está en vista
-      if (rect.top < windowHeight && rect.bottom > 0) {
-        cardsRef.current.forEach((card, index) => {
-          if (!card) return
+        // Calcular cuando la card entra en vista desde abajo
+        // progress va de 1 (abajo) a 0 (completamente en vista)
+        const triggerPoint = windowHeight * 0.8 // Empieza cuando está 80% abajo
+        const progress = Math.max(0, Math.min(1, (cardTop - triggerPoint) / (windowHeight * 0.3)))
 
-          const cardRect = card.getBoundingClientRect()
-          const cardCenter = cardRect.top + cardRect.height / 2
-          const distanceFromCenter = Math.abs(windowHeight / 2 - cardCenter)
-          const maxDistance = windowHeight / 2
+        if (cardTop < windowHeight && cardTop > -cardRect.height) {
+          // Swoosh effect: viene desde abajo con blur
+          const translateY = progress * 60 // Se mueve 60px desde abajo
+          const opacity = 1 - progress * 0.8 // Fade in
+          const blur = progress * 8 // Blur que desaparece
+          const scale = 0.95 + (1 - progress) * 0.05 // Slight scale up
 
-          // Calcular progreso (0 = centro de pantalla, 1 = fuera de vista)
-          const progress = Math.min(distanceFromCenter / maxDistance, 1)
-
-          // Aplicar transformaciones suaves
-          const scale = 0.95 + (1 - progress) * 0.05
-          const opacity = 0.4 + (1 - progress) * 0.6
-          const translateY = progress * 20
-
-          card.style.transform = `scale(${scale}) translateY(${translateY}px)`
+          card.style.transform = `translateY(${translateY}px) scale(${scale})`
           card.style.opacity = opacity.toString()
-        })
-      }
+          card.style.filter = `blur(${blur}px)`
+          card.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease-out, filter 0.6s ease-out'
+        }
+      })
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
@@ -207,7 +204,11 @@ export default function CreativeBenefits() {
                 handleCardMouseLeave(index)
               }}
               onMouseMove={(e) => handleCardMouseMove(e, index)}
-              className={`group relative p-8 rounded-2xl border border-white/10 transition-all duration-300 
+              style={{
+                transformOrigin: 'center bottom',
+                willChange: 'transform, opacity, filter'
+              }}
+              className={`group relative p-8 rounded-2xl border border-white/10 
                          bg-gradient-to-br ${benefit.color}
                          backdrop-blur-xl
                          hover:border-white/30
