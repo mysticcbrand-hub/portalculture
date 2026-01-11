@@ -77,7 +77,7 @@ El truco brutal:
       id: 3,
       scenario: 'Mentalidad y confianza',
       userMessage: 'Siento que no soy suficiente. ¿Cómo desarrollo confianza real?',
-      novaResponse: `Pará ahí 👉 La confianza NO viene de "sentirte bien". Viene de EVIDENCIA. De probar que puedes cumplir lo que te propones. 🧠
+      novaResponse: `Escucha esto 👉 La confianza NO viene de "sentirte bien". Viene de EVIDENCIA. De probar que puedes cumplir lo que te propones. 🧠
 
 La verdad que nadie te dice: La inseguridad no se va hablando bonito. Se va HACIENDO cosas que te asustan y sobreviviendo. ⚡
 
@@ -190,34 +190,73 @@ Hazlo. Ahora. 🔥`
                 {/* AI response */}
                 <div className="flex justify-start">
                   <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[90%]">
-                    <p className="text-sm text-white/90 leading-relaxed whitespace-pre-line">
-                      {conversations[activeConversation].novaResponse}
-                    </p>
+                    <div className="text-sm text-white/90 leading-relaxed whitespace-pre-line">
+                      {conversations[activeConversation].novaResponse.split(/(\*\*.*?\*\*)/).map((part, i) => {
+                        if (part.startsWith('**') && part.endsWith('**')) {
+                          return <strong key={i} className="font-bold text-white">{part.slice(2, -2)}</strong>
+                        }
+                        return <span key={i}>{part}</span>
+                      })}
+                    </div>
                     <span className="inline-block mt-2 text-[10px] text-white/30">Hace 1s</span>
                   </div>
                 </div>
               </div>
 
-              {/* Scenario indicator */}
+              {/* Navigation */}
               <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-between">
                 <span className="text-xs text-white/30 font-mono">
                   {conversations[activeConversation].scenario}
                 </span>
                 
-                {/* Dots navigation */}
-                <div className="flex gap-2">
-                  {conversations.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setActiveConversation(index)}
-                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                        index === activeConversation
-                          ? 'bg-white w-6'
-                          : 'bg-white/30 hover:bg-white/50'
-                      }`}
-                      aria-label={`Ver conversación ${index + 1}`}
-                    />
-                  ))}
+                <div className="flex items-center gap-4">
+                  {/* Previous arrow */}
+                  <button
+                    onClick={() => setActiveConversation((prev) => (prev - 1 + conversations.length) % conversations.length)}
+                    className="group p-2 rounded-lg hover:bg-white/5 transition-all duration-300"
+                    aria-label="Conversación anterior"
+                  >
+                    <svg 
+                      className="w-4 h-4 text-white/40 group-hover:text-white/70 transition-colors duration-300 group-hover:-translate-x-0.5 transition-transform" 
+                      fill="none" 
+                      viewBox="0 0 24 24" 
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+
+                  {/* Dots navigation */}
+                  <div className="flex gap-2">
+                    {conversations.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setActiveConversation(index)}
+                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                          index === activeConversation
+                            ? 'bg-white w-6'
+                            : 'bg-white/30 hover:bg-white/50'
+                        }`}
+                        aria-label={`Ver conversación ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Next arrow */}
+                  <button
+                    onClick={() => setActiveConversation((prev) => (prev + 1) % conversations.length)}
+                    className="group p-2 rounded-lg hover:bg-white/5 transition-all duration-300"
+                    aria-label="Conversación siguiente"
+                  >
+                    <svg 
+                      className="w-4 h-4 text-white/40 group-hover:text-white/70 transition-colors duration-300 group-hover:translate-x-0.5 transition-transform" 
+                      fill="none" 
+                      viewBox="0 0 24 24" 
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>
