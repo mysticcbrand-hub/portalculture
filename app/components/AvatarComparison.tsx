@@ -144,13 +144,16 @@ export default function AvatarComparison() {
                   <span className="text-sm font-mono text-red-400">ANTES</span>
                 </div>
 
-                {/* Avatar */}
-                <div className="relative w-32 h-32 mx-auto mb-6 rounded-2xl overflow-hidden border-2 border-white/10">
+                {/* Avatar - Full size with vignette */}
+                <div className="absolute inset-0 -z-10">
                   <img 
                     src="/avatars/triste.png" 
                     alt="Antes"
-                    className="w-full h-full object-cover grayscale"
+                    className="w-full h-full object-cover grayscale opacity-30"
                   />
+                  {/* Dark vignette overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/90" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/70" />
                 </div>
 
                 {/* Title */}
@@ -225,13 +228,16 @@ export default function AvatarComparison() {
                   <span className="text-sm font-mono text-green-400">DESPUÉS</span>
                 </div>
 
-                {/* Avatar */}
-                <div className="relative w-32 h-32 mx-auto mb-6 rounded-2xl overflow-hidden border-2 border-green-500/30 shadow-lg shadow-green-500/20">
+                {/* Avatar - Full size with vignette */}
+                <div className="absolute inset-0 -z-10">
                   <img 
                     src="/avatars/chad.png" 
                     alt="Después"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover opacity-25"
                   />
+                  {/* Dark vignette overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/90" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/70" />
                 </div>
 
                 {/* Title */}
