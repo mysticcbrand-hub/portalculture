@@ -129,13 +129,6 @@ Hazlo. Ahora. 🔥`
         />
       </div>
 
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(50px, -80px) scale(1.1); }
-          66% { transform: translate(-60px, 70px) scale(0.95); }
-        }
-      `}</style>
 
       <div className="relative z-10 max-w-7xl mx-auto w-full">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
@@ -156,12 +149,6 @@ Hazlo. Ahora. 🔥`
               }}
             />
 
-            <style jsx>{`
-              @keyframes glow {
-                0%, 100% { opacity: 0.3; }
-                50% { opacity: 0.6; }
-              }
-            `}</style>
 
             {/* Chat interface mockup */}
             <div 
