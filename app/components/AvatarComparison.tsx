@@ -236,7 +236,7 @@ export default function AvatarComparison() {
                 </div>
 
                 {/* Avatar - Full size with vignette - usando img nativo para evitar Next.js processing */}
-                <div className="absolute inset-0 -z-10 overflow-hidden flex items-end justify-center" style={{ backgroundColor: 'transparent' }}>
+                <div className="absolute inset-0 -z-10 overflow-hidden flex items-center justify-center" style={{ backgroundColor: 'transparent' }}>
                   <img
                     src="/avatars/chad.png"
                     alt="Después"
@@ -244,9 +244,9 @@ export default function AvatarComparison() {
                       width: '100%',
                       height: '100%',
                       objectFit: 'contain',
-                      objectPosition: 'center bottom',
-                      opacity: 0.8,
-                      transform: 'scale(2.5) translateY(20%)',
+                      objectPosition: 'center center',
+                      opacity: 0.4,
+                      transform: 'scale(1.1)',
                       pointerEvents: 'none'
                     }}
                   />
