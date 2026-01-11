@@ -89,7 +89,7 @@ export default function AvatarComparison() {
       <div className="relative z-10 max-w-7xl mx-auto w-full">
         {/* Label */}
         <div className="mb-12">
-          <span className="font-mono text-xs tracking-wider text-white/30">/ 04</span>
+          <span className="font-mono text-xs tracking-wider text-white/30">/ 05</span>
         </div>
 
         {/* Header */}

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 export default function AICoachSection() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [activeConversation, setActiveConversation] = useState(0)
   const [cardRotation, setCardRotation] = useState({ x: 0, y: 0 })
 
   useEffect(() => {
@@ -25,15 +25,6 @@ export default function AICoachSection() {
     return () => observer.disconnect()
   }, [])
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
-
   const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = e.currentTarget
     const rect = card.getBoundingClientRect()
@@ -41,8 +32,8 @@ export default function AICoachSection() {
     const y = e.clientY - rect.top
     const centerX = rect.width / 2
     const centerY = rect.height / 2
-    const rotateX = (y - centerY) / 25 // Más sutil (antes /15)
-    const rotateY = (centerX - x) / 25 // Más sutil (antes /15)
+    const rotateX = (y - centerY) / 25
+    const rotateY = (centerX - x) / 25
 
     setCardRotation({ x: rotateX, y: rotateY })
   }
@@ -50,6 +41,57 @@ export default function AICoachSection() {
   const handleCardMouseLeave = () => {
     setCardRotation({ x: 0, y: 0 })
   }
+
+  const conversations = [
+    {
+      id: 1,
+      scenario: 'Construcción de músculo',
+      userMessage: 'Oye Nova, ¿cómo puedo ganar músculo rápido?',
+      novaResponse: `Escucha bien 👉 ¡Olvídate de los atajos! Ganar músculo rápido existe, pero requiere un enfoque BRUTAL y consistente. No es magia, es ciencia y disciplina. 😤
+
+La verdad directa es que necesitas un triple ataque: entrenamiento INTENSO, nutrición CALCULADA y descanso PRIORITARIO. ¿Estás dispuesto a comprometerte con los tres? 💥
+
+Aquí tienes el protocolo de choque en 5 pasos:
+
+**Entrenamiento de Fuerza:** 3-4 veces por semana. Enfócate en ejercicios compuestos (sentadillas, peso muerto, press de banca, dominadas). Sobrecarga progresiva SEMANAL. Aumenta el peso, las repeticiones o las series. 💪`
+    },
+    {
+      id: 2,
+      scenario: 'Hábitos y disciplina',
+      userMessage: '¿Cómo construyo disciplina real? Siempre empiezo motivado pero abandono...',
+      novaResponse: `Ahí está el problema 👉 Estás esperando MOTIVACIÓN cuando necesitas SISTEMAS! La motivación es basura. La disciplina es el músculo que entrenas cada día. 🔥
+
+Mira, según Atomic Habits de James Clear, no cambias construyendo disciplina. Cambias construyendo IDENTIDAD:
+
+**No digas:** "Voy a intentar ir al gym"
+**Di:** "Soy alguien que entrena" 💪
+
+El truco brutal:
+1. Empieza RIDÍCULAMENTE pequeño → 2 flexiones, no 100
+2. Hazlo a la misma hora SIEMPRE
+3. Stack de hábitos: Después de [hábito existente] hago [nuevo hábito]
+
+¿Qué hábito quieres? Dame uno y te armo el sistema HOY. 😤`
+    },
+    {
+      id: 3,
+      scenario: 'Mentalidad y confianza',
+      userMessage: 'Siento que no soy suficiente. ¿Cómo desarrollo confianza real?',
+      novaResponse: `Pará ahí 👉 La confianza NO viene de "sentirte bien". Viene de EVIDENCIA. De probar que puedes cumplir lo que te propones. 🧠
+
+La verdad que nadie te dice: La inseguridad no se va hablando bonito. Se va HACIENDO cosas que te asustan y sobreviviendo. ⚡
+
+Protocolo Huberman para rewirear tu cerebro:
+
+**Paso 1:** Compromiso micro → Haz 1 cosa difícil HOY
+**Paso 2:** Registra la victoria (tu cerebro necesita DATA)
+**Paso 3:** Repite 30 días → Neuroplasticidad real
+
+No necesitas sentirte seguro para actuar. Actúas y LUEGO viene la seguridad. Pregúntate: ¿Qué harías HOY si no tuvieras miedo? 💥
+
+Hazlo. Ahora. 🔥`
+    }
+  ]
 
   return (
     <section 
@@ -93,38 +135,6 @@ export default function AICoachSection() {
           33% { transform: translate(50px, -80px) scale(1.1); }
           66% { transform: translate(-60px, 70px) scale(0.95); }
         }
-
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(40px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-
-        @keyframes scaleIn {
-          from {
-            opacity: 0;
-            transform: scale(0.95);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-
-        @keyframes glow {
-          0%, 100% { opacity: 0.3; }
-          50% { opacity: 0.6; }
-        }
       `}</style>
 
       <div className="relative z-10 max-w-7xl mx-auto w-full">
@@ -145,6 +155,13 @@ export default function AICoachSection() {
                 animation: 'glow 4s ease-in-out infinite',
               }}
             />
+
+            <style jsx>{`
+              @keyframes glow {
+                0%, 100% { opacity: 0.3; }
+                50% { opacity: 0.6; }
+              }
+            `}</style>
 
             {/* Chat interface mockup */}
             <div 
@@ -175,39 +192,46 @@ export default function AICoachSection() {
               </div>
 
               {/* Messages */}
-              <div className="space-y-4">
+              <div className="space-y-4 min-h-[400px]">
                 {/* User message */}
                 <div className="flex justify-end">
                   <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 backdrop-blur-sm border border-purple-500/20 rounded-2xl rounded-tr-sm px-4 py-3 max-w-[85%]">
-                    <p className="text-sm text-white/90">Oye Nova, ¿cómo puedo ganar músculo rápido?</p>
+                    <p className="text-sm text-white/90">{conversations[activeConversation].userMessage}</p>
                   </div>
                 </div>
 
-                {/* AI response with typing indicator */}
+                {/* AI response */}
                 <div className="flex justify-start">
                   <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[90%]">
-                    <p className="text-sm text-white/90 leading-relaxed">
-                      Escucha bien 👉 ¡Olvídate de los atajos! Ganar músculo rápido existe, pero requiere un enfoque BRUTAL y consistente. No es magia, es ciencia y disciplina. 😤
-                      <br /><br />
-                      La verdad directa es que necesitas un triple ataque: entrenamiento INTENSO, nutrición CALCULADA y descanso PRIORITARIO. ¿Estás dispuesto a comprometerte con los tres? 💥
-                      <br /><br />
-                      Aquí tienes el protocolo de choque en 5 pasos:
-                      <br /><br />
-                      <strong>Entrenamiento de Fuerza:</strong> 3-4 veces por semana. Enfócate en ejercicios compuestos (sentadillas, peso muerto, press de banca, dominadas). Sobrecarga progresiva SEMANAL. Aumenta el peso, las repeticiones o las series. 💪
+                    <p className="text-sm text-white/90 leading-relaxed whitespace-pre-line">
+                      {conversations[activeConversation].novaResponse}
                     </p>
                     <span className="inline-block mt-2 text-[10px] text-white/30">Hace 1s</span>
                   </div>
                 </div>
               </div>
 
-              {/* Typing indicator */}
-              <div className="mt-4 flex items-center gap-2 text-xs text-white/40">
-                <div className="flex gap-1">
-                  <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              {/* Scenario indicator */}
+              <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-between">
+                <span className="text-xs text-white/30 font-mono">
+                  {conversations[activeConversation].scenario}
+                </span>
+                
+                {/* Dots navigation */}
+                <div className="flex gap-2">
+                  {conversations.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setActiveConversation(index)}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        index === activeConversation
+                          ? 'bg-white w-6'
+                          : 'bg-white/30 hover:bg-white/50'
+                      }`}
+                      aria-label={`Ver conversación ${index + 1}`}
+                    />
+                  ))}
                 </div>
-                <span>NOVA está escribiendo...</span>
               </div>
             </div>
           </div>
