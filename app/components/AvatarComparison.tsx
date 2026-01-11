@@ -123,7 +123,7 @@ export default function AvatarComparison() {
             <div
               className="relative aspect-square p-8 md:p-10 rounded-2xl border border-white/10 
                        bg-white/[0.02] backdrop-blur-xl
-                       hover:bg-white/[0.04] hover:border-red-500/30
+                       hover:border-red-500/30
                        transition-all duration-500 ease-out overflow-hidden"
               style={{
                 transform: `perspective(1000px) rotateX(${cardRotations[1]?.x || 0}deg) rotateY(${cardRotations[1]?.y || 0}deg)`,
@@ -204,7 +204,7 @@ export default function AvatarComparison() {
             <div
               className="relative aspect-square p-8 md:p-10 rounded-2xl border border-white/10 
                        bg-white/[0.02] backdrop-blur-xl
-                       hover:bg-white/[0.04] hover:border-green-500/30
+                       hover:border-green-500/30
                        transition-all duration-500 ease-out overflow-hidden"
               style={{
                 transform: `perspective(1000px) rotateX(${cardRotations[2]?.x || 0}deg) rotateY(${cardRotations[2]?.y || 0}deg) scale(${cardRotations[2] ? 1.02 : 1})`,
