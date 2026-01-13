@@ -392,9 +392,15 @@ Hazlo. Ahora. 🔥`
 
           {/* Books - Infinite Horizontal Scroll */}
           <div className="relative py-16">
-            {/* Blur gradients on edges - More aggressive and taller */}
-            <div className="absolute left-0 top-0 bottom-0 w-40 md:w-48 bg-gradient-to-r from-black via-black/80 to-transparent z-20 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-40 md:w-48 bg-gradient-to-l from-black via-black/80 to-transparent z-20 pointer-events-none" />
+            {/* Blur gradients on edges - Seamless con fondo */}
+            <div className="absolute left-0 top-0 bottom-0 w-40 md:w-48 z-20 pointer-events-none"
+                 style={{
+                   background: 'linear-gradient(to right, rgb(0, 0, 0) 0%, rgb(0, 0, 0) 20%, rgba(0, 0, 0, 0.9) 40%, rgba(0, 0, 0, 0.6) 60%, transparent 100%)'
+                 }} />
+            <div className="absolute right-0 top-0 bottom-0 w-40 md:w-48 z-20 pointer-events-none"
+                 style={{
+                   background: 'linear-gradient(to left, rgb(0, 0, 0) 0%, rgb(0, 0, 0) 20%, rgba(0, 0, 0, 0.9) 40%, rgba(0, 0, 0, 0.6) 60%, transparent 100%)'
+                 }} />
 
             {/* Scroll container with proper overflow handling */}
             <div className="overflow-hidden">
