@@ -145,59 +145,6 @@ export default function MorphingHero({ onCtaClick }: MorphingHeroProps) {
       ref={containerRef}
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black"
     >
-      {/* SVG Filters para efecto líquido */}
-      <svg className="absolute w-0 h-0">
-        <defs>
-          {/* Filtro de distorsión líquida */}
-          <filter id="liquid">
-            <feTurbulence 
-              type="fractalNoise" 
-              baseFrequency="0.01" 
-              numOctaves="3" 
-              result="noise"
-              seed="1"
-            >
-              <animate 
-                attributeName="baseFrequency" 
-                dur="20s" 
-                values="0.01;0.015;0.01" 
-                repeatCount="indefinite"
-              />
-            </feTurbulence>
-            <feDisplacementMap 
-              in="SourceGraphic" 
-              in2="noise" 
-              scale="8" 
-              xChannelSelector="R" 
-              yChannelSelector="G"
-            />
-          </filter>
-
-          {/* Filtro glow suave */}
-          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-
-          {/* Filtro de morphing más intenso para hover */}
-          <filter id="liquid-hover">
-            <feTurbulence 
-              type="turbulence" 
-              baseFrequency="0.03" 
-              numOctaves="2" 
-              result="noise"
-            />
-            <feDisplacementMap 
-              in="SourceGraphic" 
-              in2="noise" 
-              scale="15"
-            />
-          </filter>
-        </defs>
-      </svg>
 
       {/* Fondo Cinematográfico Oscuro */}
       <div className="absolute inset-0 overflow-hidden">
@@ -278,7 +225,6 @@ export default function MorphingHero({ onCtaClick }: MorphingHeroProps) {
             }`}
             style={{ 
               transitionDelay: '400ms',
-              filter: 'url(#liquid)',
             }}
           >
             Entra al
@@ -306,13 +252,12 @@ export default function MorphingHero({ onCtaClick }: MorphingHeroProps) {
                 }}
                 onMouseLeave={() => setHoveredLetter(null)}
                 style={{
-                  filter: hoveredLetter === index ? 'url(#liquid-hover)' : 'url(#liquid)',
-                  transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
                   transform: hoveredLetter === index 
-                    ? 'scale(1.1) translateY(-8px)' 
+                    ? 'scale(1.08) translateY(-6px)' 
                     : 'scale(1) translateY(0)',
-                  animation: `breathe ${3 + index * 0.2}s ease-in-out infinite`,
-                  animationDelay: `${index * 0.1}s`,
+                  animation: `float ${4 + index * 0.3}s ease-in-out infinite`,
+                  animationDelay: `${index * 0.15}s`,
                 }}
               >
                 <span 
@@ -389,11 +334,11 @@ export default function MorphingHero({ onCtaClick }: MorphingHeroProps) {
             </svg>
           </a>
 
-          {/* Stats - Ultra minimalista */}
-          <div className="flex items-center gap-6 text-[11px] font-mono text-white/25 tracking-widest uppercase">
-            <span>+2.8K miembros</span>
+          {/* Beneficios - Minimalista */}
+          <div className="flex items-center gap-4 text-[11px] font-mono text-white/30 tracking-wider">
+            <span>+15HR VALOR</span>
             <span className="text-white/10">·</span>
-            <span>4.9 rating</span>
+            <span>4.9/5 ★</span>
           </div>
         </div>
       </div>
@@ -434,12 +379,12 @@ export default function MorphingHero({ onCtaClick }: MorphingHeroProps) {
           66% { transform: translate(-48%, -52%) scale(1.08) rotate(6deg); }
         }
 
-        @keyframes breathe {
+        @keyframes float {
           0%, 100% { 
-            transform: scale(1) translateY(0);
+            transform: translateY(0);
           }
           50% { 
-            transform: scale(1.02) translateY(-2px);
+            transform: translateY(-4px);
           }
         }
 
