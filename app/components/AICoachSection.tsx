@@ -138,12 +138,13 @@ Hazlo. Ahora. 🔥`
             animation: 'float 20s ease-in-out infinite',
           }}
         />
+        {/* Gradiente azul movido a la izquierda para no interferir con scroll */}
         <div 
           className="absolute w-[700px] h-[700px] rounded-full blur-[160px] opacity-15"
           style={{
             background: 'radial-gradient(circle, #3b82f6 0%, transparent 70%)',
             bottom: '10%',
-            right: '15%',
+            left: '5%',
             animation: 'float 25s ease-in-out infinite reverse',
           }}
         />
