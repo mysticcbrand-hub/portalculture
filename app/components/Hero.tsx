@@ -53,29 +53,20 @@ export default function Hero() {
           
           {/* Título principal */}
           <div
-            className="transition-transform duration-100 ease-out"
+            className="transition-transform duration-100 ease-out flex flex-col items-center"
             style={{
               opacity: Math.max(0, titleOpacity),
               transform: `translateY(${progress * -60}px) scale(${1 - progress * 0.1})`,
             }}
           >
             {/* Texto superior */}
-            <p className="text-lg md:text-xl lg:text-2xl font-light text-white/50 tracking-wide mb-2">
+            <p className="text-lg md:text-xl lg:text-2xl font-light text-white/40 tracking-wide mb-1">
               Entra al
             </p>
             
-            {/* PORTAL - con efecto cromado/metalizado */}
-            <h1 
-              className="font-display text-[clamp(4rem,18vw,12rem)] font-medium tracking-[-0.02em] leading-[0.85]"
-              style={{
-                background: 'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.9) 25%, rgba(180,180,190,0.85) 50%, rgba(255,255,255,0.95) 75%, rgba(200,200,210,0.9) 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                filter: 'drop-shadow(0 0 60px rgba(255,255,255,0.08))',
-              }}
-            >
-              Portal<span style={{ opacity: 0.4 }}>.</span>
+            {/* PORTAL - limpio y elegante */}
+            <h1 className="font-display text-[clamp(4rem,18vw,12rem)] font-medium tracking-[-0.02em] leading-[0.85] text-white">
+              Portal<span className="text-white/30">.</span>
             </h1>
           </div>
 
