@@ -425,7 +425,6 @@ Hazlo. Ahora. 🔥`
                     ].map((book, idx) => {
                       const globalIndex = setIndex * 10 + idx
                       const isHovered = hoveredBookIndex === globalIndex
-                      const rotation = isHovered ? cardRotation : { x: 0, y: 0 }
 
                       return (
                         <div
