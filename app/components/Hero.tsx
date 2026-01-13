@@ -59,20 +59,35 @@ export default function Hero() {
               transform: `translateY(${progress * -60}px) scale(${1 - progress * 0.1})`,
             }}
           >
-            <h1 className="font-display text-[clamp(3.5rem,15vw,10rem)] font-bold tracking-[-0.02em] leading-[0.9] text-white">
-              Portal<span className="text-white/40">.</span>
+            {/* Texto superior */}
+            <p className="text-lg md:text-xl lg:text-2xl font-light text-white/50 tracking-wide mb-2">
+              Entra al
+            </p>
+            
+            {/* PORTAL - con efecto cromado/metalizado */}
+            <h1 
+              className="font-display text-[clamp(4rem,18vw,12rem)] font-medium tracking-[-0.02em] leading-[0.85]"
+              style={{
+                background: 'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.9) 25%, rgba(180,180,190,0.85) 50%, rgba(255,255,255,0.95) 75%, rgba(200,200,210,0.9) 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                filter: 'drop-shadow(0 0 60px rgba(255,255,255,0.08))',
+              }}
+            >
+              Portal<span style={{ opacity: 0.4 }}>.</span>
             </h1>
           </div>
 
           {/* Pregunta provocadora */}
           <div
-            className="mt-8 transition-transform duration-100 ease-out"
+            className="mt-10 transition-transform duration-100 ease-out"
             style={{
               opacity: questionOpacity,
               transform: `translateY(${(1 - questionOpacity) * 40}px)`,
             }}
           >
-            <p className="text-xl md:text-2xl lg:text-3xl text-white/80 font-light tracking-tight">
+            <p className="text-xl md:text-2xl lg:text-3xl text-white/70 font-light">
               ¿De verdad quieres seguir solo?
             </p>
           </div>
