@@ -58,7 +58,18 @@
 }
 
 .animate-infinite-scroll {
-  animation: infinite-scroll 40s linear infinite;
+  animation: infinite-scroll 50s linear infinite;
+}
+
+/* Optimización para animaciones suaves */
+.will-change-transform {
+  will-change: transform;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000px;
+  perspective: 1000px;
 }
 
 /* ============================================

@@ -391,22 +391,25 @@ Hazlo. Ahora. 🔥`
           </div>
 
           {/* Books - Infinite Horizontal Scroll */}
-          <div className="relative" style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
-            {/* Blur gradients on edges */}
-            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
+          <div className="relative py-16">
+            {/* Blur gradients on edges - More aggressive and taller */}
+            <div className="absolute left-0 top-0 bottom-0 w-40 md:w-48 bg-gradient-to-r from-black via-black/80 to-transparent z-20 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-40 md:w-48 bg-gradient-to-l from-black via-black/80 to-transparent z-20 pointer-events-none" />
 
-            <div style={{ overflowX: 'hidden', overflowY: 'visible' }}>
+            {/* Scroll container with proper overflow handling */}
+            <div className="overflow-hidden">
               <div 
-                className="flex gap-4 animate-infinite-scroll"
+                className="flex gap-6 animate-infinite-scroll will-change-transform"
                 style={{ 
                   width: 'max-content',
-                  animationPlayState: isPaused ? 'paused' : 'running'
+                  animationPlayState: isPaused ? 'paused' : 'running',
+                  paddingTop: '2rem',
+                  paddingBottom: '2rem'
                 }}
               >
                 {/* Render books twice for seamless infinite loop */}
                 {[...Array(2)].map((_, setIndex) => (
-                  <div key={setIndex} className="flex gap-4">
+                  <div key={setIndex} className="flex gap-6">
                     {[
                       { title: 'Atomic Habits', author: 'James Clear', color: 'from-blue-500/20 to-cyan-500/20' },
                       { title: 'Can\'t Hurt Me', author: 'David Goggins', color: 'from-red-500/20 to-orange-500/20' },
@@ -421,11 +424,12 @@ Hazlo. Ahora. 🔥`
                     ].map((book, idx) => {
                       const globalIndex = setIndex * 10 + idx
                       const isHovered = hoveredBookIndex === globalIndex
+                      const rotation = bookRotations[globalIndex] || { x: 0, y: 0 }
 
                       return (
                         <div
                           key={globalIndex}
-                          className="group relative flex-shrink-0 w-44"
+                          className="group relative flex-shrink-0 w-48"
                           onMouseEnter={() => setIsPaused(true)}
                           onMouseLeave={() => {
                             setIsPaused(false)
@@ -434,42 +438,45 @@ Hazlo. Ahora. 🔥`
                           onMouseMove={(e) => handleBookMouseMove(e, globalIndex)}
                         >
                           <div
-                            className="relative p-5 rounded-xl border border-white/10 
-                                     bg-white/[0.02] backdrop-blur-xl
-                                     hover:border-white/20
-                                     transition-transform duration-200 cursor-pointer
-                                     flex flex-col justify-between"
-                            style={{ minHeight: '10rem' }}
+                            className="relative p-6 rounded-2xl border border-white/10 
+                                     bg-white/[0.03] backdrop-blur-xl
+                                     hover:border-white/30
+                                     transition-all duration-300 ease-out cursor-pointer
+                                     flex flex-col justify-between h-full"
                             style={{
-                              transform: `perspective(1000px) rotateX(${bookRotations[globalIndex]?.x || 0}deg) rotateY(${bookRotations[globalIndex]?.y || 0}deg) scale(${isHovered ? 1.05 : 1})`,
+                              minHeight: '11rem',
+                              transform: `perspective(1200px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) scale(${isHovered ? 1.08 : 1}) translateZ(${isHovered ? '20px' : '0px'})`,
                               transformStyle: 'preserve-3d',
-                              zIndex: isHovered ? 20 : 1,
-                              position: 'relative'
+                              zIndex: isHovered ? 30 : 1,
+                              transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease',
                             }}
                           >
-                            {/* Gradient glow on hover */}
+                            {/* Gradient glow on hover - More intense */}
                             <div 
-                              className={`absolute inset-0 bg-gradient-to-br ${book.color} 
-                                       opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 -z-10 rounded-xl`}
+                              className={`absolute -inset-2 bg-gradient-to-br ${book.color} 
+                                       opacity-0 group-hover:opacity-100 blur-2xl transition-all duration-500 -z-10 rounded-2xl scale-110`}
                             />
 
+                            {/* Subtle inner glow */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
                             {/* Book icon */}
-                            <div className="text-3xl mb-2">📖</div>
+                            <div className="text-4xl mb-3 transition-transform duration-300 group-hover:scale-110">📖</div>
 
                             {/* Content */}
-                            <div>
-                              <h4 className="text-xs font-semibold text-white mb-1 leading-tight" style={{ lineHeight: '1.2' }}>
+                            <div className="flex-1">
+                              <h4 className="text-sm font-semibold text-white mb-2 leading-tight transition-all duration-300 group-hover:text-white/90">
                                 {book.title}
                               </h4>
-                              <p className="text-xs text-white/40 line-clamp-1 mt-1">
+                              <p className="text-xs text-white/50 group-hover:text-white/60 transition-colors duration-300">
                                 {book.author}
                               </p>
                             </div>
 
                             {/* Checkmark badge */}
-                            <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-green-500/20 border border-green-500/40 flex items-center justify-center">
-                              <svg className="w-3.5 h-3.5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            <div className="absolute top-4 right-4 w-7 h-7 rounded-full bg-green-500/20 border border-green-500/40 flex items-center justify-center backdrop-blur-sm transition-all duration-300 group-hover:scale-110 group-hover:bg-green-500/30">
+                              <svg className="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                               </svg>
                             </div>
                           </div>
