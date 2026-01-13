@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import MorphingHero from './components/MorphingHero'
+import RevealHero from './components/RevealHero'
 import CreativeBenefits from './components/CreativeBenefits'
 import AICoachSection from './components/AICoachSection'
 import ScrollRevealCourses from './components/ScrollRevealCourses'
@@ -26,8 +26,8 @@ export default function Home() {
       {/* Custom Cursor */}
       <CustomCursor />
       
-      {/* Morphing Text Hero Section */}
-      <MorphingHero onCtaClick={openModal} />
+      {/* Reveal Hero Section */}
+      <RevealHero onCtaClick={openModal} />
 
       {/* Creative Benefits Section */}
       <CreativeBenefits />
