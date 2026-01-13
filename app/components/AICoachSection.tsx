@@ -391,18 +391,14 @@ Hazlo. Ahora. 🔥`
           </div>
 
           {/* Books - Infinite Horizontal Scroll */}
-          <div className="relative">
+          <div className="relative py-4">
             {/* Blur gradients on edges */}
             <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
             <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
 
-            <div 
-              className="overflow-hidden"
-              onMouseEnter={() => setIsPaused(true)}
-              onMouseLeave={() => setIsPaused(false)}
-            >
+            <div className="overflow-hidden">
               <div 
-                className={`flex gap-4 ${isPaused ? '' : 'animate-infinite-scroll'}`}
+                className="flex gap-4 animate-infinite-scroll"
                 style={{ 
                   width: 'max-content',
                   animationPlayState: isPaused ? 'paused' : 'running'
@@ -430,19 +426,24 @@ Hazlo. Ahora. 🔥`
                         <div
                           key={globalIndex}
                           className="group relative flex-shrink-0 w-44"
+                          onMouseEnter={() => setIsPaused(true)}
+                          onMouseLeave={() => {
+                            setIsPaused(false)
+                            handleBookMouseLeave(globalIndex)
+                          }}
                           onMouseMove={(e) => handleBookMouseMove(e, globalIndex)}
-                          onMouseLeave={() => handleBookMouseLeave(globalIndex)}
                         >
                           <div
                             className="relative p-4 rounded-xl border border-white/10 
                                      bg-white/[0.02] backdrop-blur-xl
                                      hover:border-white/20
-                                     transition-all duration-300 cursor-pointer
+                                     transition-transform duration-200 cursor-pointer
                                      h-36 flex flex-col justify-between"
                             style={{
                               transform: `perspective(1000px) rotateX(${bookRotations[globalIndex]?.x || 0}deg) rotateY(${bookRotations[globalIndex]?.y || 0}deg) scale(${isHovered ? 1.05 : 1})`,
                               transformStyle: 'preserve-3d',
-                              zIndex: isHovered ? 10 : 1
+                              zIndex: isHovered ? 20 : 1,
+                              position: 'relative'
                             }}
                           >
                             {/* Gradient glow on hover */}
