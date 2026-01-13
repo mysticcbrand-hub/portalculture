@@ -1,186 +1,141 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
-interface HeroProps {
-  onCtaClick: () => void
-}
+export default function Hero() {
+  const [scrollY, setScrollY] = useState(0)
+  const [windowHeight, setWindowHeight] = useState(0)
+  const heroRef = useRef<HTMLDivElement>(null)
 
-export default function Hero({ onCtaClick }: HeroProps) {
-  const sphereRef = useRef<HTMLDivElement>(null)
-  const btnRef = useRef<HTMLAnchorElement>(null)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-
-  // Parallax effect for 3D sphere - Ultra smooth
   useEffect(() => {
-    let animationFrameId: number
-    let currentX = 0
-    let currentY = 0
-    let targetX = 0
-    let targetY = 0
-
-    const handleMouseMove = (e: MouseEvent) => {
-      targetX = (e.clientX / window.innerWidth - 0.5) * 50
-      targetY = (e.clientY / window.innerHeight - 0.5) * 50
+    setWindowHeight(window.innerHeight)
+    
+    const handleScroll = () => {
+      setScrollY(window.scrollY)
     }
 
-    const animate = () => {
-      if (!sphereRef.current) return
-      
-      // Smooth interpolation
-      currentX += (targetX - currentX) * 0.1
-      currentY += (targetY - currentY) * 0.1
-      
-      sphereRef.current.style.transform = `
-        translate(-50%, -50%)
-        translate3d(${currentX}px, ${currentY}px, 0)
-      `
-      
-      animationFrameId = requestAnimationFrame(animate)
+    const handleResize = () => {
+      setWindowHeight(window.innerHeight)
     }
 
-    window.addEventListener('mousemove', handleMouseMove)
-    animate()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', handleResize)
     
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      cancelAnimationFrame(animationFrameId)
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleResize)
     }
   }, [])
 
-  // Magnetic button effect - Apple smooth
-  useEffect(() => {
-    let animationFrameId: number
-    let currentX = 0
-    let currentY = 0
-    let targetX = 0
-    let targetY = 0
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!btnRef.current) return
-      
-      const rect = btnRef.current.getBoundingClientRect()
-      const centerX = rect.left + rect.width / 2
-      const centerY = rect.top + rect.height / 2
-      
-      const distanceX = e.clientX - centerX
-      const distanceY = e.clientY - centerY
-      const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2)
-      
-      // Magnetic radius: 100px
-      if (distance < 100) {
-        const strength = (100 - distance) / 100
-        targetX = distanceX * strength * 0.4
-        targetY = distanceY * strength * 0.4
-      } else {
-        targetX = 0
-        targetY = 0
-      }
-    }
-
-    const animate = () => {
-      if (!btnRef.current) return
-      
-      // Smooth interpolation
-      currentX += (targetX - currentX) * 0.15
-      currentY += (targetY - currentY) * 0.15
-      
-      const scale = targetX !== 0 || targetY !== 0 ? 1.05 : 1
-      btnRef.current.style.transform = `translate(${currentX}px, ${currentY}px) scale(${scale})`
-      
-      animationFrameId = requestAnimationFrame(animate)
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-    animate()
-    
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      cancelAnimationFrame(animationFrameId)
-    }
-  }, [])
+  // Progreso del scroll en el hero (0 a 1)
+  const progress = Math.min(1, scrollY / windowHeight)
+  
+  // Opacidades calculadas para cada elemento
+  const titleOpacity = 1 - progress * 1.5
+  const questionOpacity = Math.max(0, Math.min(1, (progress - 0.2) * 3))
+  const descOpacity = Math.max(0, Math.min(1, (progress - 0.4) * 3))
+  const ctaOpacity = Math.max(0, Math.min(1, (progress - 0.6) * 3))
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6">
-      {/* 3D Chrome Sphere Background */}
-      <div ref={sphereRef} className="hero-3d">
-        <div className="sphere"></div>
-      </div>
+    <section 
+      ref={heroRef}
+      className="relative bg-black"
+      style={{ height: '250vh' }}
+    >
+      {/* Fondo negro puro */}
+      <div className="fixed inset-0 bg-black -z-10" />
 
-      {/* Hero Content */}
-      <div className="relative z-10 text-center max-w-5xl mx-auto">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full 
-                      bg-white/5 border border-white/10 mb-8 animate-fadeIn">
-          <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-          <span className="text-sm opacity-80">Comunidad Activa</span>
-        </div>
-
-        {/* Main Headline */}
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 
-                     chrome-gradient-text animate-fadeIn leading-tight">
-          Entra al Portal.<br />Cambia tu vida
-        </h1>
-
-        {/* Subheadline */}
-        <p className="text-xl md:text-2xl mb-12 opacity-70 max-w-3xl mx-auto 
-                    animate-fadeIn leading-relaxed">
-          La comunidad exclusiva donde jóvenes ambiciosos se transforman. 
-          Desafíos, formación premium, y conexiones que aceleran tu crecimiento.
-        </p>
-
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fadeIn">
-          <a
-            ref={btnRef}
-            href="https://app-portalculture.vercel.app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group relative py-5 px-12 
-                     font-semibold text-lg text-white magnetic-btn
-                     rounded-2xl
-                     transition-all duration-500 inline-block"
-          >
-            <span className="relative z-10">Solicitar Acceso Ahora</span>
-          </a>
+      {/* Contenido sticky */}
+      <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
+        
+        {/* Contenedor principal */}
+        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
           
-          <a
-            href="#beneficios"
-            className="py-5 px-12 rounded-2xl font-semibold text-lg
-                     border border-white/20 hover:border-white/40
-                     transition-all duration-300 hover:bg-white/5"
+          {/* Título principal */}
+          <div
+            className="transition-transform duration-100 ease-out"
+            style={{
+              opacity: Math.max(0, titleOpacity),
+              transform: `translateY(${progress * -60}px) scale(${1 - progress * 0.1})`,
+            }}
           >
-            Ver Beneficios
-          </a>
+            <h1 className="font-display text-[clamp(3.5rem,15vw,10rem)] font-semibold tracking-[-0.04em] leading-[0.9] text-white">
+              Portal<span className="text-white/40">.</span>
+            </h1>
+          </div>
+
+          {/* Pregunta provocadora */}
+          <div
+            className="mt-8 transition-transform duration-100 ease-out"
+            style={{
+              opacity: questionOpacity,
+              transform: `translateY(${(1 - questionOpacity) * 40}px)`,
+            }}
+          >
+            <p className="text-xl md:text-2xl lg:text-3xl text-white/80 font-light tracking-tight">
+              ¿De verdad quieres seguir solo?
+            </p>
+          </div>
+
+          {/* Descripción */}
+          <div
+            className="mt-6 transition-transform duration-100 ease-out"
+            style={{
+              opacity: descOpacity,
+              transform: `translateY(${(1 - descOpacity) * 40}px)`,
+            }}
+          >
+            <p className="text-base md:text-lg text-white/40 font-light max-w-lg mx-auto leading-relaxed">
+              La comunidad donde jóvenes ambiciosos construyen 
+              la mejor versión de sí mismos. Juntos.
+            </p>
+          </div>
+
+          {/* CTA */}
+          <div
+            className="mt-10 transition-transform duration-100 ease-out"
+            style={{
+              opacity: ctaOpacity,
+              transform: `translateY(${(1 - ctaOpacity) * 40}px)`,
+            }}
+          >
+            <a
+              href="/acceso"
+              className="group inline-flex items-center gap-3 px-8 py-4 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm text-white text-sm font-medium tracking-wide transition-all duration-300 hover:bg-white/10 hover:border-white/30 hover:scale-[1.02]"
+            >
+              <span>Solicitar Acceso</span>
+              <svg 
+                className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+                strokeWidth={1.5}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </a>
+
+            {/* Info adicional */}
+            <div className="mt-6 flex items-center justify-center gap-4 text-xs text-white/25 font-mono tracking-wide">
+              <span>+15h de valor</span>
+              <span className="w-1 h-1 rounded-full bg-white/20" />
+              <span>4.9★</span>
+            </div>
+          </div>
+
         </div>
 
-        {/* Social Proof */}
-        <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-8 opacity-60">
-          <div className="flex items-center gap-2">
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" />
-            </svg>
-            <span className="text-sm">+15Hr de Valor</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <span className="text-sm">Valoración 4.9/5</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <svg 
-          className="w-6 h-6 opacity-40" 
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24"
+        {/* Indicador de scroll */}
+        <div 
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 transition-opacity duration-500"
+          style={{ opacity: progress < 0.1 ? 1 : 0 }}
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-        </svg>
+          <span className="text-[10px] text-white/30 font-mono tracking-widest uppercase">
+            Scroll
+          </span>
+          <div className="w-px h-8 bg-gradient-to-b from-white/30 to-transparent" />
+        </div>
+
       </div>
     </section>
   )
