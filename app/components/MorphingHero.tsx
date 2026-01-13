@@ -32,12 +32,12 @@ export default function MorphingHero({ onCtaClick }: MorphingHeroProps) {
   const mainText = "Portal."
   const letters = mainText.split('')
 
-  // Colores del gradiente orgánico
+  // Colores del gradiente orgánico - Cinematográfico y exclusivo
   const gradientColors = [
-    { color: 'rgba(99, 102, 241, 0.4)', x: 0.2, y: 0.3 },   // Indigo
-    { color: 'rgba(139, 92, 246, 0.35)', x: 0.8, y: 0.2 },  // Violet  
-    { color: 'rgba(59, 130, 246, 0.3)', x: 0.5, y: 0.7 },   // Blue
-    { color: 'rgba(6, 182, 212, 0.25)', x: 0.1, y: 0.8 },   // Cyan
+    { color: 'rgba(30, 30, 35, 0.8)', x: 0.2, y: 0.3 },      // Charcoal
+    { color: 'rgba(45, 40, 55, 0.6)', x: 0.8, y: 0.2 },      // Deep purple noir
+    { color: 'rgba(25, 25, 30, 0.7)', x: 0.5, y: 0.7 },      // Almost black
+    { color: 'rgba(40, 35, 45, 0.5)', x: 0.1, y: 0.8 },      // Muted violet
   ]
 
   // Mouse tracking suave
@@ -105,21 +105,21 @@ export default function MorphingHero({ onCtaClick }: MorphingHeroProps) {
     }
   }, [])
 
-  // Crear partículas en hover
+  // Crear partículas en hover - más sutiles y elegantes
   const createParticles = useCallback((x: number, y: number, color: string) => {
     const newParticles: Particle[] = []
-    for (let i = 0; i < 12; i++) {
-      const angle = (Math.PI * 2 * i) / 12 + Math.random() * 0.5
-      const velocity = 2 + Math.random() * 4
+    for (let i = 0; i < 8; i++) {
+      const angle = (Math.PI * 2 * i) / 8 + Math.random() * 0.3
+      const velocity = 1 + Math.random() * 2
       newParticles.push({
         id: Date.now() + i,
         x,
         y,
         vx: Math.cos(angle) * velocity,
-        vy: Math.sin(angle) * velocity - 2,
-        life: 60 + Math.random() * 30,
-        maxLife: 90,
-        size: 3 + Math.random() * 4,
+        vy: Math.sin(angle) * velocity - 1,
+        life: 40 + Math.random() * 20,
+        maxLife: 60,
+        size: 1.5 + Math.random() * 2,
         color: color
       })
     }
@@ -143,7 +143,7 @@ export default function MorphingHero({ onCtaClick }: MorphingHeroProps) {
   return (
     <section 
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0a0a0b]"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black"
     >
       {/* SVG Filters para efecto líquido */}
       <svg className="absolute w-0 h-0">
@@ -199,51 +199,52 @@ export default function MorphingHero({ onCtaClick }: MorphingHeroProps) {
         </defs>
       </svg>
 
-      {/* Mesh Gradient Orgánico Animado */}
+      {/* Fondo Cinematográfico Oscuro */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Base gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0b] via-[#0f0f12] to-[#0a0a0b]" />
+        {/* Base negro puro */}
+        <div className="absolute inset-0 bg-black" />
         
-        {/* Formas orgánicas animadas */}
+        {/* Luz cinematográfica sutil - desde arriba */}
+        <div 
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] opacity-[0.08]"
+          style={{
+            background: 'radial-gradient(ellipse at center top, rgba(255,255,255,0.15) 0%, transparent 70%)',
+          }}
+        />
+
+        {/* Formas orgánicas muy sutiles */}
         {gradientColors.map((blob, i) => (
           <div
             key={i}
-            className="absolute rounded-full mix-blend-screen will-change-transform"
+            className="absolute rounded-full will-change-transform"
             style={{
-              width: `${600 + i * 150}px`,
-              height: `${600 + i * 150}px`,
-              background: `radial-gradient(ellipse at center, ${blob.color} 0%, transparent 70%)`,
-              left: `${blob.x * 100 + Math.sin(timeRef.current + i) * 5 + (mousePosition.x - 0.5) * 20}%`,
-              top: `${blob.y * 100 + Math.cos(timeRef.current + i * 0.7) * 5 + (mousePosition.y - 0.5) * 20}%`,
+              width: `${800 + i * 200}px`,
+              height: `${800 + i * 200}px`,
+              background: `radial-gradient(ellipse at center, ${blob.color} 0%, transparent 60%)`,
+              left: `${blob.x * 100 + (mousePosition.x - 0.5) * 10}%`,
+              top: `${blob.y * 100 + (mousePosition.y - 0.5) * 10}%`,
               transform: 'translate(-50%, -50%)',
-              filter: 'blur(80px)',
-              animation: `meshFloat${i + 1} ${18 + i * 4}s ease-in-out infinite`,
-              opacity: 0.8,
+              filter: 'blur(120px)',
+              animation: `meshFloat${i + 1} ${25 + i * 5}s ease-in-out infinite`,
+              opacity: 0.6,
             }}
           />
         ))}
 
-        {/* Overlay de profundidad */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0b] via-transparent to-[#0a0a0b]/50" />
-        
-        {/* Grain texture sutil */}
-        <div 
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-          }}
-        />
+        {/* Viñeta cinematográfica */}
+        <div className="absolute inset-0" 
+             style={{
+               background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.8) 100%)',
+             }} />
 
-        {/* Líneas de luz sutiles */}
+        {/* Overlay superior e inferior */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black opacity-60" />
+        
+        {/* Grain texture cinematográfico */}
         <div 
-          className="absolute inset-0 opacity-[0.02]"
+          className="absolute inset-0 opacity-[0.04]"
           style={{
-            backgroundImage: `
-              linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%),
-              linear-gradient(0deg, transparent 0%, rgba(255,255,255,0.02) 50%, transparent 100%)
-            `,
-            backgroundSize: '100% 100%',
-            animation: 'lightSweep 8s ease-in-out infinite',
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
           }}
         />
       </div>
@@ -300,7 +301,7 @@ export default function MorphingHero({ onCtaClick }: MorphingHeroProps) {
                   createParticles(
                     rect.left + rect.width / 2,
                     rect.top + rect.height / 2,
-                    index % 2 === 0 ? 'rgba(139, 92, 246, 1)' : 'rgba(59, 130, 246, 1)'
+                    'rgba(255, 255, 255, 1)'
                   )
                 }}
                 onMouseLeave={() => setHoveredLetter(null)}
@@ -315,28 +316,28 @@ export default function MorphingHero({ onCtaClick }: MorphingHeroProps) {
                 }}
               >
                 <span 
-                  className={`font-display text-[clamp(4rem,15vw,12rem)] font-semibold leading-[0.9] tracking-[-0.04em] inline-block transition-all duration-500 ${
+                  className={`font-display text-[clamp(4rem,15vw,12rem)] font-semibold leading-[0.9] tracking-[-0.04em] inline-block transition-all duration-700 ${
                     hoveredLetter === index 
-                      ? 'text-transparent bg-clip-text bg-gradient-to-br from-violet-400 via-blue-400 to-cyan-400' 
-                      : 'text-white'
+                      ? 'text-white' 
+                      : 'text-white/90'
                   }`}
                   style={{
                     textShadow: hoveredLetter === index 
-                      ? '0 0 60px rgba(139, 92, 246, 0.5), 0 0 120px rgba(59, 130, 246, 0.3)' 
-                      : '0 0 40px rgba(255, 255, 255, 0.1)',
+                      ? '0 0 80px rgba(255, 255, 255, 0.3), 0 0 120px rgba(255, 255, 255, 0.1)' 
+                      : 'none',
                   }}
                 >
                   {letter}
                 </span>
 
-                {/* Glow bajo la letra en hover */}
+                {/* Glow bajo la letra en hover - blanco sutil */}
                 <div 
-                  className={`absolute -bottom-4 left-1/2 -translate-x-1/2 w-full h-8 rounded-full transition-all duration-500 ${
+                  className={`absolute -bottom-4 left-1/2 -translate-x-1/2 w-full h-6 rounded-full transition-all duration-700 ${
                     hoveredLetter === index ? 'opacity-100' : 'opacity-0'
                   }`}
                   style={{
-                    background: 'radial-gradient(ellipse at center, rgba(139, 92, 246, 0.4) 0%, transparent 70%)',
-                    filter: 'blur(8px)',
+                    background: 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.15) 0%, transparent 70%)',
+                    filter: 'blur(12px)',
                   }}
                 />
               </span>
@@ -362,68 +363,49 @@ export default function MorphingHero({ onCtaClick }: MorphingHeroProps) {
           }`}
           style={{ transitionDelay: '1000ms' }}
         >
-          {/* Botón CTA */}
+          {/* Botón CTA - Minimalista y exclusivo */}
           <a
             href="/acceso"
-            className="group relative inline-flex items-center gap-3 px-8 py-4 text-sm font-medium text-white rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02]"
+            className="group relative inline-flex items-center gap-3 px-8 py-4 text-sm font-medium text-white/90 hover:text-white rounded-full overflow-hidden transition-all duration-700"
             style={{
-              background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              background: 'transparent',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
             }}
           >
-            {/* Hover gradient */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            {/* Hover fill */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700"
                  style={{
-                   background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(59, 130, 246, 0.3) 100%)',
-                 }} />
-            
-            {/* Shimmer effect */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                 style={{
-                   background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
-                   animation: 'shimmer 2s infinite',
+                   background: 'rgba(255, 255, 255, 0.05)',
                  }} />
 
-            <span className="relative z-10">Solicitar Acceso</span>
+            <span className="relative z-10 tracking-wide">Solicitar Acceso</span>
             <svg 
-              className="w-4 h-4 relative z-10 transition-transform duration-300 group-hover:translate-x-1" 
+              className="w-4 h-4 relative z-10 transition-transform duration-500 group-hover:translate-x-1 opacity-50 group-hover:opacity-100" 
               fill="none" 
               viewBox="0 0 24 24" 
               stroke="currentColor"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
-
-            {/* Border glow on hover */}
-            <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                 style={{
-                   boxShadow: 'inset 0 0 20px rgba(139, 92, 246, 0.3), 0 0 40px rgba(139, 92, 246, 0.2)',
-                 }} />
           </a>
 
-          {/* Stats */}
-          <div className="flex items-center gap-6 text-xs font-mono text-white/30 tracking-wider">
-            <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-green-400/60 animate-pulse" />
-              <span>+2.8K MIEMBROS</span>
-            </div>
-            <span className="hidden sm:inline text-white/10">|</span>
-            <span className="hidden sm:inline">4.9★ VALORACIÓN</span>
+          {/* Stats - Ultra minimalista */}
+          <div className="flex items-center gap-6 text-[11px] font-mono text-white/25 tracking-widest uppercase">
+            <span>+2.8K miembros</span>
+            <span className="text-white/10">·</span>
+            <span>4.9 rating</span>
           </div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll Indicator - Cinematográfico */}
       <div 
-        className={`absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 transition-all duration-1000 ${
+        className={`absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 transition-all duration-1000 ${
           isLoaded ? 'opacity-100' : 'opacity-0'
         }`}
-        style={{ transitionDelay: '1200ms' }}
+        style={{ transitionDelay: '1400ms' }}
       >
-        <span className="font-mono text-[10px] tracking-[0.2em] text-white/20 uppercase">
-          Scroll
-        </span>
-        <div className="w-px h-12 bg-gradient-to-b from-white/20 to-transparent" />
+        <div className="w-px h-16 bg-gradient-to-b from-white/10 via-white/5 to-transparent" />
       </div>
 
       {/* Estilos de animación */}
