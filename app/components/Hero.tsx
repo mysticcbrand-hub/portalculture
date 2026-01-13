@@ -66,7 +66,7 @@ export default function Hero() {
             
             {/* PORTAL - limpio y elegante */}
             <h1 className="font-display text-[clamp(4rem,18vw,12rem)] font-medium tracking-[-0.02em] leading-[0.85] text-white">
-              Portal<span className="text-white/30">.</span>
+              Portal
             </h1>
           </div>
 
