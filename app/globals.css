@@ -44,12 +44,21 @@
   50% { opacity: 0.6; }
 }
 
+@keyframes infinite-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
 .animate-shimmer {
   animation: shimmer 2s ease-in-out infinite;
 }
 
 .animate-shine {
   animation: shine 2s ease-in-out infinite;
+}
+
+.animate-infinite-scroll {
+  animation: infinite-scroll 40s linear infinite;
 }
 
 /* ============================================

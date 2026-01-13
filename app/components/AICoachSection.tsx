@@ -7,6 +7,8 @@ export default function AICoachSection() {
   const [isVisible, setIsVisible] = useState(false)
   const [activeConversation, setActiveConversation] = useState(0)
   const [cardRotation, setCardRotation] = useState({ x: 0, y: 0 })
+  const [isPaused, setIsPaused] = useState(false)
+  const [hoveredBookIndex, setHoveredBookIndex] = useState<number | null>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -39,6 +41,25 @@ export default function AICoachSection() {
   }
 
   const handleCardMouseLeave = () => {
+    setCardRotation({ x: 0, y: 0 })
+  }
+
+  const handleBookMouseMove = (e: React.MouseEvent<HTMLDivElement>, index: number) => {
+    const card = e.currentTarget
+    const rect = card.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const centerX = rect.width / 2
+    const centerY = rect.height / 2
+    const rotateX = (y - centerY) / 20
+    const rotateY = (centerX - x) / 20
+
+    setHoveredBookIndex(index)
+    setCardRotation({ x: rotateX, y: rotateY })
+  }
+
+  const handleBookMouseLeave = () => {
+    setHoveredBookIndex(null)
     setCardRotation({ x: 0, y: 0 })
   }
 
@@ -362,60 +383,94 @@ Hazlo. Ahora. 🔥`
             </p>
           </div>
 
-          {/* Books Grid - Horizontal scroll on mobile, grid on desktop */}
-          <div className="overflow-x-auto pb-4 -mx-4 px-4 md:overflow-visible">
-            <div className="flex md:grid md:grid-cols-4 lg:grid-cols-5 gap-4 min-w-max md:min-w-0">
-              {[
-                { title: 'Atomic Habits', author: 'James Clear', color: 'from-blue-500/20 to-cyan-500/20' },
-                { title: 'Can\'t Hurt Me', author: 'David Goggins', color: 'from-red-500/20 to-orange-500/20' },
-                { title: 'Charisma Myth', author: 'Olivia Fox Cabane', color: 'from-purple-500/20 to-pink-500/20' },
-                { title: 'Win Friends', author: 'Dale Carnegie', color: 'from-green-500/20 to-emerald-500/20' },
-                { title: 'Superior Man', author: 'David Deida', color: 'from-amber-500/20 to-yellow-500/20' },
-                { title: 'Naval Almanack', author: 'Naval Ravikant', color: 'from-indigo-500/20 to-blue-500/20' },
-                { title: 'Why We Sleep', author: 'Matthew Walker', color: 'from-violet-500/20 to-purple-500/20' },
-                { title: 'Zero to One', author: 'Peter Thiel', color: 'from-teal-500/20 to-cyan-500/20' },
-                { title: 'Huberman Lab', author: 'Protocolos', color: 'from-rose-500/20 to-pink-500/20' },
-                { title: 'Examine.com', author: 'Research', color: 'from-lime-500/20 to-green-500/20' },
-              ].map((book, idx) => (
-                <div
-                  key={idx}
-                  className="group relative flex-shrink-0 w-40 md:w-auto"
-                >
-                  <div
-                    className="relative p-4 rounded-xl border border-white/10 
-                             bg-white/[0.02] backdrop-blur-xl
-                             hover:border-white/20 hover:bg-white/[0.04]
-                             transition-all duration-300 cursor-pointer
-                             h-32 flex flex-col justify-between"
-                  >
-                    {/* Gradient glow on hover */}
-                    <div 
-                      className={`absolute inset-0 bg-gradient-to-br ${book.color} 
-                               opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 -z-10 rounded-xl`}
-                    />
+          {/* Books - Infinite Horizontal Scroll */}
+          <div className="relative">
+            {/* Blur gradients on edges */}
+            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
 
-                    {/* Book icon */}
-                    <div className="text-2xl mb-2">📖</div>
+            <div 
+              className="overflow-hidden"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+            >
+              <div 
+                className={`flex gap-4 ${isPaused ? '' : 'animate-infinite-scroll'}`}
+                style={{ 
+                  width: 'max-content',
+                  animationPlayState: isPaused ? 'paused' : 'running'
+                }}
+              >
+                {/* Render books twice for seamless infinite loop */}
+                {[...Array(2)].map((_, setIndex) => (
+                  <div key={setIndex} className="flex gap-4">
+                    {[
+                      { title: 'Atomic Habits', author: 'James Clear', color: 'from-blue-500/20 to-cyan-500/20' },
+                      { title: 'Can\'t Hurt Me', author: 'David Goggins', color: 'from-red-500/20 to-orange-500/20' },
+                      { title: 'Charisma Myth', author: 'Olivia Fox Cabane', color: 'from-purple-500/20 to-pink-500/20' },
+                      { title: 'Win Friends', author: 'Dale Carnegie', color: 'from-green-500/20 to-emerald-500/20' },
+                      { title: 'Superior Man', author: 'David Deida', color: 'from-amber-500/20 to-yellow-500/20' },
+                      { title: 'Naval Almanack', author: 'Naval Ravikant', color: 'from-indigo-500/20 to-blue-500/20' },
+                      { title: 'Why We Sleep', author: 'Matthew Walker', color: 'from-violet-500/20 to-purple-500/20' },
+                      { title: 'Zero to One', author: 'Peter Thiel', color: 'from-teal-500/20 to-cyan-500/20' },
+                      { title: 'Huberman Lab', author: 'Protocolos', color: 'from-rose-500/20 to-pink-500/20' },
+                      { title: 'Examine.com', author: 'Research', color: 'from-lime-500/20 to-green-500/20' },
+                    ].map((book, idx) => {
+                      const globalIndex = setIndex * 10 + idx
+                      const isHovered = hoveredBookIndex === globalIndex
+                      const rotation = isHovered ? cardRotation : { x: 0, y: 0 }
 
-                    {/* Content */}
-                    <div>
-                      <h4 className="text-sm font-semibold text-white mb-1 line-clamp-2">
-                        {book.title}
-                      </h4>
-                      <p className="text-xs text-white/40 line-clamp-1">
-                        {book.author}
-                      </p>
-                    </div>
+                      return (
+                        <div
+                          key={globalIndex}
+                          className="group relative flex-shrink-0 w-44"
+                          onMouseMove={(e) => handleBookMouseMove(e, globalIndex)}
+                          onMouseLeave={handleBookMouseLeave}
+                        >
+                          <div
+                            className="relative p-4 rounded-xl border border-white/10 
+                                     bg-white/[0.02] backdrop-blur-xl
+                                     hover:border-white/20
+                                     transition-all duration-300 cursor-pointer
+                                     h-36 flex flex-col justify-between"
+                            style={{
+                              transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) scale(${isHovered ? 1.05 : 1})`,
+                              transformStyle: 'preserve-3d',
+                              zIndex: isHovered ? 10 : 1
+                            }}
+                          >
+                            {/* Gradient glow on hover */}
+                            <div 
+                              className={`absolute inset-0 bg-gradient-to-br ${book.color} 
+                                       opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 -z-10 rounded-xl`}
+                            />
 
-                    {/* Checkmark badge */}
-                    <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-green-500/20 border border-green-500/40 flex items-center justify-center">
-                      <svg className="w-3 h-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
+                            {/* Book icon */}
+                            <div className="text-3xl mb-2">📖</div>
+
+                            {/* Content */}
+                            <div>
+                              <h4 className="text-sm font-semibold text-white mb-1 line-clamp-2">
+                                {book.title}
+                              </h4>
+                              <p className="text-xs text-white/40 line-clamp-1">
+                                {book.author}
+                              </p>
+                            </div>
+
+                            {/* Checkmark badge */}
+                            <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-green-500/20 border border-green-500/40 flex items-center justify-center">
+                              <svg className="w-3.5 h-3.5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 
