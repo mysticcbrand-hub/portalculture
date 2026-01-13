@@ -52,8 +52,8 @@ export default function AICoachSection() {
     const y = e.clientY - rect.top
     const centerX = rect.width / 2
     const centerY = rect.height / 2
-    const rotateX = (y - centerY) / 20
-    const rotateY = (centerX - x) / 20
+    const rotateX = (y - centerY) / 30 // Más sutil (antes /20)
+    const rotateY = (centerX - x) / 30 // Más sutil (antes /20)
 
     setHoveredBookIndex(index)
     setBookRotations(prev => ({
@@ -410,14 +410,14 @@ Hazlo. Ahora. 🔥`
                     {[
                       { title: 'Atomic Habits', author: 'James Clear', color: 'from-blue-500/20 to-cyan-500/20' },
                       { title: 'Can\'t Hurt Me', author: 'David Goggins', color: 'from-red-500/20 to-orange-500/20' },
-                      { title: 'Charisma Myth', author: 'Olivia Fox Cabane', color: 'from-purple-500/20 to-pink-500/20' },
-                      { title: 'Win Friends', author: 'Dale Carnegie', color: 'from-green-500/20 to-emerald-500/20' },
-                      { title: 'Superior Man', author: 'David Deida', color: 'from-amber-500/20 to-yellow-500/20' },
-                      { title: 'Naval Almanack', author: 'Naval Ravikant', color: 'from-indigo-500/20 to-blue-500/20' },
+                      { title: 'The Charisma Myth', author: 'Olivia Fox Cabane', color: 'from-purple-500/20 to-pink-500/20' },
+                      { title: 'Win Friends and Influence People', author: 'Dale Carnegie', color: 'from-green-500/20 to-emerald-500/20' },
+                      { title: 'The Way of the Superior Man', author: 'David Deida', color: 'from-amber-500/20 to-yellow-500/20' },
+                      { title: 'The Almanack of Naval Ravikant', author: 'Naval Ravikant', color: 'from-indigo-500/20 to-blue-500/20' },
                       { title: 'Why We Sleep', author: 'Matthew Walker', color: 'from-violet-500/20 to-purple-500/20' },
                       { title: 'Zero to One', author: 'Peter Thiel', color: 'from-teal-500/20 to-cyan-500/20' },
-                      { title: 'Huberman Lab', author: 'Protocolos', color: 'from-rose-500/20 to-pink-500/20' },
-                      { title: 'Examine.com', author: 'Research', color: 'from-lime-500/20 to-green-500/20' },
+                      { title: 'Huberman Lab Protocols', author: 'Andrew Huberman', color: 'from-rose-500/20 to-pink-500/20' },
+                      { title: 'Examine.com Research', author: 'Evidence-Based', color: 'from-lime-500/20 to-green-500/20' },
                     ].map((book, idx) => {
                       const globalIndex = setIndex * 10 + idx
                       const isHovered = hoveredBookIndex === globalIndex
@@ -457,10 +457,10 @@ Hazlo. Ahora. 🔥`
 
                             {/* Content */}
                             <div>
-                              <h4 className="text-sm font-semibold text-white mb-1 line-clamp-2">
+                              <h4 className="text-xs font-semibold text-white mb-1 leading-tight" style={{ lineHeight: '1.2' }}>
                                 {book.title}
                               </h4>
-                              <p className="text-xs text-white/40 line-clamp-1">
+                              <p className="text-xs text-white/40 line-clamp-1 mt-1">
                                 {book.author}
                               </p>
                             </div>
