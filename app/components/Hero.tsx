@@ -59,7 +59,7 @@ export default function Hero() {
               transform: `translateY(${progress * -60}px) scale(${1 - progress * 0.1})`,
             }}
           >
-            <h1 className="font-display text-[clamp(3.5rem,15vw,10rem)] font-semibold tracking-[-0.04em] leading-[0.9] text-white">
+            <h1 className="font-display text-[clamp(3.5rem,15vw,10rem)] font-bold tracking-[-0.02em] leading-[0.9] text-white">
               Portal<span className="text-white/40">.</span>
             </h1>
           </div>
