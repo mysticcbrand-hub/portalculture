@@ -6,7 +6,8 @@ export default function AICoachSection() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [activeConversation, setActiveConversation] = useState(0)
-  const [cardRotation, setCardRotation] = useState({ x: 0, y: 0 })
+  const [chatRotation, setChatRotation] = useState({ x: 0, y: 0 })
+  const [bookRotations, setBookRotations] = useState<{ [key: number]: { x: number; y: number } }>({})
   const [isPaused, setIsPaused] = useState(false)
   const [hoveredBookIndex, setHoveredBookIndex] = useState<number | null>(null)
 
@@ -37,11 +38,11 @@ export default function AICoachSection() {
     const rotateX = (y - centerY) / 25
     const rotateY = (centerX - x) / 25
 
-    setCardRotation({ x: rotateX, y: rotateY })
+    setChatRotation({ x: rotateX, y: rotateY })
   }
 
   const handleCardMouseLeave = () => {
-    setCardRotation({ x: 0, y: 0 })
+    setChatRotation({ x: 0, y: 0 })
   }
 
   const handleBookMouseMove = (e: React.MouseEvent<HTMLDivElement>, index: number) => {
@@ -55,12 +56,18 @@ export default function AICoachSection() {
     const rotateY = (centerX - x) / 20
 
     setHoveredBookIndex(index)
-    setCardRotation({ x: rotateX, y: rotateY })
+    setBookRotations(prev => ({
+      ...prev,
+      [index]: { x: rotateX, y: rotateY }
+    }))
   }
 
-  const handleBookMouseLeave = () => {
+  const handleBookMouseLeave = (index: number) => {
     setHoveredBookIndex(null)
-    setCardRotation({ x: 0, y: 0 })
+    setBookRotations(prev => ({
+      ...prev,
+      [index]: { x: 0, y: 0 }
+    }))
   }
 
   const conversations = [
@@ -177,7 +184,7 @@ Hazlo. Ahora. 🔥`
               onMouseMove={handleCardMouseMove}
               onMouseLeave={handleCardMouseLeave}
               style={{
-                transform: `perspective(1000px) rotateX(${cardRotation.x}deg) rotateY(${cardRotation.y}deg)`,
+                transform: `perspective(1000px) rotateX(${chatRotation.x}deg) rotateY(${chatRotation.y}deg)`,
                 transformStyle: 'preserve-3d',
               }}
             >
@@ -425,7 +432,7 @@ Hazlo. Ahora. 🔥`
                           key={globalIndex}
                           className="group relative flex-shrink-0 w-44"
                           onMouseMove={(e) => handleBookMouseMove(e, globalIndex)}
-                          onMouseLeave={handleBookMouseLeave}
+                          onMouseLeave={() => handleBookMouseLeave(globalIndex)}
                         >
                           <div
                             className="relative p-4 rounded-xl border border-white/10 
@@ -434,7 +441,7 @@ Hazlo. Ahora. 🔥`
                                      transition-all duration-300 cursor-pointer
                                      h-36 flex flex-col justify-between"
                             style={{
-                              transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) scale(${isHovered ? 1.05 : 1})`,
+                              transform: `perspective(1000px) rotateX(${bookRotations[globalIndex]?.x || 0}deg) rotateY(${bookRotations[globalIndex]?.y || 0}deg) scale(${isHovered ? 1.05 : 1})`,
                               transformStyle: 'preserve-3d',
                               zIndex: isHovered ? 10 : 1
                             }}
