@@ -391,12 +391,12 @@ Hazlo. Ahora. 🔥`
           </div>
 
           {/* Books - Infinite Horizontal Scroll */}
-          <div className="relative py-8">
+          <div className="relative" style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
             {/* Blur gradients on edges */}
             <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
             <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
 
-            <div className="overflow-x-hidden overflow-y-visible">
+            <div style={{ overflowX: 'hidden', overflowY: 'visible' }}>
               <div 
                 className="flex gap-4 animate-infinite-scroll"
                 style={{ 
@@ -434,11 +434,12 @@ Hazlo. Ahora. 🔥`
                           onMouseMove={(e) => handleBookMouseMove(e, globalIndex)}
                         >
                           <div
-                            className="relative p-4 rounded-xl border border-white/10 
+                            className="relative p-5 rounded-xl border border-white/10 
                                      bg-white/[0.02] backdrop-blur-xl
                                      hover:border-white/20
                                      transition-transform duration-200 cursor-pointer
-                                     h-36 flex flex-col justify-between"
+                                     flex flex-col justify-between"
+                            style={{ minHeight: '10rem' }}
                             style={{
                               transform: `perspective(1000px) rotateX(${bookRotations[globalIndex]?.x || 0}deg) rotateY(${bookRotations[globalIndex]?.y || 0}deg) scale(${isHovered ? 1.05 : 1})`,
                               transformStyle: 'preserve-3d',
