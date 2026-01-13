@@ -393,14 +393,18 @@ Hazlo. Ahora. 🔥`
 
           {/* Books - Infinite Horizontal Scroll */}
           <div className="relative py-16">
-            {/* Blur gradients on edges - Seamless con fondo */}
-            <div className="absolute left-0 top-0 bottom-0 w-40 md:w-48 z-20 pointer-events-none"
+            {/* Más espacio lateral para evitar que el glow interfiera */}
+            <div className="absolute left-0 top-0 bottom-0 w-32 md:w-40 z-20 pointer-events-none bg-black" />
+            <div className="absolute right-0 top-0 bottom-0 w-32 md:w-40 z-20 pointer-events-none bg-black" />
+            
+            {/* Blur gradients sutiles solo en el centro */}
+            <div className="absolute left-32 md:left-40 top-0 bottom-0 w-24 z-20 pointer-events-none"
                  style={{
-                   background: 'linear-gradient(to right, rgb(0, 0, 0) 0%, rgb(0, 0, 0) 20%, rgba(0, 0, 0, 0.9) 40%, rgba(0, 0, 0, 0.6) 60%, transparent 100%)'
+                   background: 'linear-gradient(to right, rgba(0, 0, 0, 1), transparent)'
                  }} />
-            <div className="absolute right-0 top-0 bottom-0 w-40 md:w-48 z-20 pointer-events-none"
+            <div className="absolute right-32 md:right-40 top-0 bottom-0 w-24 z-20 pointer-events-none"
                  style={{
-                   background: 'linear-gradient(to left, rgb(0, 0, 0) 0%, rgb(0, 0, 0) 20%, rgba(0, 0, 0, 0.9) 40%, rgba(0, 0, 0, 0.6) 60%, transparent 100%)'
+                   background: 'linear-gradient(to left, rgba(0, 0, 0, 1), transparent)'
                  }} />
 
             {/* Scroll container with proper overflow handling */}
@@ -411,7 +415,9 @@ Hazlo. Ahora. 🔥`
                   width: 'max-content',
                   animationPlayState: isPaused ? 'paused' : 'running',
                   paddingTop: '2rem',
-                  paddingBottom: '2rem'
+                  paddingBottom: '2rem',
+                  paddingLeft: '10rem',
+                  paddingRight: '10rem'
                 }}
               >
                 {/* Render books twice for seamless infinite loop */}
@@ -447,42 +453,47 @@ Hazlo. Ahora. 🔥`
                           <div
                             className="relative p-6 rounded-2xl border border-white/10 
                                      bg-white/[0.03] backdrop-blur-xl
-                                     hover:border-white/30
-                                     transition-all duration-300 ease-out cursor-pointer
-                                     flex flex-col justify-between h-full"
+                                     hover:border-white/20 hover:bg-white/[0.05]
+                                     transition-all duration-500 ease-out cursor-pointer
+                                     flex flex-col justify-between h-full overflow-hidden"
                             style={{
                               minHeight: '11rem',
-                              transform: `perspective(1200px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) scale(${isHovered ? 1.08 : 1}) translateZ(${isHovered ? '20px' : '0px'})`,
+                              transform: `perspective(1200px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) scale(${isHovered ? 1.05 : 1})`,
                               transformStyle: 'preserve-3d',
                               zIndex: isHovered ? 30 : 1,
-                              transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease',
+                              transition: 'all 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
+                              boxShadow: isHovered ? '0 20px 60px -15px rgba(0, 0, 0, 0.5), 0 0 40px -10px ' + (book.color.includes('blue') ? 'rgba(59, 130, 246, 0.3)' : book.color.includes('purple') ? 'rgba(168, 85, 247, 0.3)' : book.color.includes('red') ? 'rgba(239, 68, 68, 0.3)' : 'rgba(255, 255, 255, 0.1)') : 'none'
                             }}
                           >
-                            {/* Gradient glow on hover - More intense */}
+                            {/* Sutil shimmer effect en hover */}
                             <div 
-                              className={`absolute -inset-2 bg-gradient-to-br ${book.color} 
-                                       opacity-0 group-hover:opacity-100 blur-2xl transition-all duration-500 -z-10 rounded-2xl scale-110`}
+                              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                              style={{
+                                background: 'linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.03) 50%, transparent 100%)',
+                                transform: isHovered ? 'translateX(100%)' : 'translateX(-100%)',
+                                transition: 'transform 0.7s ease-in-out'
+                              }}
                             />
 
-                            {/* Subtle inner glow */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            {/* Inner glow más sutil */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.07] via-transparent to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                             {/* Book icon */}
-                            <div className="text-4xl mb-3 transition-transform duration-300 group-hover:scale-110">📖</div>
+                            <div className="text-4xl mb-3 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">📖</div>
 
                             {/* Content */}
                             <div className="flex-1">
-                              <h4 className="text-sm font-semibold text-white mb-2 leading-tight transition-all duration-300 group-hover:text-white/90">
+                              <h4 className="text-sm font-semibold text-white/90 mb-2 leading-tight transition-all duration-500 group-hover:text-white group-hover:translate-x-0.5">
                                 {book.title}
                               </h4>
-                              <p className="text-xs text-white/50 group-hover:text-white/60 transition-colors duration-300">
+                              <p className="text-xs text-white/40 group-hover:text-white/70 transition-all duration-500">
                                 {book.author}
                               </p>
                             </div>
 
-                            {/* Checkmark badge */}
-                            <div className="absolute top-4 right-4 w-7 h-7 rounded-full bg-green-500/20 border border-green-500/40 flex items-center justify-center backdrop-blur-sm transition-all duration-300 group-hover:scale-110 group-hover:bg-green-500/30">
-                              <svg className="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            {/* Checkmark badge - Más elegante */}
+                            <div className="absolute top-4 right-4 w-7 h-7 rounded-full bg-green-500/20 border border-green-500/40 flex items-center justify-center backdrop-blur-sm transition-all duration-500 group-hover:scale-110 group-hover:bg-green-500/40 group-hover:border-green-400/60 group-hover:shadow-lg group-hover:shadow-green-500/20">
+                              <svg className="w-4 h-4 text-green-400 group-hover:text-green-300 transition-colors duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                               </svg>
                             </div>
