@@ -345,6 +345,96 @@ Hazlo. Ahora. 🔥`
             </p>
           </div>
         </div>
+
+        {/* Knowledge Sources - Interactive Section */}
+        <div 
+          className={`mt-20 transition-all duration-1000 delay-500 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
+          <div className="text-center mb-10">
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+              Conocimiento de élite
+            </h3>
+            <p className="text-white/60">
+              Entrenado con más de <span className="text-white font-semibold">10 libros</span> y{' '}
+              <span className="text-white font-semibold">100+ horas</span> de contenido verificado
+            </p>
+          </div>
+
+          {/* Books Grid - Horizontal scroll on mobile, grid on desktop */}
+          <div className="overflow-x-auto pb-4 -mx-4 px-4 md:overflow-visible">
+            <div className="flex md:grid md:grid-cols-4 lg:grid-cols-5 gap-4 min-w-max md:min-w-0">
+              {[
+                { title: 'Atomic Habits', author: 'James Clear', color: 'from-blue-500/20 to-cyan-500/20' },
+                { title: 'Can\'t Hurt Me', author: 'David Goggins', color: 'from-red-500/20 to-orange-500/20' },
+                { title: 'Charisma Myth', author: 'Olivia Fox Cabane', color: 'from-purple-500/20 to-pink-500/20' },
+                { title: 'Win Friends', author: 'Dale Carnegie', color: 'from-green-500/20 to-emerald-500/20' },
+                { title: 'Superior Man', author: 'David Deida', color: 'from-amber-500/20 to-yellow-500/20' },
+                { title: 'Naval Almanack', author: 'Naval Ravikant', color: 'from-indigo-500/20 to-blue-500/20' },
+                { title: 'Why We Sleep', author: 'Matthew Walker', color: 'from-violet-500/20 to-purple-500/20' },
+                { title: 'Zero to One', author: 'Peter Thiel', color: 'from-teal-500/20 to-cyan-500/20' },
+                { title: 'Huberman Lab', author: 'Protocolos', color: 'from-rose-500/20 to-pink-500/20' },
+                { title: 'Examine.com', author: 'Research', color: 'from-lime-500/20 to-green-500/20' },
+              ].map((book, idx) => (
+                <div
+                  key={idx}
+                  className="group relative flex-shrink-0 w-40 md:w-auto"
+                >
+                  <div
+                    className="relative p-4 rounded-xl border border-white/10 
+                             bg-white/[0.02] backdrop-blur-xl
+                             hover:border-white/20 hover:bg-white/[0.04]
+                             transition-all duration-300 cursor-pointer
+                             h-32 flex flex-col justify-between"
+                  >
+                    {/* Gradient glow on hover */}
+                    <div 
+                      className={`absolute inset-0 bg-gradient-to-br ${book.color} 
+                               opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 -z-10 rounded-xl`}
+                    />
+
+                    {/* Book icon */}
+                    <div className="text-2xl mb-2">📖</div>
+
+                    {/* Content */}
+                    <div>
+                      <h4 className="text-sm font-semibold text-white mb-1 line-clamp-2">
+                        {book.title}
+                      </h4>
+                      <p className="text-xs text-white/40 line-clamp-1">
+                        {book.author}
+                      </p>
+                    </div>
+
+                    {/* Checkmark badge */}
+                    <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-green-500/20 border border-green-500/40 flex items-center justify-center">
+                      <svg className="w-3 h-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Stats below */}
+          <div className="flex flex-wrap justify-center gap-8 mt-10">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white mb-1">10+</div>
+              <div className="text-sm text-white/50">Libros premium</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white mb-1">100+</div>
+              <div className="text-sm text-white/50">Horas de contenido</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white mb-1">5</div>
+              <div className="text-sm text-white/50">Fuentes científicas</div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )
