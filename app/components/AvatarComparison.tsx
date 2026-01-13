@@ -154,15 +154,9 @@ export default function AvatarComparison() {
                     }}
                   />
                   
-                  {/* Viñeta gris suave para transición */}
-                  <div className="absolute inset-0 pointer-events-none" 
-                       style={{
-                         background: 'radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.8) 100%)'
-                       }} />
-                  
-                  {/* Dark vignette overlay adicional */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-black/85 pointer-events-none" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/70 pointer-events-none" />
+                  {/* Dark vignette overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 pointer-events-none" />
                 </div>
 
                 {/* Title */}
@@ -243,15 +237,9 @@ export default function AvatarComparison() {
                     }}
                   />
                   
-                  {/* Viñeta gris suave para transición */}
-                  <div className="absolute inset-0 pointer-events-none" 
-                       style={{
-                         background: 'radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.8) 100%)'
-                       }} />
-                  
-                  {/* Dark vignette overlay adicional */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-black/85 pointer-events-none" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/70 pointer-events-none" />
+                  {/* Dark vignette overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 pointer-events-none" />
                 </div>
 
                 {/* Title */}
