@@ -508,18 +508,21 @@ Hazlo. Ahora. 🔥`
           </div>
 
           {/* Stats below */}
-          <div className="flex flex-wrap justify-center gap-8 mt-10">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">10+</div>
-              <div className="text-sm text-white/50">Libros premium</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">100+</div>
-              <div className="text-sm text-white/50">Horas de contenido</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">5</div>
-              <div className="text-sm text-white/50">Fuentes científicas</div>
+          <div className="text-center mt-10">
+            <p className="text-sm text-white/40 mb-6 uppercase tracking-wider">Nutrida con</p>
+            <div className="flex flex-wrap justify-center gap-8">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white mb-1">10+</div>
+                <div className="text-sm text-white/50">Libros</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white mb-1">100+</div>
+                <div className="text-sm text-white/50">Horas de contenido</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white mb-1">5</div>
+                <div className="text-sm text-white/50">Fuentes científicas</div>
+              </div>
             </div>
           </div>
         </div>
