@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import CreativeHero from './components/CreativeHero'
+import Interactive3DHero from './components/Interactive3DHero'
 import CreativeBenefits from './components/CreativeBenefits'
 import AICoachSection from './components/AICoachSection'
 import ScrollRevealCourses from './components/ScrollRevealCourses'
@@ -26,8 +26,8 @@ export default function Home() {
       {/* Custom Cursor */}
       <CustomCursor />
       
-      {/* Creative Hero Section */}
-      <CreativeHero onCtaClick={openModal} />
+      {/* Interactive 3D Hero Section */}
+      <Interactive3DHero onCtaClick={openModal} />
 
       {/* Creative Benefits Section */}
       <CreativeBenefits />

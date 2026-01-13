@@ -72,6 +72,15 @@
   perspective: 1000px;
 }
 
+/* Gradientes especiales para el portal 3D */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
+.bg-gradient-conic {
+  background: conic-gradient(from 0deg, var(--tw-gradient-stops));
+}
+
 /* ============================================
    PREMIUM LANDING PAGE - GLOBAL STYLES
    Chrome aesthetics, 3D effects, Apple-level polish
