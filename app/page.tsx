@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import HeroStatement from './components/HeroStatement'
+import HeroPremium from './components/HeroPremium'
 import CreativeBenefits from './components/CreativeBenefits'
 import AICoachSection from './components/AICoachSection'
 import ScrollRevealCourses from './components/ScrollRevealCourses'
@@ -26,8 +26,8 @@ export default function Home() {
       {/* Custom Cursor */}
       <CustomCursor />
       
-      {/* Hero Section - THE STATEMENT */}
-      <HeroStatement />
+      {/* Hero Section - Premium Glassmorphism */}
+      <HeroPremium />
 
       {/* Creative Benefits Section */}
       <CreativeBenefits />
