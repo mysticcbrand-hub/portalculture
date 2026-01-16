@@ -39,42 +39,40 @@ export default function HeroPremium() {
   const contentScale = 1 - scrollProgress * 0.05
 
   return (
-    <section ref={heroRef} className="relative min-h-screen bg-[#050507] overflow-hidden">
+    <section ref={heroRef} className="relative min-h-screen bg-black overflow-hidden">
       
       {/* ============================================
-          BACKGROUND - Clean, minimal, Apple-style
+          BACKGROUND - Clean gradient like /04 section
           ============================================ */}
       
-      {/* Single soft gradient orb - very subtle, no banding */}
+      {/* Subtle gradient glow - responds to mouse */}
       <div 
-        className="absolute pointer-events-none"
+        className="absolute inset-0 pointer-events-none transition-all duration-1000 ease-out"
         style={{
-          width: '150vw',
-          height: '150vh',
-          top: '-25vh',
-          left: '-25vw',
-          background: `
-            conic-gradient(
-              from 180deg at ${50 + (mousePosition.x - 0.5) * 10}% ${40 + (mousePosition.y - 0.5) * 10}%,
-              rgba(88, 28, 135, 0.15) 0deg,
-              rgba(15, 23, 42, 0.1) 60deg,
-              rgba(30, 27, 75, 0.12) 120deg,
-              rgba(49, 46, 129, 0.1) 180deg,
-              rgba(15, 23, 42, 0.08) 240deg,
-              rgba(88, 28, 135, 0.15) 360deg
-            )
-          `,
-          filter: 'blur(100px) saturate(1.2)',
-          transition: 'background 1s ease-out',
+          background: `radial-gradient(
+            ellipse 80% 60% at ${50 + (mousePosition.x - 0.5) * 8}% ${45 + (mousePosition.y - 0.5) * 8}%,
+            rgba(99, 102, 241, 0.08) 0%,
+            rgba(139, 92, 246, 0.04) 30%,
+            transparent 70%
+          )`,
         }}
       />
       
-      {/* Grain/noise texture - STRONG to eliminate banding completely */}
+      {/* Secondary subtle accent */}
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 60% 40% at 70% 20%, rgba(168, 85, 247, 0.04) 0%, transparent 50%)',
+        }}
+      />
+      
+      {/* Noise texture - subtle */}
       <div 
         className="absolute inset-0 pointer-events-none z-[5]"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-          opacity: 0.08,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          opacity: 0.04,
+          mixBlendMode: 'overlay',
         }}
       />
 
