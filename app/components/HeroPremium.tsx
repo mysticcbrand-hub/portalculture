@@ -5,7 +5,7 @@ import Image from 'next/image'
 
 export default function HeroPremium() {
   const [mounted, setMounted] = useState(false)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 })
   const [scrollY, setScrollY] = useState(0)
   const heroRef = useRef<HTMLDivElement>(null)
 
@@ -13,8 +13,9 @@ export default function HeroPremium() {
     setMounted(true)
     
     const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 2
-      const y = (e.clientY / window.innerHeight - 0.5) * 2
+      // Normalized 0-1 for smoother calculations
+      const x = e.clientX / window.innerWidth
+      const y = e.clientY / window.innerHeight
       setMousePosition({ x, y })
     }
 
@@ -38,175 +39,42 @@ export default function HeroPremium() {
   const contentScale = 1 - scrollProgress * 0.05
 
   return (
-    <section ref={heroRef} className="relative min-h-screen bg-black overflow-hidden">
+    <section ref={heroRef} className="relative min-h-screen bg-[#050507] overflow-hidden">
       
       {/* ============================================
-          BACKGROUND - Smooth gradients with dithering
+          BACKGROUND - Clean, minimal, Apple-style
           ============================================ */}
       
-      {/* SVG filter for dithering - eliminates banding */}
-      <svg className="absolute w-0 h-0">
-        <defs>
-          <filter id="noiseFilter">
-            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" result="noise"/>
-            <feColorMatrix type="saturate" values="0"/>
-            <feComponentTransfer>
-              <feFuncR type="linear" slope="0.1"/>
-              <feFuncG type="linear" slope="0.1"/>
-              <feFuncB type="linear" slope="0.1"/>
-              <feFuncA type="linear" slope="0.3" intercept="0"/>
-            </feComponentTransfer>
-            <feBlend in="SourceGraphic" mode="overlay"/>
-          </filter>
-        </defs>
-      </svg>
-      
-      {/* ============================================
-          MESH GRADIENT SYSTEM - Apple-style, no banding
-          Multiple large, soft gradients that blend together
-          ============================================ */}
-      
-      {/* Base layer - very subtle warm undertone */}
+      {/* Single soft gradient orb - very subtle, no banding */}
       <div 
-        className="absolute inset-0"
+        className="absolute pointer-events-none"
         style={{
-          background: 'linear-gradient(135deg, rgba(10, 8, 18, 1) 0%, rgba(5, 5, 12, 1) 100%)',
+          width: '150vw',
+          height: '150vh',
+          top: '-25vh',
+          left: '-25vw',
+          background: `
+            conic-gradient(
+              from 180deg at ${50 + (mousePosition.x - 0.5) * 10}% ${40 + (mousePosition.y - 0.5) * 10}%,
+              rgba(88, 28, 135, 0.15) 0deg,
+              rgba(15, 23, 42, 0.1) 60deg,
+              rgba(30, 27, 75, 0.12) 120deg,
+              rgba(49, 46, 129, 0.1) 180deg,
+              rgba(15, 23, 42, 0.08) 240deg,
+              rgba(88, 28, 135, 0.15) 360deg
+            )
+          `,
+          filter: 'blur(100px) saturate(1.2)',
+          transition: 'background 1s ease-out',
         }}
       />
       
-      {/* Mesh gradient container - responds to mouse */}
+      {/* Grain/noise texture - STRONG to eliminate banding completely */}
       <div 
-        className="absolute inset-0 pointer-events-none overflow-hidden"
-      >
-        {/* Gradient 1 - Top left purple/violet - LARGE */}
-        <div 
-          className="absolute rounded-full"
-          style={{
-            width: '140%',
-            height: '100%',
-            top: '-60%',
-            left: '-40%',
-            background: `
-              radial-gradient(
-                ellipse 50% 50% at 50% 50%,
-                rgba(124, 58, 237, 0.08) 0%,
-                rgba(109, 40, 217, 0.04) 25%,
-                rgba(91, 33, 182, 0.02) 45%,
-                transparent 70%
-              )
-            `,
-            filter: 'blur(40px)',
-            transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * 15}px)`,
-            transition: 'transform 2s cubic-bezier(0.16, 1, 0.3, 1)',
-          }}
-        />
-        
-        {/* Gradient 2 - Top right indigo/blue - LARGE */}
-        <div 
-          className="absolute rounded-full"
-          style={{
-            width: '120%',
-            height: '90%',
-            top: '-40%',
-            right: '-30%',
-            background: `
-              radial-gradient(
-                ellipse 55% 55% at 50% 50%,
-                rgba(79, 70, 229, 0.06) 0%,
-                rgba(67, 56, 202, 0.03) 30%,
-                rgba(55, 48, 163, 0.015) 50%,
-                transparent 75%
-              )
-            `,
-            filter: 'blur(50px)',
-            transform: `translate(${mousePosition.x * -15}px, ${mousePosition.y * 12}px)`,
-            transition: 'transform 2.5s cubic-bezier(0.16, 1, 0.3, 1)',
-          }}
-        />
-        
-        {/* Gradient 3 - Center subtle rose/pink */}
-        <div 
-          className="absolute rounded-full"
-          style={{
-            width: '100%',
-            height: '80%',
-            top: '20%',
-            left: '10%',
-            background: `
-              radial-gradient(
-                ellipse 60% 50% at 50% 50%,
-                rgba(244, 114, 182, 0.025) 0%,
-                rgba(236, 72, 153, 0.012) 35%,
-                transparent 65%
-              )
-            `,
-            filter: 'blur(60px)',
-            transform: `translate(${mousePosition.x * 10}px, ${mousePosition.y * -8}px)`,
-            transition: 'transform 3s cubic-bezier(0.16, 1, 0.3, 1)',
-          }}
-        />
-        
-        {/* Gradient 4 - Bottom center blue/cyan glow */}
-        <div 
-          className="absolute rounded-full"
-          style={{
-            width: '130%',
-            height: '70%',
-            bottom: '-30%',
-            left: '-15%',
-            background: `
-              radial-gradient(
-                ellipse 50% 60% at 50% 50%,
-                rgba(56, 189, 248, 0.03) 0%,
-                rgba(14, 165, 233, 0.015) 30%,
-                rgba(2, 132, 199, 0.008) 50%,
-                transparent 70%
-              )
-            `,
-            filter: 'blur(45px)',
-            transform: `translate(${mousePosition.x * -12}px, ${mousePosition.y * -18}px)`,
-            transition: 'transform 2.2s cubic-bezier(0.16, 1, 0.3, 1)',
-          }}
-        />
-        
-        {/* Gradient 5 - Floating accent orb - moves more */}
-        <div 
-          className="absolute rounded-full"
-          style={{
-            width: '60%',
-            height: '50%',
-            top: '30%',
-            right: '5%',
-            background: `
-              radial-gradient(
-                circle at 50% 50%,
-                rgba(167, 139, 250, 0.04) 0%,
-                rgba(139, 92, 246, 0.02) 40%,
-                transparent 70%
-              )
-            `,
-            filter: 'blur(35px)',
-            transform: `translate(${mousePosition.x * 25}px, ${mousePosition.y * 20}px)`,
-            transition: 'transform 1.8s cubic-bezier(0.16, 1, 0.3, 1)',
-          }}
-        />
-      </div>
-      
-      {/* Vignette - subtle darkening at edges */}
-      <div 
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none z-[5]"
         style={{
-          background: 'radial-gradient(ellipse 80% 80% at 50% 50%, transparent 0%, rgba(0, 0, 0, 0.4) 100%)',
-        }}
-      />
-
-      {/* Noise texture - fine grain for smooth gradients */}
-      <div 
-        className="absolute inset-0 pointer-events-none z-10"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          opacity: 0.035,
-          mixBlendMode: 'overlay',
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          opacity: 0.08,
         }}
       />
 
@@ -230,6 +98,17 @@ export default function HeroPremium() {
         {/* Main content - centered */}
         <div className="flex-1 flex flex-col items-center justify-center px-6 pb-20">
           
+          {/* Section indicator */}
+          <div 
+            className={`
+              mb-6
+              transition-all duration-1000 ease-out
+              ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
+            `}
+          >
+            <span className="font-mono text-xs tracking-wider text-white/30">/ 01</span>
+          </div>
+          
           {/* Logo mark - with 3D tilt hover */}
           <div 
             className={`
@@ -246,15 +125,15 @@ export default function HeroPremium() {
               className="
                 relative w-20 h-20 md:w-24 md:h-24
                 rounded-2xl md:rounded-3xl
-                bg-gradient-to-b from-white/[0.1] to-white/[0.03]
-                border border-white/[0.1]
+                bg-gradient-to-b from-white/[0.08] to-white/[0.02]
+                border border-white/[0.08]
                 backdrop-blur-xl
-                shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.08)]
+                shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.06)]
                 flex items-center justify-center
                 overflow-hidden
                 transition-all duration-500 ease-out
                 group-hover:shadow-[0_16px_48px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.1)]
-                group-hover:border-white/[0.15]
+                group-hover:border-white/[0.12]
               "
               style={{
                 transformStyle: 'preserve-3d',
@@ -263,99 +142,45 @@ export default function HeroPremium() {
                 const rect = e.currentTarget.getBoundingClientRect()
                 const x = (e.clientX - rect.left) / rect.width - 0.5
                 const y = (e.clientY - rect.top) / rect.height - 0.5
-                e.currentTarget.style.transform = `rotateY(${x * 20}deg) rotateX(${-y * 20}deg)`
+                e.currentTarget.style.transform = `rotateY(${x * 15}deg) rotateX(${-y * 15}deg)`
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'rotateY(0) rotateX(0)'
               }}
             >
               {/* Shine effect on hover */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.15] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              {/* Logo - brighter */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.12] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              {/* Logo */}
               <Image 
                 src="/logo.png" 
                 alt="Portal" 
                 width={56} 
                 height={56}
-                className="relative z-10 w-12 h-12 md:w-14 md:h-14 object-contain brightness-110"
+                className="relative z-10 w-12 h-12 md:w-14 md:h-14 object-contain"
               />
             </div>
           </div>
 
-          {/* Main headline - with liquid glass effect */}
+          {/* Main headline */}
           <h1 
             className={`
               text-center mb-5 md:mb-6
               transition-all duration-1000 ease-out
               ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}
             `}
-            style={{ 
-              transitionDelay: '300ms',
-              perspective: '1000px',
-            }}
+            style={{ transitionDelay: '300ms' }}
           >
             <span 
               className="
-                group/title
-                block text-[clamp(2.8rem,9vw,6rem)] 
-                font-normal tracking-[0.02em] leading-[0.9]
+                block text-[clamp(2.5rem,8vw,5.5rem)] 
+                font-normal tracking-[0.01em] leading-[0.95]
                 text-white
-                relative inline-block
-                cursor-default
               "
               style={{
                 fontFamily: "'Fuente Display', 'Scotch Display', Georgia, serif",
               }}
-              onMouseMove={(e) => {
-                const rect = e.currentTarget.getBoundingClientRect()
-                const x = e.clientX - rect.left
-                const y = e.clientY - rect.top
-                
-                e.currentTarget.style.setProperty('--mouse-x', `${x}px`)
-                e.currentTarget.style.setProperty('--mouse-y', `${y}px`)
-              }}
             >
               PORTAL CULTURE
-              
-              {/* Liquid glass shimmer effect - stronger */}
-              <span 
-                className="absolute inset-0 opacity-0 group-hover/title:opacity-100 transition-opacity duration-700 pointer-events-none"
-                style={{
-                  background: `
-                    radial-gradient(
-                      500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-                      rgba(255, 255, 255, 0.2) 0%,
-                      rgba(255, 255, 255, 0.08) 25%,
-                      transparent 60%
-                    )
-                  `,
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  filter: 'blur(0.5px)',
-                  mixBlendMode: 'plus-lighter',
-                }}
-              />
-              
-              {/* Subtle color shift */}
-              <span 
-                className="absolute inset-0 opacity-0 group-hover/title:opacity-100 transition-opacity duration-500 pointer-events-none"
-                style={{
-                  background: `
-                    radial-gradient(
-                      350px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-                      rgba(167, 139, 250, 0.12) 0%,
-                      rgba(139, 92, 246, 0.06) 30%,
-                      transparent 55%
-                    )
-                  `,
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  filter: 'blur(0.8px)',
-                  mixBlendMode: 'screen',
-                }}
-              />
             </span>
           </h1>
 
