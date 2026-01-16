@@ -61,24 +61,12 @@ export default function HeroPremium() {
         </defs>
       </svg>
       
-      {/* Base dark gradient - top to center spotlight */}
-      <div 
-        className="absolute inset-0"
-        style={{
-          background: `
-            radial-gradient(ellipse 120% 60% at 50% -10%, rgba(40, 35, 55, 0.7) 0%, rgba(25, 22, 35, 0.4) 30%, transparent 60%),
-            radial-gradient(ellipse 80% 50% at 50% 30%, rgba(30, 27, 42, 0.3) 0%, transparent 50%),
-            linear-gradient(180deg, rgba(15, 12, 22, 0.8) 0%, transparent 40%)
-          `,
-        }}
-      />
-      
       {/* Ambient glow - very soft, responds to mouse */}
       <div 
-        className="absolute w-[1000px] h-[800px] -top-[300px] left-1/2 pointer-events-none"
+        className="absolute w-[1000px] h-[800px] top-0 left-1/2 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at center, rgba(100, 90, 140, 0.08) 0%, rgba(60, 50, 100, 0.03) 35%, transparent 60%)',
-          filter: 'blur(100px)',
+          background: 'radial-gradient(ellipse at center, rgba(100, 90, 140, 0.06) 0%, rgba(60, 50, 100, 0.02) 35%, transparent 55%)',
+          filter: 'blur(120px)',
           transform: `translate(calc(-50% + ${mousePosition.x * 30}px), ${mousePosition.y * 20}px)`,
           transition: 'transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
@@ -89,7 +77,7 @@ export default function HeroPremium() {
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          opacity: 0.04,
+          opacity: 0.045,
           mixBlendMode: 'overlay',
         }}
       />
@@ -166,26 +154,77 @@ export default function HeroPremium() {
             </div>
           </div>
 
-          {/* Main headline */}
+          {/* Main headline - with liquid glass effect */}
           <h1 
             className={`
-              text-center mb-5 md:mb-6
+              group text-center mb-5 md:mb-6
               transition-all duration-1000 ease-out
               ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}
             `}
-            style={{ transitionDelay: '300ms' }}
+            style={{ 
+              transitionDelay: '300ms',
+              perspective: '1000px',
+            }}
           >
             <span 
               className="
                 block text-[clamp(2.8rem,9vw,6rem)] 
                 font-normal tracking-[0.02em] leading-[0.9]
                 text-white
+                relative inline-block
+                cursor-default
               "
               style={{
                 fontFamily: "'Fuente Display', 'Scotch Display', Georgia, serif",
               }}
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect()
+                const x = e.clientX - rect.left
+                const y = e.clientY - rect.top
+                
+                e.currentTarget.style.setProperty('--mouse-x', `${x}px`)
+                e.currentTarget.style.setProperty('--mouse-y', `${y}px`)
+              }}
             >
               PORTAL CULTURE
+              
+              {/* Liquid glass shimmer effect */}
+              <span 
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                style={{
+                  background: `
+                    radial-gradient(
+                      600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                      rgba(255, 255, 255, 0.12) 0%,
+                      rgba(255, 255, 255, 0.06) 20%,
+                      transparent 60%
+                    )
+                  `,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  filter: 'blur(1px)',
+                  mixBlendMode: 'screen',
+                }}
+              />
+              
+              {/* Subtle ripple distortion */}
+              <span 
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                style={{
+                  background: `
+                    radial-gradient(
+                      400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                      rgba(200, 200, 255, 0.08) 0%,
+                      transparent 50%
+                    )
+                  `,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  filter: 'blur(0.5px)',
+                }}
+              />
             </span>
           </h1>
 
@@ -301,24 +340,45 @@ export default function HeroPremium() {
             </button>
           </div>
 
-          {/* Social proof - subtle */}
+          {/* Social proof - subtle with hover effect */}
           <div 
             className={`
-              mt-14 md:mt-16
+              group/social mt-14 md:mt-16
               flex items-center gap-3 text-[11px] md:text-xs
               transition-all duration-1000 ease-out
               ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
+              cursor-default
             `}
             style={{ transitionDelay: '800ms' }}
           >
-            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white/[0.04] border border-white/[0.08]">
-              <svg className="w-5 h-5 text-white/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <div className="
+              flex items-center justify-center w-10 h-10 rounded-full 
+              bg-white/[0.04] border border-white/[0.08]
+              transition-all duration-500
+              group-hover/social:bg-white/[0.06] group-hover/social:border-white/[0.12]
+              group-hover/social:shadow-[0_0_20px_rgba(255,255,255,0.05)]
+            ">
+              <svg 
+                className="w-5 h-5 text-white/50 transition-all duration-500 group-hover/social:text-white/70 group-hover/social:scale-110" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor" 
+                strokeWidth={1.5}
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div className="flex flex-col">
-              <span className="text-white/60 font-medium">+500 horas de valor</span>
-              <span className="text-white/30">en contenido exclusivo</span>
+              <span className="
+                text-white/60 font-medium
+                transition-all duration-500
+                group-hover/social:text-white/80
+              ">
+                +500 horas de valor
+              </span>
+              <span className="text-white/30 transition-colors duration-500 group-hover/social:text-white/40">
+                en contenido exclusivo
+              </span>
             </div>
           </div>
         </div>
