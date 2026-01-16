@@ -424,16 +424,16 @@ Hazlo. Ahora. 🔥`
                 {[...Array(2)].map((_, setIndex) => (
                   <div key={setIndex} className="flex gap-3 md:gap-6">
                     {[
-                      { title: 'Atomic Habits', author: 'James Clear', color: 'from-blue-500/20 to-cyan-500/20' },
-                      { title: 'Can\'t Hurt Me', author: 'David Goggins', color: 'from-red-500/20 to-orange-500/20' },
-                      { title: 'The Charisma Myth', author: 'O. Fox Cabane', color: 'from-purple-500/20 to-pink-500/20' },
-                      { title: 'Win Friends', author: 'Dale Carnegie', color: 'from-green-500/20 to-emerald-500/20' },
-                      { title: 'Superior Man', author: 'David Deida', color: 'from-amber-500/20 to-yellow-500/20' },
-                      { title: 'Naval Ravikant', author: 'Naval', color: 'from-indigo-500/20 to-blue-500/20' },
-                      { title: 'Why We Sleep', author: 'M. Walker', color: 'from-violet-500/20 to-purple-500/20' },
-                      { title: 'Zero to One', author: 'Peter Thiel', color: 'from-teal-500/20 to-cyan-500/20' },
-                      { title: 'Huberman Lab', author: 'A. Huberman', color: 'from-rose-500/20 to-pink-500/20' },
-                      { title: 'Examine.com', author: 'Evidence-Based', color: 'from-lime-500/20 to-green-500/20' },
+                      { title: 'Atomic Habits', author: 'James Clear', color: 'from-blue-500/20 to-cyan-500/20', emoji: '⚛️' },
+                      { title: 'Can\'t Hurt Me', author: 'David Goggins', color: 'from-red-500/20 to-orange-500/20', emoji: '🔥' },
+                      { title: 'The Charisma Myth', author: 'O. Fox Cabane', color: 'from-purple-500/20 to-pink-500/20', emoji: '✨' },
+                      { title: 'Win Friends', author: 'Dale Carnegie', color: 'from-green-500/20 to-emerald-500/20', emoji: '🤝' },
+                      { title: 'Superior Man', author: 'David Deida', color: 'from-amber-500/20 to-yellow-500/20', emoji: '👑' },
+                      { title: 'Naval Ravikant', author: 'Naval', color: 'from-indigo-500/20 to-blue-500/20', emoji: '🧭' },
+                      { title: 'Why We Sleep', author: 'M. Walker', color: 'from-violet-500/20 to-purple-500/20', emoji: '😴' },
+                      { title: 'Zero to One', author: 'Peter Thiel', color: 'from-teal-500/20 to-cyan-500/20', emoji: '🚀' },
+                      { title: 'Huberman Lab', author: 'A. Huberman', color: 'from-rose-500/20 to-pink-500/20', emoji: '🧠' },
+                      { title: 'Examine.com', author: 'Evidence-Based', color: 'from-lime-500/20 to-green-500/20', emoji: '🔬' },
                     ].map((book, idx) => {
                       const globalIndex = setIndex * 10 + idx
                       const isHovered = hoveredBookIndex === globalIndex
@@ -469,7 +469,7 @@ Hazlo. Ahora. 🔥`
                             <div className="absolute inset-0 bg-gradient-to-br from-white/[0.07] via-transparent to-transparent rounded-xl md:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                             {/* Book icon */}
-                            <div className="text-2xl md:text-4xl mb-2 md:mb-3 transition-all duration-500 group-hover:scale-110">📖</div>
+                            <div className="text-2xl md:text-4xl mb-2 md:mb-3 transition-all duration-500 group-hover:scale-110">{book.emoji}</div>
 
                             {/* Content */}
                             <div className="flex-1">
