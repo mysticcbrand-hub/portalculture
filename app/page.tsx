@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import Hero from './components/Hero'
+import HeroStatement from './components/HeroStatement'
 import CreativeBenefits from './components/CreativeBenefits'
 import AICoachSection from './components/AICoachSection'
 import ScrollRevealCourses from './components/ScrollRevealCourses'
@@ -26,8 +26,8 @@ export default function Home() {
       {/* Custom Cursor */}
       <CustomCursor />
       
-      {/* Hero Section */}
-      <Hero />
+      {/* Hero Section - THE STATEMENT */}
+      <HeroStatement />
 
       {/* Creative Benefits Section */}
       <CreativeBenefits />
