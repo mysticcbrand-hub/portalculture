@@ -61,23 +61,48 @@ export default function HeroPremium() {
         </defs>
       </svg>
       
-      {/* Ambient glow - very soft, responds to mouse */}
-      <div 
-        className="absolute w-[1000px] h-[800px] top-0 left-1/2 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse at center, rgba(100, 90, 140, 0.06) 0%, rgba(60, 50, 100, 0.02) 35%, transparent 55%)',
-          filter: 'blur(120px)',
-          transform: `translate(calc(-50% + ${mousePosition.x * 30}px), ${mousePosition.y * 20}px)`,
-          transition: 'transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)',
-        }}
-      />
-
-      {/* Noise texture - stronger to eliminate banding */}
+      {/* Multi-layer ambient glow - no banding, responds to mouse */}
       <div 
         className="absolute inset-0 pointer-events-none"
         style={{
+          transform: `translate(${mousePosition.x * 15}px, ${mousePosition.y * 10}px)`,
+          transition: 'transform 1.5s cubic-bezier(0.16, 1, 0.3, 1)',
+        }}
+      >
+        {/* Layer 1 - Purple glow */}
+        <div 
+          className="absolute w-[800px] h-[700px] -top-[150px] left-[20%] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(139, 92, 246, 0.04) 0%, rgba(124, 58, 237, 0.02) 30%, transparent 60%)',
+            filter: 'blur(80px)',
+          }}
+        />
+        
+        {/* Layer 2 - Blue glow */}
+        <div 
+          className="absolute w-[700px] h-[600px] top-[10%] right-[15%] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(99, 102, 241, 0.035) 0%, rgba(79, 70, 229, 0.018) 35%, transparent 65%)',
+            filter: 'blur(90px)',
+          }}
+        />
+        
+        {/* Layer 3 - Subtle cyan accent */}
+        <div 
+          className="absolute w-[500px] h-[500px] top-[40%] left-[50%] -translate-x-1/2 rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(103, 232, 249, 0.025) 0%, transparent 50%)',
+            filter: 'blur(70px)',
+          }}
+        />
+      </div>
+
+      {/* Noise texture - STRONG to eliminate all banding */}
+      <div 
+        className="absolute inset-0 pointer-events-none z-10"
+        style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          opacity: 0.045,
+          opacity: 0.06,
           mixBlendMode: 'overlay',
         }}
       />
@@ -157,7 +182,7 @@ export default function HeroPremium() {
           {/* Main headline - with liquid glass effect */}
           <h1 
             className={`
-              group text-center mb-5 md:mb-6
+              text-center mb-5 md:mb-6
               transition-all duration-1000 ease-out
               ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}
             `}
@@ -168,6 +193,7 @@ export default function HeroPremium() {
           >
             <span 
               className="
+                group/title
                 block text-[clamp(2.8rem,9vw,6rem)] 
                 font-normal tracking-[0.02em] leading-[0.9]
                 text-white
@@ -188,41 +214,43 @@ export default function HeroPremium() {
             >
               PORTAL CULTURE
               
-              {/* Liquid glass shimmer effect */}
+              {/* Liquid glass shimmer effect - stronger */}
               <span 
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                className="absolute inset-0 opacity-0 group-hover/title:opacity-100 transition-opacity duration-700 pointer-events-none"
                 style={{
                   background: `
                     radial-gradient(
-                      600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-                      rgba(255, 255, 255, 0.12) 0%,
-                      rgba(255, 255, 255, 0.06) 20%,
+                      500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                      rgba(255, 255, 255, 0.2) 0%,
+                      rgba(255, 255, 255, 0.08) 25%,
                       transparent 60%
                     )
                   `,
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
-                  filter: 'blur(1px)',
-                  mixBlendMode: 'screen',
+                  filter: 'blur(0.5px)',
+                  mixBlendMode: 'plus-lighter',
                 }}
               />
               
-              {/* Subtle ripple distortion */}
+              {/* Subtle color shift */}
               <span 
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                className="absolute inset-0 opacity-0 group-hover/title:opacity-100 transition-opacity duration-500 pointer-events-none"
                 style={{
                   background: `
                     radial-gradient(
-                      400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-                      rgba(200, 200, 255, 0.08) 0%,
-                      transparent 50%
+                      350px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                      rgba(167, 139, 250, 0.12) 0%,
+                      rgba(139, 92, 246, 0.06) 30%,
+                      transparent 55%
                     )
                   `,
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
-                  filter: 'blur(0.5px)',
+                  filter: 'blur(0.8px)',
+                  mixBlendMode: 'screen',
                 }}
               />
             </span>
