@@ -61,48 +61,151 @@ export default function HeroPremium() {
         </defs>
       </svg>
       
-      {/* Multi-layer ambient glow - no banding, responds to mouse */}
+      {/* ============================================
+          MESH GRADIENT SYSTEM - Apple-style, no banding
+          Multiple large, soft gradients that blend together
+          ============================================ */}
+      
+      {/* Base layer - very subtle warm undertone */}
       <div 
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0"
         style={{
-          transform: `translate(${mousePosition.x * 15}px, ${mousePosition.y * 10}px)`,
-          transition: 'transform 1.5s cubic-bezier(0.16, 1, 0.3, 1)',
+          background: 'linear-gradient(135deg, rgba(10, 8, 18, 1) 0%, rgba(5, 5, 12, 1) 100%)',
         }}
+      />
+      
+      {/* Mesh gradient container - responds to mouse */}
+      <div 
+        className="absolute inset-0 pointer-events-none overflow-hidden"
       >
-        {/* Layer 1 - Purple glow */}
+        {/* Gradient 1 - Top left purple/violet - LARGE */}
         <div 
-          className="absolute w-[800px] h-[700px] -top-[150px] left-[20%] rounded-full"
+          className="absolute rounded-full"
           style={{
-            background: 'radial-gradient(circle, rgba(139, 92, 246, 0.04) 0%, rgba(124, 58, 237, 0.02) 30%, transparent 60%)',
-            filter: 'blur(80px)',
+            width: '140%',
+            height: '100%',
+            top: '-60%',
+            left: '-40%',
+            background: `
+              radial-gradient(
+                ellipse 50% 50% at 50% 50%,
+                rgba(124, 58, 237, 0.08) 0%,
+                rgba(109, 40, 217, 0.04) 25%,
+                rgba(91, 33, 182, 0.02) 45%,
+                transparent 70%
+              )
+            `,
+            filter: 'blur(40px)',
+            transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * 15}px)`,
+            transition: 'transform 2s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         />
         
-        {/* Layer 2 - Blue glow */}
+        {/* Gradient 2 - Top right indigo/blue - LARGE */}
         <div 
-          className="absolute w-[700px] h-[600px] top-[10%] right-[15%] rounded-full"
+          className="absolute rounded-full"
           style={{
-            background: 'radial-gradient(circle, rgba(99, 102, 241, 0.035) 0%, rgba(79, 70, 229, 0.018) 35%, transparent 65%)',
-            filter: 'blur(90px)',
+            width: '120%',
+            height: '90%',
+            top: '-40%',
+            right: '-30%',
+            background: `
+              radial-gradient(
+                ellipse 55% 55% at 50% 50%,
+                rgba(79, 70, 229, 0.06) 0%,
+                rgba(67, 56, 202, 0.03) 30%,
+                rgba(55, 48, 163, 0.015) 50%,
+                transparent 75%
+              )
+            `,
+            filter: 'blur(50px)',
+            transform: `translate(${mousePosition.x * -15}px, ${mousePosition.y * 12}px)`,
+            transition: 'transform 2.5s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         />
         
-        {/* Layer 3 - Subtle cyan accent */}
+        {/* Gradient 3 - Center subtle rose/pink */}
         <div 
-          className="absolute w-[500px] h-[500px] top-[40%] left-[50%] -translate-x-1/2 rounded-full"
+          className="absolute rounded-full"
           style={{
-            background: 'radial-gradient(circle, rgba(103, 232, 249, 0.025) 0%, transparent 50%)',
-            filter: 'blur(70px)',
+            width: '100%',
+            height: '80%',
+            top: '20%',
+            left: '10%',
+            background: `
+              radial-gradient(
+                ellipse 60% 50% at 50% 50%,
+                rgba(244, 114, 182, 0.025) 0%,
+                rgba(236, 72, 153, 0.012) 35%,
+                transparent 65%
+              )
+            `,
+            filter: 'blur(60px)',
+            transform: `translate(${mousePosition.x * 10}px, ${mousePosition.y * -8}px)`,
+            transition: 'transform 3s cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+        />
+        
+        {/* Gradient 4 - Bottom center blue/cyan glow */}
+        <div 
+          className="absolute rounded-full"
+          style={{
+            width: '130%',
+            height: '70%',
+            bottom: '-30%',
+            left: '-15%',
+            background: `
+              radial-gradient(
+                ellipse 50% 60% at 50% 50%,
+                rgba(56, 189, 248, 0.03) 0%,
+                rgba(14, 165, 233, 0.015) 30%,
+                rgba(2, 132, 199, 0.008) 50%,
+                transparent 70%
+              )
+            `,
+            filter: 'blur(45px)',
+            transform: `translate(${mousePosition.x * -12}px, ${mousePosition.y * -18}px)`,
+            transition: 'transform 2.2s cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+        />
+        
+        {/* Gradient 5 - Floating accent orb - moves more */}
+        <div 
+          className="absolute rounded-full"
+          style={{
+            width: '60%',
+            height: '50%',
+            top: '30%',
+            right: '5%',
+            background: `
+              radial-gradient(
+                circle at 50% 50%,
+                rgba(167, 139, 250, 0.04) 0%,
+                rgba(139, 92, 246, 0.02) 40%,
+                transparent 70%
+              )
+            `,
+            filter: 'blur(35px)',
+            transform: `translate(${mousePosition.x * 25}px, ${mousePosition.y * 20}px)`,
+            transition: 'transform 1.8s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         />
       </div>
+      
+      {/* Vignette - subtle darkening at edges */}
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 80% 80% at 50% 50%, transparent 0%, rgba(0, 0, 0, 0.4) 100%)',
+        }}
+      />
 
-      {/* Noise texture - STRONG to eliminate all banding */}
+      {/* Noise texture - fine grain for smooth gradients */}
       <div 
         className="absolute inset-0 pointer-events-none z-10"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          opacity: 0.06,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          opacity: 0.035,
           mixBlendMode: 'overlay',
         }}
       />
