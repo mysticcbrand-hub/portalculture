@@ -17,6 +17,12 @@ export default function AICoachSection() {
   const [startX, setStartX] = useState(0)
   const [scrollLeft, setScrollLeft] = useState(0)
   const animationRef = useRef<number | null>(null)
+  
+  // Momentum/inertia state
+  const velocityRef = useRef(0)
+  const lastScrollRef = useRef(0)
+  const lastTimeRef = useRef(0)
+  const momentumAnimationRef = useRef<number | null>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -88,8 +94,8 @@ export default function AICoachSection() {
     const animate = () => {
       if (!container) return
 
-      // Only scroll if not dragging
-      if (!isDragging) {
+      // Only scroll if not dragging AND no momentum animation
+      if (!isDragging && !momentumAnimationRef.current) {
         container.scrollLeft += scrollSpeed
         
         // Seamless loop: reset when reaching halfway
@@ -126,7 +132,21 @@ export default function AICoachSection() {
     const x = e.pageX - container.offsetLeft
     const walk = (x - startX) * 2 // Scroll speed multiplier
     
-    container.scrollLeft = scrollLeft - walk
+    const newScrollLeft = scrollLeft - walk
+    const currentTime = Date.now()
+    
+    // Calculate velocity for momentum
+    if (lastTimeRef.current) {
+      const timeDelta = currentTime - lastTimeRef.current
+      if (timeDelta > 0) {
+        const scrollDelta = newScrollLeft - lastScrollRef.current
+        velocityRef.current = scrollDelta / timeDelta * 16 // Normalize to per-frame velocity
+      }
+    }
+    
+    lastScrollRef.current = newScrollLeft
+    lastTimeRef.current = currentTime
+    container.scrollLeft = newScrollLeft
     
     // Infinite loop while dragging
     const maxScroll = container.scrollWidth / 2
@@ -143,10 +163,56 @@ export default function AICoachSection() {
 
   const handleMouseUp = () => {
     setIsDragging(false)
+    applyMomentum()
   }
 
   const handleMouseLeave = () => {
     setIsDragging(false)
+    applyMomentum()
+  }
+
+  // Apply momentum/inertia after drag release
+  const applyMomentum = () => {
+    const container = scrollRef.current
+    if (!container) return
+
+    // Cancel any existing momentum animation
+    if (momentumAnimationRef.current) {
+      cancelAnimationFrame(momentumAnimationRef.current)
+    }
+
+    let velocity = velocityRef.current
+    const friction = 0.95 // Friction coefficient (lower = more friction)
+    const minVelocity = 0.1 // Stop when velocity is very low
+
+    const animate = () => {
+      if (!container) return
+
+      // Apply velocity with friction
+      velocity *= friction
+      container.scrollLeft += velocity
+
+      // Handle infinite loop
+      const maxScroll = container.scrollWidth / 2
+      if (container.scrollLeft >= maxScroll) {
+        container.scrollLeft = 0
+      } else if (container.scrollLeft <= 0) {
+        container.scrollLeft = maxScroll - 1
+      }
+
+      // Continue animation if velocity is significant
+      if (Math.abs(velocity) > minVelocity) {
+        momentumAnimationRef.current = requestAnimationFrame(animate)
+      } else {
+        momentumAnimationRef.current = null
+        velocityRef.current = 0
+      }
+    }
+
+    // Only apply momentum if velocity is significant
+    if (Math.abs(velocity) > minVelocity) {
+      momentumAnimationRef.current = requestAnimationFrame(animate)
+    }
   }
 
   const conversations = [
