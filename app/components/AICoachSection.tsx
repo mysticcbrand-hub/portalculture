@@ -132,20 +132,21 @@ export default function AICoachSection() {
     const x = e.pageX - container.offsetLeft
     const walk = (x - startX) * 2 // Scroll speed multiplier
     
-    const newScrollLeft = scrollLeft - walk
+    // Calculate velocity BEFORE updating scroll (use raw mouse movement)
     const currentTime = Date.now()
-    
-    // Calculate velocity for momentum
     if (lastTimeRef.current) {
       const timeDelta = currentTime - lastTimeRef.current
       if (timeDelta > 0) {
-        const scrollDelta = newScrollLeft - lastScrollRef.current
-        velocityRef.current = scrollDelta / timeDelta * 16 // Normalize to per-frame velocity
+        const mouseDelta = x - (lastScrollRef.current || x)
+        // Velocity is based on mouse movement, not scroll position
+        velocityRef.current = (mouseDelta / timeDelta) * -2 * 16 // Normalize & apply multiplier
       }
     }
     
-    lastScrollRef.current = newScrollLeft
+    lastScrollRef.current = x
     lastTimeRef.current = currentTime
+    
+    const newScrollLeft = scrollLeft - walk
     container.scrollLeft = newScrollLeft
     
     // Infinite loop while dragging
@@ -182,8 +183,10 @@ export default function AICoachSection() {
     }
 
     let velocity = velocityRef.current
-    const friction = 0.95 // Friction coefficient (lower = more friction)
-    const minVelocity = 0.1 // Stop when velocity is very low
+    const friction = 0.92 // Friction coefficient (lower = more friction, slower stop)
+    const minVelocity = 0.5 // Stop when velocity is very low
+
+    console.log('Momentum started with velocity:', velocity) // Debug
 
     const animate = () => {
       if (!container) return
@@ -195,7 +198,7 @@ export default function AICoachSection() {
       // Handle infinite loop
       const maxScroll = container.scrollWidth / 2
       if (container.scrollLeft >= maxScroll) {
-        container.scrollLeft = 0
+        container.scrollLeft = 1
       } else if (container.scrollLeft <= 0) {
         container.scrollLeft = maxScroll - 1
       }
@@ -204,6 +207,7 @@ export default function AICoachSection() {
       if (Math.abs(velocity) > minVelocity) {
         momentumAnimationRef.current = requestAnimationFrame(animate)
       } else {
+        console.log('Momentum ended') // Debug
         momentumAnimationRef.current = null
         velocityRef.current = 0
       }
@@ -211,7 +215,10 @@ export default function AICoachSection() {
 
     // Only apply momentum if velocity is significant
     if (Math.abs(velocity) > minVelocity) {
+      console.log('Starting momentum animation') // Debug
       momentumAnimationRef.current = requestAnimationFrame(animate)
+    } else {
+      console.log('Velocity too low, no momentum') // Debug
     }
   }
 
