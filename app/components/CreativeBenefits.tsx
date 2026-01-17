@@ -259,18 +259,23 @@ export default function CreativeBenefits() {
         </div>
 
         {/* Bottom Statement - Premium Card */}
-        <div 
+        <button 
+          onClick={() => {
+            const nextSection = document.getElementById('ai-coach')
+            if (nextSection) {
+              nextSection.scrollIntoView({ behavior: 'smooth' })
+            }
+          }}
           className="
-            group relative text-center mt-20 py-8 md:py-10 px-8 md:px-12 rounded-2xl 
-            bg-gradient-to-b from-white/[0.06] to-white/[0.02]
-            border border-white/[0.08]
-            backdrop-blur-2xl
+            group relative w-full mt-16 py-5 md:py-6 px-6 md:px-8 rounded-xl 
+            bg-white/[0.03]
+            border border-white/[0.06]
+            backdrop-blur-xl
             overflow-hidden
             transition-all duration-500 ease-out
-            hover:border-white/[0.15]
-            hover:shadow-[0_8px_60px_-12px_rgba(255,255,255,0.08)]
-            hover:scale-[1.01]
-            flex items-center justify-center
+            hover:border-white/[0.12]
+            hover:bg-white/[0.05]
+            cursor-pointer
           "
         >
           {/* Animated gradient background on hover */}
@@ -305,42 +310,17 @@ export default function CreativeBenefits() {
             "
           />
           
-          {/* Content */}
-          <div className="relative z-10">
-            <p className="text-2xl md:text-3xl lg:text-4xl font-light text-white/70 leading-relaxed group-hover:text-white/90 transition-colors duration-500">
-              <span className="text-white font-medium">Valor infinito</span>.{' '}
-              <br className="md:hidden" />
-              <span 
-                className="
-                  relative inline-block font-semibold
-                  bg-gradient-to-r from-white via-purple-200 to-white 
-                  bg-clip-text text-transparent
-                  bg-[length:200%_100%] bg-left
-                  group-hover:bg-right
-                  transition-all duration-700
-                "
-              >
-                Cambia tu vida hoy
-              </span>.
-            </p>
-            
-            {/* Subtle CTA hint */}
-            <div 
-              className="
-                mt-6 flex items-center justify-center gap-2 
-                text-xs text-white/30 
-                opacity-0 group-hover:opacity-100 
-                translate-y-2 group-hover:translate-y-0
-                transition-all duration-500
-              "
-            >
-              <span>Empieza ahora</span>
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
-            </div>
-          </div>
-        </div>
+          {/* Content - centered */}
+          <p className="relative z-10 text-lg md:text-xl text-white/60 group-hover:text-white/80 transition-colors duration-500 text-center">
+            <span className="text-white/90 font-medium">Valor infinito</span>.{' '}
+            <span className="font-medium text-white/70 group-hover:text-white/90 transition-colors duration-500">
+              Cambia tu vida hoy
+            </span>
+            <svg className="inline-block w-4 h-4 ml-2 opacity-0 group-hover:opacity-60 transition-all duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+            </svg>
+          </p>
+        </button>
       </div>
     </section>
   )
