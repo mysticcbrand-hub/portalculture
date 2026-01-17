@@ -183,10 +183,8 @@ export default function AICoachSection() {
     }
 
     let velocity = velocityRef.current
-    const friction = 0.92 // Friction coefficient (lower = more friction, slower stop)
-    const minVelocity = 0.5 // Stop when velocity is very low
-
-    console.log('Momentum started with velocity:', velocity) // Debug
+    const friction = 0.94 // Higher = less friction, longer momentum
+    const minVelocity = 0.1 // Lower threshold = runs longer
 
     const animate = () => {
       if (!container) return
@@ -207,18 +205,14 @@ export default function AICoachSection() {
       if (Math.abs(velocity) > minVelocity) {
         momentumAnimationRef.current = requestAnimationFrame(animate)
       } else {
-        console.log('Momentum ended') // Debug
         momentumAnimationRef.current = null
         velocityRef.current = 0
       }
     }
 
-    // Only apply momentum if velocity is significant
+    // Start momentum if velocity exists
     if (Math.abs(velocity) > minVelocity) {
-      console.log('Starting momentum animation') // Debug
       momentumAnimationRef.current = requestAnimationFrame(animate)
-    } else {
-      console.log('Velocity too low, no momentum') // Debug
     }
   }
 
