@@ -7,7 +7,9 @@ export default function HeroPremium() {
   const [mounted, setMounted] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 })
   const [scrollY, setScrollY] = useState(0)
+  const [isHoveringTitle, setIsHoveringTitle] = useState(false)
   const heroRef = useRef<HTMLDivElement>(null)
+  const titleRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -159,7 +161,7 @@ export default function HeroPremium() {
             </div>
           </div>
 
-          {/* Main headline */}
+          {/* Main headline - Liquid Chrome Effect */}
           <h1 
             className={`
               text-center mb-5 md:mb-6
@@ -169,16 +171,82 @@ export default function HeroPremium() {
             style={{ transitionDelay: '300ms' }}
           >
             <span 
+              ref={titleRef}
               className="
+                liquid-chrome-text
                 block text-[clamp(2.5rem,8vw,5.5rem)] 
                 font-normal tracking-[0.01em] leading-[0.95]
-                text-white
+                relative cursor-default
               "
               style={{
                 fontFamily: "'Fuente Display', 'Scotch Display', Georgia, serif",
               }}
+              onMouseEnter={() => setIsHoveringTitle(true)}
+              onMouseLeave={() => setIsHoveringTitle(false)}
+              onMouseMove={(e) => {
+                if (!titleRef.current) return
+                const rect = titleRef.current.getBoundingClientRect()
+                const x = ((e.clientX - rect.left) / rect.width) * 100
+                const y = ((e.clientY - rect.top) / rect.height) * 100
+                titleRef.current.style.setProperty('--chrome-x', `${x}%`)
+                titleRef.current.style.setProperty('--chrome-y', `${y}%`)
+              }}
             >
-              PORTAL CULTURE
+              {/* Base text */}
+              <span 
+                className="relative z-10 transition-all duration-300"
+                style={{
+                  color: isHoveringTitle ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.9)',
+                }}
+              >
+                PORTAL CULTURE
+              </span>
+              
+              {/* Chrome reflection layer - follows cursor */}
+              <span 
+                className="absolute inset-0 z-20 pointer-events-none transition-opacity duration-300"
+                style={{
+                  background: `
+                    radial-gradient(
+                      circle 250px at var(--chrome-x, 50%) var(--chrome-y, 50%),
+                      rgba(255, 255, 255, 1) 0%,
+                      rgba(230, 230, 250, 0.9) 8%,
+                      rgba(200, 200, 230, 0.7) 18%,
+                      rgba(160, 160, 200, 0.4) 35%,
+                      rgba(120, 120, 160, 0.1) 55%,
+                      transparent 70%
+                    )
+                  `,
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  opacity: isHoveringTitle ? 1 : 0,
+                }}
+              >
+                PORTAL CULTURE
+              </span>
+              
+              {/* Bright core highlight */}
+              <span 
+                className="absolute inset-0 z-30 pointer-events-none transition-opacity duration-200"
+                style={{
+                  background: `
+                    radial-gradient(
+                      circle 100px at var(--chrome-x, 50%) var(--chrome-y, 50%),
+                      rgba(255, 255, 255, 1) 0%,
+                      rgba(255, 255, 255, 0.5) 30%,
+                      transparent 60%
+                    )
+                  `,
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  opacity: isHoveringTitle ? 0.8 : 0,
+                  filter: 'blur(0.5px)',
+                }}
+              >
+                PORTAL CULTURE
+              </span>
             </span>
           </h1>
 
