@@ -11,6 +11,7 @@ import Footer from './components/Footer'
 import Modal from './components/Modal'
 import CustomCursor from './components/CustomCursor'
 import LoadingIntro from './components/LoadingIntro'
+import SectionBlurTransition from './components/SectionBlurTransition'
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -25,6 +26,9 @@ export default function Home() {
       
       {/* Custom Cursor */}
       <CustomCursor />
+      
+      {/* Blur transition at top when scrolling */}
+      <SectionBlurTransition />
       
       {/* Hero Section - Premium Glassmorphism */}
       <HeroPremium />
