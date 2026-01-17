@@ -3,9 +3,8 @@
 import { useEffect, useState } from 'react'
 
 /**
- * SectionBlurTransition
- * Adds a subtle blur overlay at the top of sections that fades in/out based on scroll
- * Creates smooth transitions between sections like the hero blur effect
+ * SectionBlurTransition - Apple-style
+ * Clean fade at top when scrolling, no halation effect
  */
 export default function SectionBlurTransition() {
   const [scrollY, setScrollY] = useState(0)
@@ -19,21 +18,38 @@ export default function SectionBlurTransition() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Only show after scrolling past the hero
-  const showBlur = scrollY > 300
-  const blurOpacity = Math.min(1, (scrollY - 300) / 400)
+  // Start showing after hero
+  const showEffect = scrollY > 400
+  const opacity = Math.min(1, Math.max(0, (scrollY - 400) / 300))
+
+  if (!showEffect) return null
 
   return (
-    <div 
-      className="fixed top-0 left-0 right-0 h-32 pointer-events-none z-40 transition-opacity duration-500"
-      style={{
-        opacity: showBlur ? blurOpacity * 0.8 : 0,
-        background: 'linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 40%, transparent 100%)',
-        backdropFilter: showBlur ? 'blur(8px)' : 'blur(0px)',
-        WebkitBackdropFilter: showBlur ? 'blur(8px)' : 'blur(0px)',
-        maskImage: 'linear-gradient(to bottom, black 0%, black 50%, transparent 100%)',
-        WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 50%, transparent 100%)',
-      }}
-    />
+    <>
+      {/* Clean gradient fade - no blur, just darkening */}
+      <div 
+        className="fixed top-0 left-0 right-0 pointer-events-none z-40"
+        style={{
+          height: '120px',
+          opacity: opacity * 0.6,
+          background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%)',
+          transition: 'opacity 0.3s ease-out',
+        }}
+      />
+      
+      {/* Subtle blur layer - very gentle */}
+      <div 
+        className="fixed top-0 left-0 right-0 pointer-events-none z-[39]"
+        style={{
+          height: '80px',
+          opacity: opacity * 0.5,
+          backdropFilter: 'blur(4px) saturate(1.2)',
+          WebkitBackdropFilter: 'blur(4px) saturate(1.2)',
+          maskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
+          transition: 'opacity 0.3s ease-out',
+        }}
+      />
+    </>
   )
 }
