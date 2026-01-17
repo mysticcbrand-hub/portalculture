@@ -12,6 +12,15 @@
   display: none;  /* Chrome, Safari, Opera */
 }
 
+/* Drag cursor styles */
+.cursor-grab {
+  cursor: grab;
+}
+
+.cursor-grabbing {
+  cursor: grabbing;
+}
+
 /* Anti-banding para todos los gradientes y glows */
 * {
   -webkit-font-smoothing: antialiased;

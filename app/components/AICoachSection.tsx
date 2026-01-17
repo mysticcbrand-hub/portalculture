@@ -440,9 +440,8 @@ Hazlo. Ahora. 🔥`
             {/* Scroll container - draggable */}
             <div 
               ref={scrollRef}
-              className="overflow-x-auto scrollbar-hide"
+              className={`overflow-x-auto scrollbar-hide ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
               style={{
-                cursor: isDragging ? 'grabbing' : 'grab',
                 scrollBehavior: isDragging ? 'auto' : 'smooth',
               }}
               onMouseDown={handleMouseDown}
