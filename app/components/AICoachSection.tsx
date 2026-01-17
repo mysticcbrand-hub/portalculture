@@ -77,44 +77,39 @@ export default function AICoachSection() {
     }))
   }
 
-  // Auto-scroll animation
+  // Auto-scroll animation - simplified
   useEffect(() => {
     const container = scrollRef.current
     if (!container) return
 
-    const scrollSpeed = 0.5 // pixels per frame
-    let lastTime = 0
+    const scrollSpeed = 1 // pixels per frame
+    let animationId: number
 
-    const animate = (currentTime: number) => {
+    const animate = () => {
       if (!container) return
 
-      // Calculate delta time for smooth animation
-      if (lastTime !== 0) {
-        const deltaTime = currentTime - lastTime
-        const scrollIncrement = scrollSpeed * (deltaTime / 16) // Normalize to 60fps
+      // Only scroll if not dragging
+      if (!isDragging) {
+        container.scrollLeft += scrollSpeed
         
-        if (!isDragging && !isPaused) {
-          container.scrollLeft += scrollIncrement
-          
-          // Seamless loop: reset when reaching halfway
-          if (container.scrollLeft >= container.scrollWidth / 2) {
-            container.scrollLeft = 0
-          }
+        // Seamless loop: reset when reaching halfway
+        const halfWidth = container.scrollWidth / 2
+        if (container.scrollLeft >= halfWidth) {
+          container.scrollLeft = 1 // Reset to start (not 0 to avoid flicker)
         }
       }
       
-      lastTime = currentTime
-      animationRef.current = requestAnimationFrame(animate)
+      animationId = requestAnimationFrame(animate)
     }
 
-    animationRef.current = requestAnimationFrame(animate)
+    animationId = requestAnimationFrame(animate)
 
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current)
+      if (animationId) {
+        cancelAnimationFrame(animationId)
       }
     }
-  }, [isDragging, isPaused])
+  }, [isDragging])
 
   // Drag scroll handlers
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -122,7 +117,6 @@ export default function AICoachSection() {
     setIsDragging(true)
     setStartX(e.pageX - scrollRef.current.offsetLeft)
     setScrollLeft(scrollRef.current.scrollLeft)
-    setIsPaused(true) // Pause auto-scroll when dragging
   }
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -149,15 +143,10 @@ export default function AICoachSection() {
 
   const handleMouseUp = () => {
     setIsDragging(false)
-    // Resume auto-scroll after a brief pause
-    setTimeout(() => setIsPaused(false), 1000)
   }
 
   const handleMouseLeave = () => {
     setIsDragging(false)
-    if (isPaused) {
-      setTimeout(() => setIsPaused(false), 1000)
-    }
   }
 
   const conversations = [
