@@ -258,14 +258,87 @@ export default function CreativeBenefits() {
           )})}
         </div>
 
-        {/* Bottom Statement */}
-        <div className="text-center mt-20 p-12 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl">
-          <p className="text-2xl md:text-3xl font-light text-white/80 leading-relaxed">
-            <span className="text-white font-semibold">Valor infinito</span>.{' '}
-            <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent font-bold">
-              Cambia tu vida hoy
-            </span>.
-          </p>
+        {/* Bottom Statement - Premium Card */}
+        <div 
+          className="
+            group relative text-center mt-20 p-10 md:p-14 rounded-3xl 
+            bg-gradient-to-b from-white/[0.08] to-white/[0.02]
+            border border-white/[0.1]
+            backdrop-blur-2xl
+            overflow-hidden
+            transition-all duration-500 ease-out
+            hover:border-white/[0.2]
+            hover:shadow-[0_8px_60px_-12px_rgba(255,255,255,0.1)]
+            hover:scale-[1.01]
+          "
+        >
+          {/* Animated gradient background on hover */}
+          <div 
+            className="
+              absolute inset-0 opacity-0 group-hover:opacity-100
+              transition-opacity duration-700
+            "
+            style={{
+              background: 'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(139, 92, 246, 0.08) 0%, transparent 50%)',
+            }}
+          />
+          
+          {/* Shine effect on hover */}
+          <div 
+            className="
+              absolute inset-0 -translate-x-full group-hover:translate-x-full
+              transition-transform duration-1000 ease-in-out
+            "
+            style={{
+              background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)',
+            }}
+          />
+          
+          {/* Top accent line */}
+          <div 
+            className="
+              absolute top-0 left-1/2 -translate-x-1/2 h-px w-1/3
+              bg-gradient-to-r from-transparent via-white/30 to-transparent
+              group-hover:w-2/3 group-hover:via-white/50
+              transition-all duration-500
+            "
+          />
+          
+          {/* Content */}
+          <div className="relative z-10">
+            <p className="text-2xl md:text-3xl lg:text-4xl font-light text-white/70 leading-relaxed group-hover:text-white/90 transition-colors duration-500">
+              <span className="text-white font-medium">Valor infinito</span>.{' '}
+              <br className="md:hidden" />
+              <span 
+                className="
+                  relative inline-block font-semibold
+                  bg-gradient-to-r from-white via-purple-200 to-white 
+                  bg-clip-text text-transparent
+                  bg-[length:200%_100%] bg-left
+                  group-hover:bg-right
+                  transition-all duration-700
+                "
+              >
+                Cambia tu vida hoy
+              </span>.
+            </p>
+            
+            {/* Subtle CTA hint */}
+            <div 
+              className="
+                mt-6 flex items-center justify-center gap-2 
+                text-xs text-white/30 
+                opacity-0 group-hover:opacity-100 
+                translate-y-2 group-hover:translate-y-0
+                transition-all duration-500
+              "
+            >
+              <span>Empieza ahora</span>
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </div>
+          </div>
         </div>
       </div>
     </section>
