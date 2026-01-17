@@ -261,15 +261,16 @@ export default function CreativeBenefits() {
         {/* Bottom Statement - Premium Card */}
         <div 
           className="
-            group relative text-center mt-20 p-10 md:p-14 rounded-3xl 
-            bg-gradient-to-b from-white/[0.08] to-white/[0.02]
-            border border-white/[0.1]
+            group relative text-center mt-20 py-8 md:py-10 px-8 md:px-12 rounded-2xl 
+            bg-gradient-to-b from-white/[0.06] to-white/[0.02]
+            border border-white/[0.08]
             backdrop-blur-2xl
             overflow-hidden
             transition-all duration-500 ease-out
-            hover:border-white/[0.2]
-            hover:shadow-[0_8px_60px_-12px_rgba(255,255,255,0.1)]
+            hover:border-white/[0.15]
+            hover:shadow-[0_8px_60px_-12px_rgba(255,255,255,0.08)]
             hover:scale-[1.01]
+            flex items-center justify-center
           "
         >
           {/* Animated gradient background on hover */}
