@@ -12,6 +12,7 @@ import Modal from './components/Modal'
 import CustomCursor from './components/CustomCursor'
 import LoadingIntro from './components/LoadingIntro'
 import SectionBlurTransition from './components/SectionBlurTransition'
+import SmoothScroll from './components/SmoothScroll'
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -21,6 +22,9 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen bg-black text-white">
+      {/* Smooth scrolling - ciridae.com style */}
+      <SmoothScroll />
+      
       {/* Loading Intro */}
       <LoadingIntro />
       

@@ -10,6 +10,12 @@ export default function AICoachSection() {
   const [bookRotations, setBookRotations] = useState<{ [key: number]: { x: number; y: number } }>({})
   const [isPaused, setIsPaused] = useState(false)
   const [hoveredBookIndex, setHoveredBookIndex] = useState<number | null>(null)
+  
+  // Drag scroll state
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const [startX, setStartX] = useState(0)
+  const [scrollLeft, setScrollLeft] = useState(0)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -68,6 +74,30 @@ export default function AICoachSection() {
       ...prev,
       [index]: { x: 0, y: 0 }
     }))
+  }
+
+  // Drag scroll handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!scrollRef.current) return
+    setIsDragging(true)
+    setStartX(e.pageX - scrollRef.current.offsetLeft)
+    setScrollLeft(scrollRef.current.scrollLeft)
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !scrollRef.current) return
+    e.preventDefault()
+    const x = e.pageX - scrollRef.current.offsetLeft
+    const walk = (x - startX) * 2 // Scroll speed multiplier
+    scrollRef.current.scrollLeft = scrollLeft - walk
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  const handleMouseLeave = () => {
+    setIsDragging(false)
   }
 
   const conversations = [
@@ -407,22 +437,31 @@ Hazlo. Ahora. 🔥`
                    background: 'linear-gradient(to left, rgba(0, 0, 0, 1), transparent)'
                  }} />
 
-            {/* Scroll container */}
-            <div className="overflow-hidden">
+            {/* Scroll container - draggable */}
+            <div 
+              ref={scrollRef}
+              className="overflow-x-auto scrollbar-hide"
+              style={{
+                cursor: isDragging ? 'grabbing' : 'grab',
+                scrollBehavior: isDragging ? 'auto' : 'smooth',
+              }}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseLeave}
+            >
               <div 
-                className="flex gap-3 md:gap-6 animate-infinite-scroll will-change-transform"
+                className="flex gap-3 md:gap-6"
                 style={{ 
                   width: 'max-content',
-                  animationPlayState: isPaused ? 'paused' : 'running',
                   paddingTop: '1rem',
                   paddingBottom: '1rem',
                   paddingLeft: '3rem',
-                  paddingRight: '3rem'
+                  paddingRight: '3rem',
+                  userSelect: 'none',
                 }}
               >
-                {/* Render books twice for seamless infinite loop */}
-                {[...Array(2)].map((_, setIndex) => (
-                  <div key={setIndex} className="flex gap-3 md:gap-6">
+                {/* Render books - draggable horizontal scroll */}
                     {[
                       { title: 'Atomic Habits', author: 'James Clear', color: 'from-blue-500/20 to-cyan-500/20', emoji: '⚛️' },
                       { title: 'Can\'t Hurt Me', author: 'David Goggins', color: 'from-red-500/20 to-orange-500/20', emoji: '🔥' },
@@ -435,7 +474,7 @@ Hazlo. Ahora. 🔥`
                       { title: 'Huberman Lab', author: 'A. Huberman', color: 'from-rose-500/20 to-pink-500/20', emoji: '🧠' },
                       { title: 'Examine.com', author: 'Evidence-Based', color: 'from-lime-500/20 to-green-500/20', emoji: '🔬' },
                     ].map((book, idx) => {
-                      const globalIndex = setIndex * 10 + idx
+                      const globalIndex = idx
                       const isHovered = hoveredBookIndex === globalIndex
                       const rotation = bookRotations[globalIndex] || { x: 0, y: 0 }
 
@@ -443,11 +482,7 @@ Hazlo. Ahora. 🔥`
                         <div
                           key={globalIndex}
                           className="group relative flex-shrink-0 w-32 md:w-48"
-                          onMouseEnter={() => setIsPaused(true)}
-                          onMouseLeave={() => {
-                            setIsPaused(false)
-                            handleBookMouseLeave(globalIndex)
-                          }}
+                          onMouseLeave={() => handleBookMouseLeave(globalIndex)}
                           onMouseMove={(e) => handleBookMouseMove(e, globalIndex)}
                         >
                           <div
@@ -491,8 +526,6 @@ Hazlo. Ahora. 🔥`
                         </div>
                       )
                     })}
-                  </div>
-                ))}
               </div>
             </div>
           </div>

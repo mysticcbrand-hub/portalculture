@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@stripe/stripe-js": "^8.6.0",
+    "lenis": "^1.3.17",
     "next": "^14.2.24",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
