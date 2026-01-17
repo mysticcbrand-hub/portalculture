@@ -16,6 +16,7 @@ export default function AICoachSection() {
   const [isDragging, setIsDragging] = useState(false)
   const [startX, setStartX] = useState(0)
   const [scrollLeft, setScrollLeft] = useState(0)
+  const animationRef = useRef<number | null>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -76,12 +77,44 @@ export default function AICoachSection() {
     }))
   }
 
+  // Auto-scroll animation
+  useEffect(() => {
+    const container = scrollRef.current
+    if (!container || isDragging || isPaused) return
+
+    let scrollPosition = container.scrollLeft
+    const scrollSpeed = 0.5 // pixels per frame
+
+    const animate = () => {
+      if (!container || isDragging || isPaused) return
+
+      scrollPosition += scrollSpeed
+      
+      // Reset to start when reaching end (seamless loop)
+      if (scrollPosition >= container.scrollWidth / 2) {
+        scrollPosition = 0
+      }
+      
+      container.scrollLeft = scrollPosition
+      animationRef.current = requestAnimationFrame(animate)
+    }
+
+    animationRef.current = requestAnimationFrame(animate)
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+    }
+  }, [isDragging, isPaused])
+
   // Drag scroll handlers
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollRef.current) return
     setIsDragging(true)
     setStartX(e.pageX - scrollRef.current.offsetLeft)
     setScrollLeft(scrollRef.current.scrollLeft)
+    setIsPaused(true) // Pause auto-scroll when dragging
   }
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -94,10 +127,15 @@ export default function AICoachSection() {
 
   const handleMouseUp = () => {
     setIsDragging(false)
+    // Resume auto-scroll after a brief pause
+    setTimeout(() => setIsPaused(false), 1000)
   }
 
   const handleMouseLeave = () => {
     setIsDragging(false)
+    if (isPaused) {
+      setTimeout(() => setIsPaused(false), 1000)
+    }
   }
 
   const conversations = [
@@ -460,8 +498,9 @@ Hazlo. Ahora. 🔥`
                   userSelect: 'none',
                 }}
               >
-                {/* Render books - draggable horizontal scroll */}
-                    {[
+                {/* Render books twice for seamless auto-scroll + draggable */}
+                {[...Array(2)].map((_, setIndex) => (
+                    [
                       { title: 'Atomic Habits', author: 'James Clear', color: 'from-blue-500/20 to-cyan-500/20', emoji: '⚛️' },
                       { title: 'Can\'t Hurt Me', author: 'David Goggins', color: 'from-red-500/20 to-orange-500/20', emoji: '🔥' },
                       { title: 'The Charisma Myth', author: 'O. Fox Cabane', color: 'from-purple-500/20 to-pink-500/20', emoji: '✨' },
@@ -473,7 +512,7 @@ Hazlo. Ahora. 🔥`
                       { title: 'Huberman Lab', author: 'A. Huberman', color: 'from-rose-500/20 to-pink-500/20', emoji: '🧠' },
                       { title: 'Examine.com', author: 'Evidence-Based', color: 'from-lime-500/20 to-green-500/20', emoji: '🔬' },
                     ].map((book, idx) => {
-                      const globalIndex = idx
+                      const globalIndex = setIndex * 10 + idx
                       const isHovered = hoveredBookIndex === globalIndex
                       const rotation = bookRotations[globalIndex] || { x: 0, y: 0 }
 
@@ -524,7 +563,8 @@ Hazlo. Ahora. 🔥`
                           </div>
                         </div>
                       )
-                    })}
+                    })
+                ))}
               </div>
             </div>
           </div>
