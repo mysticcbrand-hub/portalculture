@@ -80,22 +80,30 @@ export default function AICoachSection() {
   // Auto-scroll animation
   useEffect(() => {
     const container = scrollRef.current
-    if (!container || isDragging || isPaused) return
+    if (!container) return
 
-    let scrollPosition = container.scrollLeft
     const scrollSpeed = 0.5 // pixels per frame
+    let lastTime = 0
 
-    const animate = () => {
-      if (!container || isDragging || isPaused) return
+    const animate = (currentTime: number) => {
+      if (!container) return
 
-      scrollPosition += scrollSpeed
-      
-      // Reset to start when reaching end (seamless loop)
-      if (scrollPosition >= container.scrollWidth / 2) {
-        scrollPosition = 0
+      // Calculate delta time for smooth animation
+      if (lastTime !== 0) {
+        const deltaTime = currentTime - lastTime
+        const scrollIncrement = scrollSpeed * (deltaTime / 16) // Normalize to 60fps
+        
+        if (!isDragging && !isPaused) {
+          container.scrollLeft += scrollIncrement
+          
+          // Seamless loop: reset when reaching halfway
+          if (container.scrollLeft >= container.scrollWidth / 2) {
+            container.scrollLeft = 0
+          }
+        }
       }
       
-      container.scrollLeft = scrollPosition
+      lastTime = currentTime
       animationRef.current = requestAnimationFrame(animate)
     }
 
@@ -120,9 +128,23 @@ export default function AICoachSection() {
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !scrollRef.current) return
     e.preventDefault()
-    const x = e.pageX - scrollRef.current.offsetLeft
+    const container = scrollRef.current
+    const x = e.pageX - container.offsetLeft
     const walk = (x - startX) * 2 // Scroll speed multiplier
-    scrollRef.current.scrollLeft = scrollLeft - walk
+    
+    container.scrollLeft = scrollLeft - walk
+    
+    // Infinite loop while dragging
+    const maxScroll = container.scrollWidth / 2
+    if (container.scrollLeft >= maxScroll) {
+      container.scrollLeft = 0
+      setScrollLeft(0)
+      setStartX(x)
+    } else if (container.scrollLeft <= 0) {
+      container.scrollLeft = maxScroll - 1
+      setScrollLeft(maxScroll - 1)
+      setStartX(x)
+    }
   }
 
   const handleMouseUp = () => {
