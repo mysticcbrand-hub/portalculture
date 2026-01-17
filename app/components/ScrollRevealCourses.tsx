@@ -155,7 +155,7 @@ export default function ScrollRevealCourses() {
   }
 
   return (
-    <section className="relative py-24 md:py-32 overflow-hidden">
+    <section id="cursos" className="relative py-24 md:py-32 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-zinc-950 to-black" />
 

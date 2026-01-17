@@ -261,7 +261,7 @@ export default function CreativeBenefits() {
         {/* Bottom Statement - Premium Card */}
         <button 
           onClick={() => {
-            const nextSection = document.getElementById('ai-coach')
+            const nextSection = document.getElementById('cursos')
             if (nextSection) {
               nextSection.scrollIntoView({ behavior: 'smooth' })
             }
