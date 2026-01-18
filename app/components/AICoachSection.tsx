@@ -7,22 +7,8 @@ export default function AICoachSection() {
   const [isVisible, setIsVisible] = useState(false)
   const [activeConversation, setActiveConversation] = useState(0)
   const [chatRotation, setChatRotation] = useState({ x: 0, y: 0 })
-  const [bookRotations, setBookRotations] = useState<{ [key: number]: { x: number; y: number } }>({})
-  const [isPaused, setIsPaused] = useState(false)
-  const [hoveredBookIndex, setHoveredBookIndex] = useState<number | null>(null)
-  
-  // Drag scroll state
+  // Scroll ref for marquee
   const scrollRef = useRef<HTMLDivElement>(null)
-  const [isDragging, setIsDragging] = useState(false)
-  const [startX, setStartX] = useState(0)
-  const [scrollLeft, setScrollLeft] = useState(0)
-  const animationRef = useRef<number | null>(null)
-  
-  // Momentum/inertia state
-  const velocityRef = useRef(0)
-  const lastScrollRef = useRef(0)
-  const lastTimeRef = useRef(0)
-  const momentumAnimationRef = useRef<number | null>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -59,225 +45,6 @@ export default function AICoachSection() {
 
   const handleCardMouseLeave = () => {
     setChatRotation({ x: 0, y: 0 })
-  }
-
-  const handleBookMouseMove = (e: React.MouseEvent<HTMLDivElement>, index: number) => {
-    // Skip 3D effect on mobile/touch devices for better performance
-    if (window.matchMedia('(hover: none)').matches) return
-    
-    const card = e.currentTarget
-    const rect = card.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    const centerX = rect.width / 2
-    const centerY = rect.height / 2
-    const rotateX = (y - centerY) / 30 // Más sutil (antes /20)
-    const rotateY = (centerX - x) / 30 // Más sutil (antes /20)
-
-    setHoveredBookIndex(index)
-    setBookRotations(prev => ({
-      ...prev,
-      [index]: { x: rotateX, y: rotateY }
-    }))
-  }
-
-  const handleBookMouseLeave = (index: number) => {
-    setHoveredBookIndex(null)
-    setBookRotations(prev => ({
-      ...prev,
-      [index]: { x: 0, y: 0 }
-    }))
-  }
-
-  // Auto-scroll animation - simplified
-  useEffect(() => {
-    const container = scrollRef.current
-    if (!container) return
-
-    const scrollSpeed = 1 // pixels per frame
-    let animationId: number
-
-    const animate = () => {
-      if (!container) return
-
-      // Only scroll if not dragging AND no momentum animation
-      if (!isDragging && !momentumAnimationRef.current) {
-        container.scrollLeft += scrollSpeed
-        
-        // Seamless loop: reset when reaching halfway
-        const halfWidth = container.scrollWidth / 2
-        if (container.scrollLeft >= halfWidth) {
-          container.scrollLeft = 1 // Reset to start (not 0 to avoid flicker)
-        }
-      }
-      
-      animationId = requestAnimationFrame(animate)
-    }
-
-    animationId = requestAnimationFrame(animate)
-
-    return () => {
-      if (animationId) {
-        cancelAnimationFrame(animationId)
-      }
-    }
-  }, [isDragging])
-
-  // Drag scroll handlers - Mouse
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (!scrollRef.current) return
-    setIsDragging(true)
-    setStartX(e.pageX - scrollRef.current.offsetLeft)
-    setScrollLeft(scrollRef.current.scrollLeft)
-  }
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging || !scrollRef.current) return
-    e.preventDefault()
-    const container = scrollRef.current
-    const x = e.pageX - container.offsetLeft
-    const walk = (x - startX) * 2 // Scroll speed multiplier
-    
-    // Calculate velocity BEFORE updating scroll (use raw mouse movement)
-    const currentTime = Date.now()
-    if (lastTimeRef.current) {
-      const timeDelta = currentTime - lastTimeRef.current
-      if (timeDelta > 0) {
-        const mouseDelta = x - (lastScrollRef.current || x)
-        // Velocity is based on mouse movement, not scroll position
-        velocityRef.current = (mouseDelta / timeDelta) * -2 * 16 // Normalize & apply multiplier
-      }
-    }
-    
-    lastScrollRef.current = x
-    lastTimeRef.current = currentTime
-    
-    const newScrollLeft = scrollLeft - walk
-    container.scrollLeft = newScrollLeft
-    
-    // Infinite loop while dragging
-    const maxScroll = container.scrollWidth / 2
-    if (container.scrollLeft >= maxScroll) {
-      container.scrollLeft = 0
-      setScrollLeft(0)
-      setStartX(x)
-    } else if (container.scrollLeft <= 0) {
-      container.scrollLeft = maxScroll - 1
-      setScrollLeft(maxScroll - 1)
-      setStartX(x)
-    }
-  }
-
-  const handleMouseUp = () => {
-    setIsDragging(false)
-    applyMomentum()
-  }
-
-  const handleMouseLeave = () => {
-    setIsDragging(false)
-    applyMomentum()
-  }
-
-  // Touch handlers for mobile - CRITICAL for mobile scrolling
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (!scrollRef.current) return
-    // Cancel any ongoing momentum
-    if (momentumAnimationRef.current) {
-      cancelAnimationFrame(momentumAnimationRef.current)
-      momentumAnimationRef.current = null
-    }
-    setIsDragging(true)
-    const touch = e.touches[0]
-    setStartX(touch.pageX - scrollRef.current.offsetLeft)
-    setScrollLeft(scrollRef.current.scrollLeft)
-    lastScrollRef.current = touch.pageX
-    lastTimeRef.current = Date.now()
-    velocityRef.current = 0
-  }
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging || !scrollRef.current) return
-    const container = scrollRef.current
-    const touch = e.touches[0]
-    const x = touch.pageX - container.offsetLeft
-    const walk = (x - startX) * 1.5 // Slightly less multiplier for touch (feels more natural)
-    
-    // Calculate velocity for momentum
-    const currentTime = Date.now()
-    if (lastTimeRef.current) {
-      const timeDelta = currentTime - lastTimeRef.current
-      if (timeDelta > 0 && timeDelta < 100) { // Only calculate if reasonable time delta
-        const touchDelta = touch.pageX - (lastScrollRef.current || touch.pageX)
-        velocityRef.current = (touchDelta / timeDelta) * -1.5 * 16
-      }
-    }
-    
-    lastScrollRef.current = touch.pageX
-    lastTimeRef.current = currentTime
-    
-    const newScrollLeft = scrollLeft - walk
-    container.scrollLeft = newScrollLeft
-    
-    // Infinite loop while dragging
-    const maxScroll = container.scrollWidth / 2
-    if (container.scrollLeft >= maxScroll) {
-      container.scrollLeft = 1
-      setScrollLeft(1)
-      setStartX(x)
-    } else if (container.scrollLeft <= 0) {
-      container.scrollLeft = maxScroll - 1
-      setScrollLeft(maxScroll - 1)
-      setStartX(x)
-    }
-  }
-
-  const handleTouchEnd = () => {
-    setIsDragging(false)
-    applyMomentum()
-  }
-
-  // Apply momentum/inertia after drag release
-  const applyMomentum = () => {
-    const container = scrollRef.current
-    if (!container) return
-
-    // Cancel any existing momentum animation
-    if (momentumAnimationRef.current) {
-      cancelAnimationFrame(momentumAnimationRef.current)
-    }
-
-    let velocity = velocityRef.current
-    const friction = 0.94 // Higher = less friction, longer momentum
-    const minVelocity = 0.1 // Lower threshold = runs longer
-
-    const animate = () => {
-      if (!container) return
-
-      // Apply velocity with friction
-      velocity *= friction
-      container.scrollLeft += velocity
-
-      // Handle infinite loop
-      const maxScroll = container.scrollWidth / 2
-      if (container.scrollLeft >= maxScroll) {
-        container.scrollLeft = 1
-      } else if (container.scrollLeft <= 0) {
-        container.scrollLeft = maxScroll - 1
-      }
-
-      // Continue animation if velocity is significant
-      if (Math.abs(velocity) > minVelocity) {
-        momentumAnimationRef.current = requestAnimationFrame(animate)
-      } else {
-        momentumAnimationRef.current = null
-        velocityRef.current = 0
-      }
-    }
-
-    // Start momentum if velocity exists
-    if (Math.abs(velocity) > minVelocity) {
-      momentumAnimationRef.current = requestAnimationFrame(animate)
-    }
   }
 
   const conversations = [
@@ -335,34 +102,33 @@ Hazlo. Ahora. 🔥`
     <section 
       ref={sectionRef}
       id="ai-coach"
-      className="relative min-h-screen flex items-center justify-center px-5 md:px-6 py-12 md:py-32 overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center px-5 md:px-6 py-16 md:py-32 overflow-hidden"
     >
-      {/* Background with animated gradient */}
+      {/* Background - SIMPLIFIED for mobile (no animated blurs) */}
       <div className="absolute inset-0 bg-black">
-        {/* Subtle animated gradient orbs */}
+        {/* Static gradient for mobile, animated for desktop */}
         <div 
-          className="absolute w-[600px] h-[600px] rounded-full blur-[150px] opacity-20"
+          className="absolute w-[400px] md:w-[600px] h-[400px] md:h-[600px] rounded-full opacity-15 md:opacity-20"
           style={{
             background: 'radial-gradient(circle, #a855f7 0%, transparent 70%)',
-            top: '20%',
-            left: '10%',
-            animation: 'float 20s ease-in-out infinite',
+            top: '10%',
+            left: '5%',
+            filter: 'blur(100px)',
           }}
         />
-        {/* Gradiente azul arriba a la derecha (área de la card, no del scroll) */}
         <div 
-          className="absolute w-[700px] h-[700px] rounded-full blur-[160px] opacity-15"
+          className="hidden md:block absolute w-[700px] h-[700px] rounded-full opacity-15"
           style={{
             background: 'radial-gradient(circle, #3b82f6 0%, transparent 70%)',
             top: '5%',
             right: '10%',
-            animation: 'float 25s ease-in-out infinite reverse',
+            filter: 'blur(120px)',
           }}
         />
         
-        {/* Grain texture - stronger to eliminate banding */}
+        {/* Grain texture - only on desktop */}
         <div 
-          className="absolute inset-0 opacity-[0.045] mix-blend-overlay"
+          className="hidden md:block absolute inset-0 opacity-[0.04] mix-blend-overlay"
           style={{
             backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
           }}
@@ -375,24 +141,22 @@ Hazlo. Ahora. 🔥`
           
           {/* Left: Visual Element - Interactive Chat Preview */}
           <div 
-            className={`relative transition-all duration-1000 ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            className={`relative transition-all duration-700 ${
+              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
-            style={{ animationDelay: '0.2s' }}
           >
-            {/* Floating orb effect */}
+            {/* Floating orb effect - DESKTOP ONLY */}
             <div 
-              className="absolute -inset-40 opacity-50 blur-3xl"
+              className="hidden md:block absolute -inset-40 opacity-40 pointer-events-none"
               style={{
-                background: 'radial-gradient(circle, rgba(168, 85, 247, 0.3) 0%, transparent 70%)',
-                animation: 'glow 4s ease-in-out infinite',
+                background: 'radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, transparent 70%)',
+                filter: 'blur(60px)',
               }}
             />
 
-
-            {/* Chat interface mockup */}
+            {/* Chat interface mockup - simplified for mobile */}
             <div 
-              className="relative bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-xl md:shadow-2xl transition-transform duration-200 ease-out max-w-[95%] md:max-w-none mx-auto"
+              className="relative bg-white/[0.03] md:bg-white/[0.02] md:backdrop-blur-xl border border-white/10 rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-lg md:shadow-2xl max-w-[94%] md:max-w-none mx-auto"
               onMouseMove={handleCardMouseMove}
               onMouseLeave={handleCardMouseLeave}
               style={{
@@ -586,154 +350,85 @@ Hazlo. Ahora. 🔥`
           </div>
         </div>
 
-        {/* Knowledge Sources - Interactive Section */}
+        {/* Knowledge Sources - REDESIGNED for mobile */}
         <div 
-          className={`mt-10 md:mt-20 transition-all duration-1000 delay-500 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          className={`mt-12 md:mt-24 transition-all duration-700 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
-          <div className="text-center mb-6 md:mb-10">
-            <h3 className="text-xl md:text-3xl font-bold text-white mb-2 md:mb-3">
-              Conocimiento de élite
+          {/* Header */}
+          <div className="text-center mb-8 md:mb-12">
+            <p className="text-[10px] md:text-xs font-mono text-white/30 tracking-wider mb-2">FUENTES DE CONOCIMIENTO</p>
+            <h3 className="text-lg md:text-3xl font-bold text-white mb-2">
+              Entrenado con lo mejor
             </h3>
-            <p className="text-white/60 text-sm md:text-base px-4">
-              Entrenado con <span className="text-white font-semibold">10+ libros</span> y{' '}
-              <span className="text-white font-semibold">100+ horas</span> de contenido
+            <p className="text-white/50 text-xs md:text-base">
+              <span className="text-white/70">10+ libros</span> · <span className="text-white/70">100+ horas</span> · <span className="text-white/70">5 fuentes</span>
             </p>
           </div>
 
-          {/* Books - Infinite Horizontal Scroll */}
-          <div className="relative py-4 md:py-16">
-            {/* Espacio lateral para fade - más pequeño en móvil */}
-            <div className="absolute left-0 top-0 bottom-0 w-8 md:w-32 z-20 pointer-events-none bg-black" />
-            <div className="absolute right-0 top-0 bottom-0 w-8 md:w-32 z-20 pointer-events-none bg-black" />
-            
-            {/* Blur gradients sutiles */}
-            <div className="absolute left-8 md:left-32 top-0 bottom-0 w-12 md:w-24 z-20 pointer-events-none"
-                 style={{
-                   background: 'linear-gradient(to right, rgba(0, 0, 0, 1), transparent)'
-                 }} />
-            <div className="absolute right-8 md:right-32 top-0 bottom-0 w-12 md:w-24 z-20 pointer-events-none"
-                 style={{
-                   background: 'linear-gradient(to left, rgba(0, 0, 0, 1), transparent)'
-                 }} />
+          {/* Books - CSS Animation Marquee (more reliable on mobile) */}
+          <div className="relative overflow-hidden py-2">
+            {/* Fade edges */}
+            <div className="absolute left-0 top-0 bottom-0 w-12 md:w-24 z-10 pointer-events-none bg-gradient-to-r from-black to-transparent" />
+            <div className="absolute right-0 top-0 bottom-0 w-12 md:w-24 z-10 pointer-events-none bg-gradient-to-l from-black to-transparent" />
 
-            {/* Scroll container - draggable + touch */}
+            {/* Marquee container */}
             <div 
               ref={scrollRef}
-              className={`overflow-x-auto scrollbar-hide ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+              className="flex animate-marquee hover:pause-animation"
               style={{
-                scrollBehavior: isDragging ? 'auto' : 'smooth',
-                WebkitOverflowScrolling: 'touch',
-                touchAction: 'pan-x', // Allow horizontal panning on touch
+                width: 'max-content',
               }}
-              // Mouse events
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseLeave}
-              // Touch events for mobile
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
             >
-              <div 
-                className="flex gap-2 md:gap-6"
-                style={{ 
-                  width: 'max-content',
-                  paddingTop: '0.5rem',
-                  paddingBottom: '0.5rem',
-                  paddingLeft: '1rem',
-                  paddingRight: '1rem',
-                  userSelect: 'none',
-                }}
-              >
-                {/* Render books twice for seamless auto-scroll + draggable */}
-                {[...Array(2)].map((_, setIndex) => (
-                    [
-                      { title: 'Atomic Habits', author: 'James Clear', color: 'from-blue-500/20 to-cyan-500/20', emoji: '⚛️' },
-                      { title: 'Can\'t Hurt Me', author: 'David Goggins', color: 'from-red-500/20 to-orange-500/20', emoji: '🔥' },
-                      { title: 'The Charisma Myth', author: 'O. Fox Cabane', color: 'from-purple-500/20 to-pink-500/20', emoji: '✨' },
-                      { title: 'Win Friends', author: 'Dale Carnegie', color: 'from-green-500/20 to-emerald-500/20', emoji: '🤝' },
-                      { title: 'Superior Man', author: 'David Deida', color: 'from-amber-500/20 to-yellow-500/20', emoji: '👑' },
-                      { title: 'Naval Ravikant', author: 'Naval', color: 'from-indigo-500/20 to-blue-500/20', emoji: '🧭' },
-                      { title: 'Why We Sleep', author: 'M. Walker', color: 'from-violet-500/20 to-purple-500/20', emoji: '😴' },
-                      { title: 'Zero to One', author: 'Peter Thiel', color: 'from-teal-500/20 to-cyan-500/20', emoji: '🚀' },
-                      { title: 'Huberman Lab', author: 'A. Huberman', color: 'from-rose-500/20 to-pink-500/20', emoji: '🧠' },
-                      { title: 'Examine.com', author: 'Evidence-Based', color: 'from-lime-500/20 to-green-500/20', emoji: '🔬' },
-                    ].map((book, idx) => {
-                      const globalIndex = setIndex * 10 + idx
-                      const isHovered = hoveredBookIndex === globalIndex
-                      const rotation = bookRotations[globalIndex] || { x: 0, y: 0 }
-
-                      return (
-                        <div
-                          key={globalIndex}
-                          className="group relative flex-shrink-0 w-24 md:w-48"
-                          onMouseLeave={() => handleBookMouseLeave(globalIndex)}
-                          onMouseMove={(e) => handleBookMouseMove(e, globalIndex)}
-                        >
-                          <div
-                            className="relative p-3 md:p-6 rounded-lg md:rounded-2xl border border-white/10 
-                                     bg-white/[0.03] backdrop-blur-xl
-                                     hover:border-white/20 hover:bg-white/[0.05]
-                                     transition-all duration-500 ease-out cursor-pointer
-                                     flex flex-col justify-between h-full overflow-hidden"
-                            style={{
-                              minHeight: '5.5rem',
-                              transform: `perspective(1200px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) scale(${isHovered ? 1.05 : 1})`,
-                              transformStyle: 'preserve-3d',
-                              zIndex: isHovered ? 30 : 1,
-                              transition: 'all 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
-                              boxShadow: isHovered ? '0 20px 60px -15px rgba(0, 0, 0, 0.5)' : 'none'
-                            }}
-                          >
-                            {/* Inner glow más sutil */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.07] via-transparent to-transparent rounded-lg md:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                            {/* Book icon */}
-                            <div className="text-lg md:text-4xl mb-1 md:mb-3 transition-all duration-500 group-hover:scale-110">{book.emoji}</div>
-
-                            {/* Content */}
-                            <div className="flex-1">
-                              <h4 className="text-[10px] md:text-sm font-semibold text-white/90 mb-0.5 md:mb-2 leading-tight transition-all duration-500 group-hover:text-white">
-                                {book.title}
-                              </h4>
-                              <p className="text-[8px] md:text-xs text-white/40 group-hover:text-white/70 transition-all duration-500 hidden md:block">
-                                {book.author}
-                              </p>
-                            </div>
-
-                            {/* Checkmark badge */}
-                            <div className="absolute top-1.5 right-1.5 md:top-4 md:right-4 w-4 h-4 md:w-7 md:h-7 rounded-full bg-green-500/20 border border-green-500/40 flex items-center justify-center backdrop-blur-sm transition-all duration-500 group-hover:scale-110 group-hover:bg-green-500/40">
-                              <svg className="w-2 h-2 md:w-4 md:h-4 text-green-400 group-hover:text-green-300 transition-colors duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                              </svg>
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    })
-                ))}
-              </div>
+              {/* Render books twice for seamless loop */}
+              {[0, 1].map((setIndex) => (
+                <div key={setIndex} className="flex gap-3 md:gap-5 px-2">
+                  {[
+                    { title: 'Atomic Habits', emoji: '⚛️' },
+                    { title: 'Can\'t Hurt Me', emoji: '🔥' },
+                    { title: 'Charisma Myth', emoji: '✨' },
+                    { title: 'Win Friends', emoji: '🤝' },
+                    { title: 'Superior Man', emoji: '👑' },
+                    { title: 'Naval Ravikant', emoji: '🧭' },
+                    { title: 'Why We Sleep', emoji: '😴' },
+                    { title: 'Zero to One', emoji: '🚀' },
+                    { title: 'Huberman Lab', emoji: '🧠' },
+                    { title: 'Examine.com', emoji: '🔬' },
+                  ].map((book, idx) => (
+                    <div
+                      key={`${setIndex}-${idx}`}
+                      className="flex-shrink-0 flex items-center gap-2 md:gap-3 px-3 md:px-5 py-2 md:py-3 
+                               rounded-full bg-white/[0.04] border border-white/[0.08]
+                               hover:bg-white/[0.08] hover:border-white/15 transition-all duration-300"
+                    >
+                      <span className="text-base md:text-xl">{book.emoji}</span>
+                      <span className="text-[11px] md:text-sm text-white/80 font-medium whitespace-nowrap">{book.title}</span>
+                      <svg className="w-3 h-3 md:w-4 md:h-4 text-green-400/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  ))}
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Stats below */}
-          <div className="text-center mt-4 md:mt-10">
-            <div className="flex justify-center gap-4 md:gap-8">
-              <div className="text-center">
-                <div className="text-lg md:text-3xl font-bold text-white mb-0.5">10+</div>
-                <div className="text-[10px] md:text-sm text-white/50">Libros</div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg md:text-3xl font-bold text-white mb-0.5">100+</div>
-                <div className="text-[10px] md:text-sm text-white/50">Horas</div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg md:text-3xl font-bold text-white mb-0.5">5</div>
-                <div className="text-[10px] md:text-sm text-white/50">Fuentes</div>
-              </div>
+          {/* Quick stats - compact for mobile */}
+          <div className="flex justify-center items-center gap-6 md:gap-10 mt-8 md:mt-12">
+            <div className="text-center">
+              <div className="text-2xl md:text-4xl font-bold text-white">10+</div>
+              <div className="text-[10px] md:text-xs text-white/40 uppercase tracking-wider">Libros</div>
+            </div>
+            <div className="w-px h-8 bg-white/10" />
+            <div className="text-center">
+              <div className="text-2xl md:text-4xl font-bold text-white">100+</div>
+              <div className="text-[10px] md:text-xs text-white/40 uppercase tracking-wider">Horas</div>
+            </div>
+            <div className="w-px h-8 bg-white/10" />
+            <div className="text-center">
+              <div className="text-2xl md:text-4xl font-bold text-white">24/7</div>
+              <div className="text-[10px] md:text-xs text-white/40 uppercase tracking-wider">Disponible</div>
             </div>
           </div>
         </div>
