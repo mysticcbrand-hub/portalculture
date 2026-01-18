@@ -110,6 +110,9 @@ export default function CreativeBenefits() {
   }, [])
 
   const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>, index: number) => {
+    // Skip 3D effect on mobile/touch devices for better performance
+    if (window.matchMedia('(hover: none)').matches) return
+    
     const card = e.currentTarget
     const rect = card.getBoundingClientRect()
     const x = e.clientX - rect.left
@@ -135,7 +138,7 @@ export default function CreativeBenefits() {
   }
 
   return (
-    <section ref={sectionRef} id="beneficios" className="py-32 px-6 relative overflow-hidden">
+    <section ref={sectionRef} id="beneficios" className="py-16 md:py-32 px-4 md:px-6 relative overflow-hidden">
       {/* Ambient Background */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
@@ -146,7 +149,7 @@ export default function CreativeBenefits() {
         {/* Header */}
         <div className="text-center mb-16 md:mb-20 relative">
           <p className="text-[10px] md:text-xs font-mono text-white/30 tracking-wider mb-3 md:mb-4">/ 02 BENEFICIOS</p>
-          <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent px-4">
+          <h2 className="text-2xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent px-4">
             Dentro de Portal Culture
           </h2>
           <p className="text-base md:text-xl text-white/60 max-w-3xl mx-auto leading-relaxed px-4">

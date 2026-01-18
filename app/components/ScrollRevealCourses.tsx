@@ -127,6 +127,9 @@ export default function ScrollRevealCourses() {
   }, [])
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, courseId: number) => {
+    // Skip 3D effect on mobile/touch devices for better performance
+    if (window.matchMedia('(hover: none)').matches) return
+    
     const card = e.currentTarget
     const rect = card.getBoundingClientRect()
     const x = e.clientX - rect.left
@@ -155,15 +158,15 @@ export default function ScrollRevealCourses() {
   }
 
   return (
-    <section id="cursos" className="relative py-24 md:py-32 overflow-hidden">
+    <section id="cursos" className="relative py-16 md:py-32 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-zinc-950 to-black" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6">
         {/* Section Header */}
-        <div className="text-center mb-32">
-          <span className="font-mono text-xs tracking-wider text-white/30 mb-4 block">/ 03</span>
-          <h2 className="text-[clamp(2.5rem,6vw,5rem)] font-bold leading-[1.1] mb-6">
+        <div className="text-center mb-12 md:mb-32">
+          <span className="font-mono text-xs tracking-wider text-white/30 mb-3 block">/ 03</span>
+          <h2 className="text-[clamp(1.8rem,5vw,5rem)] font-bold leading-[1.1] mb-3 md:mb-6">
             <span
               className="block"
               style={{
@@ -176,11 +179,11 @@ export default function ScrollRevealCourses() {
               Cursos Exclusivos
             </span>
           </h2>
-          <p className="text-xl md:text-2xl text-white/70 font-light">Diseñados para resolver todos tus problemas</p>
+          <p className="text-base md:text-2xl text-white/70 font-light px-4">Diseñados para resolver todos tus problemas</p>
         </div>
 
         {/* Course Cards */}
-        <div className="space-y-32 md:space-y-40 max-w-4xl mx-auto" ref={sectionRef}>
+        <div className="space-y-12 md:space-y-40 max-w-4xl mx-auto" ref={sectionRef}>
           {courses.map((course, index) => {
             const pos = mousePositions[course.id] || { x: 0, y: 0, spotX: 50, spotY: 50 }
             const progress = scrollProgress[index] || 0
@@ -211,7 +214,7 @@ export default function ScrollRevealCourses() {
                 }}
               >
                 {/* Backdrop blur card */}
-                <div className="relative backdrop-blur-xl bg-white/[0.03] border border-white/[0.08] rounded-3xl p-8 md:p-12 min-h-[280px] overflow-hidden">
+                <div className="relative backdrop-blur-xl bg-white/[0.03] border border-white/[0.08] rounded-2xl md:rounded-3xl p-5 md:p-12 min-h-[180px] md:min-h-[280px] overflow-hidden">
                   {/* Background Images for all courses */}
                   {course.id === 1 && (
                     <div className="absolute inset-0 opacity-35 md:opacity-20 group-hover:opacity-45 md:group-hover:opacity-30 transition-opacity duration-500">
@@ -247,7 +250,7 @@ export default function ScrollRevealCourses() {
 
                   {/* Big number background */}
                   <div
-                    className="absolute top-6 left-8 text-[6rem] md:text-[8rem] font-bold leading-none pointer-events-none"
+                    className="absolute top-3 left-4 md:top-6 md:left-8 text-[4rem] md:text-[8rem] font-bold leading-none pointer-events-none"
                     style={{
                       background: 'linear-gradient(135deg, #C0C0C0, #FFFFFF, #A8A8A8)',
                       WebkitBackgroundClip: 'text',
@@ -260,7 +263,7 @@ export default function ScrollRevealCourses() {
                   </div>
 
                   {/* Icon */}
-                  <div className="absolute top-8 right-8 w-16 h-16 md:w-20 md:h-20 transition-transform duration-300 group-hover:rotate-6">
+                  <div className="absolute top-4 right-4 md:top-8 md:right-8 w-10 h-10 md:w-20 md:h-20 transition-transform duration-300 group-hover:rotate-6">
                     <img 
                       src={course.icon} 
                       alt={course.title}
@@ -269,16 +272,16 @@ export default function ScrollRevealCourses() {
                   </div>
 
                   {/* Content */}
-                  <div className="relative z-10 max-w-[70%]">
-                    <h3 className="text-2xl md:text-3xl font-semibold text-white mb-4 tracking-tight">{course.title}</h3>
-                    <p className="text-base md:text-lg text-white/65 leading-relaxed mb-6">{course.description}</p>
+                  <div className="relative z-10 max-w-[75%] md:max-w-[70%]">
+                    <h3 className="text-lg md:text-3xl font-semibold text-white mb-2 md:mb-4 tracking-tight">{course.title}</h3>
+                    <p className="text-sm md:text-lg text-white/65 leading-relaxed mb-3 md:mb-6">{course.description}</p>
 
                     {/* Tags */}
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5 md:gap-2">
                       {course.tags.map((tag, idx) => (
                         <span
                           key={idx}
-                          className={`tag tag-${tag.variant} inline-block px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-300`}
+                          className={`tag tag-${tag.variant} inline-block px-2 py-1 md:px-3 md:py-1.5 rounded-full text-[10px] md:text-xs font-medium border transition-all duration-300`}
                         >
                           {tag.text}
                         </span>

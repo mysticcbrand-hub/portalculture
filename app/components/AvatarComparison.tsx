@@ -30,6 +30,9 @@ export default function AvatarComparison() {
   }, [])
 
   const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>, cardId: number) => {
+    // Skip 3D effect on mobile/touch devices for better performance
+    if (window.matchMedia('(hover: none)').matches) return
+    
     const card = e.currentTarget
     const rect = card.getBoundingClientRect()
     const x = e.clientX - rect.left

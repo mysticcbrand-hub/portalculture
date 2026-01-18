@@ -42,6 +42,9 @@ export default function AICoachSection() {
   }, [])
 
   const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Skip 3D effect on mobile/touch devices for better performance
+    if (window.matchMedia('(hover: none)').matches) return
+    
     const card = e.currentTarget
     const rect = card.getBoundingClientRect()
     const x = e.clientX - rect.left
@@ -59,6 +62,9 @@ export default function AICoachSection() {
   }
 
   const handleBookMouseMove = (e: React.MouseEvent<HTMLDivElement>, index: number) => {
+    // Skip 3D effect on mobile/touch devices for better performance
+    if (window.matchMedia('(hover: none)').matches) return
+    
     const card = e.currentTarget
     const rect = card.getBoundingClientRect()
     const x = e.clientX - rect.left
@@ -117,7 +123,7 @@ export default function AICoachSection() {
     }
   }, [isDragging])
 
-  // Drag scroll handlers
+  // Drag scroll handlers - Mouse
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollRef.current) return
     setIsDragging(true)
@@ -168,6 +174,64 @@ export default function AICoachSection() {
   }
 
   const handleMouseLeave = () => {
+    setIsDragging(false)
+    applyMomentum()
+  }
+
+  // Touch handlers for mobile - CRITICAL for mobile scrolling
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!scrollRef.current) return
+    // Cancel any ongoing momentum
+    if (momentumAnimationRef.current) {
+      cancelAnimationFrame(momentumAnimationRef.current)
+      momentumAnimationRef.current = null
+    }
+    setIsDragging(true)
+    const touch = e.touches[0]
+    setStartX(touch.pageX - scrollRef.current.offsetLeft)
+    setScrollLeft(scrollRef.current.scrollLeft)
+    lastScrollRef.current = touch.pageX
+    lastTimeRef.current = Date.now()
+    velocityRef.current = 0
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || !scrollRef.current) return
+    const container = scrollRef.current
+    const touch = e.touches[0]
+    const x = touch.pageX - container.offsetLeft
+    const walk = (x - startX) * 1.5 // Slightly less multiplier for touch (feels more natural)
+    
+    // Calculate velocity for momentum
+    const currentTime = Date.now()
+    if (lastTimeRef.current) {
+      const timeDelta = currentTime - lastTimeRef.current
+      if (timeDelta > 0 && timeDelta < 100) { // Only calculate if reasonable time delta
+        const touchDelta = touch.pageX - (lastScrollRef.current || touch.pageX)
+        velocityRef.current = (touchDelta / timeDelta) * -1.5 * 16
+      }
+    }
+    
+    lastScrollRef.current = touch.pageX
+    lastTimeRef.current = currentTime
+    
+    const newScrollLeft = scrollLeft - walk
+    container.scrollLeft = newScrollLeft
+    
+    // Infinite loop while dragging
+    const maxScroll = container.scrollWidth / 2
+    if (container.scrollLeft >= maxScroll) {
+      container.scrollLeft = 1
+      setScrollLeft(1)
+      setStartX(x)
+    } else if (container.scrollLeft <= 0) {
+      container.scrollLeft = maxScroll - 1
+      setScrollLeft(maxScroll - 1)
+      setStartX(x)
+    }
+  }
+
+  const handleTouchEnd = () => {
     setIsDragging(false)
     applyMomentum()
   }
@@ -270,7 +334,8 @@ Hazlo. Ahora. 🔥`
   return (
     <section 
       ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center px-4 md:px-6 py-32 md:py-40 overflow-hidden"
+      id="ai-coach"
+      className="relative min-h-screen flex items-center justify-center px-4 md:px-6 py-16 md:py-32 overflow-hidden"
     >
       {/* Background with animated gradient */}
       <div className="absolute inset-0 bg-black">
@@ -459,17 +524,17 @@ Hazlo. Ahora. 🔥`
             </div>
 
             {/* Headline */}
-            <h2 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] font-normal leading-[1.1] tracking-tight mb-6" style={{ transform: 'scaleY(1.1)' }}>
+            <h2 className="font-display text-[clamp(1.8rem,5vw,4rem)] font-normal leading-[1.1] tracking-tight mb-4 md:mb-6" style={{ transform: 'scaleY(1.1)' }}>
               <span className="block text-white">Tu coach.</span>
               <span className="block text-white/60">Disponible 24/7.</span>
             </h2>
 
             {/* Description */}
-            <div className="space-y-4 mb-10 text-white/60 text-lg leading-relaxed">
+            <div className="space-y-3 md:space-y-4 mb-6 md:mb-10 text-white/60 text-sm md:text-lg leading-relaxed">
               <p>
-                NOVA™ no es un bot cualquiera. Es tu mentor del desarrollo colectivo entrenado con libros y cientos de horas de conocimiento con las mejores estrategias para ti.
+                NOVA™ es tu mentor de desarrollo personal, entrenado con los mejores libros y estrategias.
               </p>
-              <p>
+              <p className="hidden md:block">
                 Responde con sistemas reales, pasos accionables y la energía que necesitas para transformar tu vida.
               </p>
             </div>
@@ -523,22 +588,22 @@ Hazlo. Ahora. 🔥`
 
         {/* Knowledge Sources - Interactive Section */}
         <div 
-          className={`mt-20 transition-all duration-1000 delay-500 ${
+          className={`mt-10 md:mt-20 transition-all duration-1000 delay-500 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
         >
-          <div className="text-center mb-10">
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+          <div className="text-center mb-6 md:mb-10">
+            <h3 className="text-xl md:text-3xl font-bold text-white mb-2 md:mb-3">
               Conocimiento de élite
             </h3>
-            <p className="text-white/60">
-              Entrenado con más de <span className="text-white font-semibold">10 libros</span> y{' '}
-              <span className="text-white font-semibold">100+ horas</span> de contenido verificado
+            <p className="text-white/60 text-sm md:text-base px-4">
+              Entrenado con <span className="text-white font-semibold">10+ libros</span> y{' '}
+              <span className="text-white font-semibold">100+ horas</span> de contenido
             </p>
           </div>
 
           {/* Books - Infinite Horizontal Scroll */}
-          <div className="relative py-8 md:py-16">
+          <div className="relative py-4 md:py-16">
             {/* Espacio lateral para fade - más pequeño en móvil */}
             <div className="absolute left-0 top-0 bottom-0 w-8 md:w-32 z-20 pointer-events-none bg-black" />
             <div className="absolute right-0 top-0 bottom-0 w-8 md:w-32 z-20 pointer-events-none bg-black" />
@@ -553,26 +618,33 @@ Hazlo. Ahora. 🔥`
                    background: 'linear-gradient(to left, rgba(0, 0, 0, 1), transparent)'
                  }} />
 
-            {/* Scroll container - draggable */}
+            {/* Scroll container - draggable + touch */}
             <div 
               ref={scrollRef}
               className={`overflow-x-auto scrollbar-hide ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
               style={{
                 scrollBehavior: isDragging ? 'auto' : 'smooth',
+                WebkitOverflowScrolling: 'touch',
+                touchAction: 'pan-x', // Allow horizontal panning on touch
               }}
+              // Mouse events
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
               onMouseLeave={handleMouseLeave}
+              // Touch events for mobile
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
             >
               <div 
-                className="flex gap-3 md:gap-6"
+                className="flex gap-2 md:gap-6"
                 style={{ 
                   width: 'max-content',
-                  paddingTop: '1rem',
-                  paddingBottom: '1rem',
-                  paddingLeft: '3rem',
-                  paddingRight: '3rem',
+                  paddingTop: '0.5rem',
+                  paddingBottom: '0.5rem',
+                  paddingLeft: '1rem',
+                  paddingRight: '1rem',
                   userSelect: 'none',
                 }}
               >
@@ -597,18 +669,18 @@ Hazlo. Ahora. 🔥`
                       return (
                         <div
                           key={globalIndex}
-                          className="group relative flex-shrink-0 w-32 md:w-48"
+                          className="group relative flex-shrink-0 w-24 md:w-48"
                           onMouseLeave={() => handleBookMouseLeave(globalIndex)}
                           onMouseMove={(e) => handleBookMouseMove(e, globalIndex)}
                         >
                           <div
-                            className="relative p-4 md:p-6 rounded-xl md:rounded-2xl border border-white/10 
+                            className="relative p-3 md:p-6 rounded-lg md:rounded-2xl border border-white/10 
                                      bg-white/[0.03] backdrop-blur-xl
                                      hover:border-white/20 hover:bg-white/[0.05]
                                      transition-all duration-500 ease-out cursor-pointer
                                      flex flex-col justify-between h-full overflow-hidden"
                             style={{
-                              minHeight: '8rem',
+                              minHeight: '5.5rem',
                               transform: `perspective(1200px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) scale(${isHovered ? 1.05 : 1})`,
                               transformStyle: 'preserve-3d',
                               zIndex: isHovered ? 30 : 1,
@@ -617,24 +689,24 @@ Hazlo. Ahora. 🔥`
                             }}
                           >
                             {/* Inner glow más sutil */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.07] via-transparent to-transparent rounded-xl md:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.07] via-transparent to-transparent rounded-lg md:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                             {/* Book icon */}
-                            <div className="text-2xl md:text-4xl mb-2 md:mb-3 transition-all duration-500 group-hover:scale-110">{book.emoji}</div>
+                            <div className="text-lg md:text-4xl mb-1 md:mb-3 transition-all duration-500 group-hover:scale-110">{book.emoji}</div>
 
                             {/* Content */}
                             <div className="flex-1">
-                              <h4 className="text-xs md:text-sm font-semibold text-white/90 mb-1 md:mb-2 leading-tight transition-all duration-500 group-hover:text-white">
+                              <h4 className="text-[10px] md:text-sm font-semibold text-white/90 mb-0.5 md:mb-2 leading-tight transition-all duration-500 group-hover:text-white">
                                 {book.title}
                               </h4>
-                              <p className="text-[10px] md:text-xs text-white/40 group-hover:text-white/70 transition-all duration-500">
+                              <p className="text-[8px] md:text-xs text-white/40 group-hover:text-white/70 transition-all duration-500 hidden md:block">
                                 {book.author}
                               </p>
                             </div>
 
                             {/* Checkmark badge */}
-                            <div className="absolute top-2 right-2 md:top-4 md:right-4 w-5 h-5 md:w-7 md:h-7 rounded-full bg-green-500/20 border border-green-500/40 flex items-center justify-center backdrop-blur-sm transition-all duration-500 group-hover:scale-110 group-hover:bg-green-500/40">
-                              <svg className="w-3 h-3 md:w-4 md:h-4 text-green-400 group-hover:text-green-300 transition-colors duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <div className="absolute top-1.5 right-1.5 md:top-4 md:right-4 w-4 h-4 md:w-7 md:h-7 rounded-full bg-green-500/20 border border-green-500/40 flex items-center justify-center backdrop-blur-sm transition-all duration-500 group-hover:scale-110 group-hover:bg-green-500/40">
+                              <svg className="w-2 h-2 md:w-4 md:h-4 text-green-400 group-hover:text-green-300 transition-colors duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                               </svg>
                             </div>
@@ -648,20 +720,19 @@ Hazlo. Ahora. 🔥`
           </div>
 
           {/* Stats below */}
-          <div className="text-center mt-6 md:mt-10">
-            <p className="text-xs md:text-sm text-white/40 mb-4 md:mb-6 uppercase tracking-wider">Nutrida con</p>
-            <div className="flex justify-center gap-6 md:gap-8">
+          <div className="text-center mt-4 md:mt-10">
+            <div className="flex justify-center gap-4 md:gap-8">
               <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-white mb-1">10+</div>
-                <div className="text-xs md:text-sm text-white/50">Libros</div>
+                <div className="text-lg md:text-3xl font-bold text-white mb-0.5">10+</div>
+                <div className="text-[10px] md:text-sm text-white/50">Libros</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-white mb-1">100+</div>
-                <div className="text-xs md:text-sm text-white/50">Horas</div>
+                <div className="text-lg md:text-3xl font-bold text-white mb-0.5">100+</div>
+                <div className="text-[10px] md:text-sm text-white/50">Horas</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-white mb-1">5</div>
-                <div className="text-xs md:text-sm text-white/50">Fuentes</div>
+                <div className="text-lg md:text-3xl font-bold text-white mb-0.5">5</div>
+                <div className="text-[10px] md:text-sm text-white/50">Fuentes</div>
               </div>
             </div>
           </div>

@@ -139,6 +139,8 @@ export default function HeroPremium() {
                 transformStyle: 'preserve-3d',
               }}
               onMouseMove={(e) => {
+                // Skip 3D effect on mobile (touch devices)
+                if (window.matchMedia('(hover: none)').matches) return
                 const rect = e.currentTarget.getBoundingClientRect()
                 const x = (e.clientX - rect.left) / rect.width - 0.5
                 const y = (e.clientY - rect.top) / rect.height - 0.5
@@ -181,9 +183,15 @@ export default function HeroPremium() {
               style={{
                 fontFamily: "'Fuente Display', 'Scotch Display', Georgia, serif",
               }}
-              onMouseEnter={() => setIsHoveringTitle(true)}
+              onMouseEnter={() => {
+                // Skip chrome effect on mobile
+                if (window.matchMedia('(hover: none)').matches) return
+                setIsHoveringTitle(true)
+              }}
               onMouseLeave={() => setIsHoveringTitle(false)}
               onMouseMove={(e) => {
+                // Skip chrome effect on mobile
+                if (window.matchMedia('(hover: none)').matches) return
                 if (!titleRef.current) return
                 const rect = titleRef.current.getBoundingClientRect()
                 const x = ((e.clientX - rect.left) / rect.width) * 100
@@ -305,6 +313,8 @@ export default function HeroPremium() {
               "
               style={{ perspective: '500px' }}
               onMouseMove={(e) => {
+                // Skip 3D effect on mobile (touch devices)
+                if (window.matchMedia('(hover: none)').matches) return
                 const rect = e.currentTarget.getBoundingClientRect()
                 const x = (e.clientX - rect.left) / rect.width - 0.5
                 const y = (e.clientY - rect.top) / rect.height - 0.5
