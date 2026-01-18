@@ -60,6 +60,23 @@ export default function CreativeBenefits() {
   const [cardRotations, setCardRotations] = useState<{ [key: number]: { x: number; y: number } }>({})
   const cardsRef = useRef<(HTMLDivElement | null)[]>([])
   const sectionRef = useRef<HTMLDivElement>(null)
+  
+  // Mobile swipe state
+  const [isMobile, setIsMobile] = useState(false)
+  const [currentCardIndex, setCurrentCardIndex] = useState(0)
+  const [swipeOffset, setSwipeOffset] = useState({ x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
+  const [startPos, setStartPos] = useState({ x: 0, y: 0 })
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -150,6 +167,49 @@ export default function CreativeBenefits() {
     }))
   }
 
+  // Swipe handlers for mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!isMobile) return
+    setIsDragging(true)
+    setStartPos({
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY
+    })
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || !isMobile) return
+    const deltaX = e.touches[0].clientX - startPos.x
+    const deltaY = e.touches[0].clientY - startPos.y
+    setSwipeOffset({ x: deltaX, y: deltaY })
+  }
+
+  const handleTouchEnd = () => {
+    if (!isMobile) return
+    setIsDragging(false)
+    
+    const threshold = 100 // pixels to trigger swipe
+    
+    if (Math.abs(swipeOffset.x) > threshold) {
+      // Swipe left or right
+      if (swipeOffset.x > 0 && currentCardIndex > 0) {
+        // Swipe right - previous card
+        setCurrentCardIndex(prev => prev - 1)
+      } else if (swipeOffset.x < 0 && currentCardIndex < benefits.length - 1) {
+        // Swipe left - next card
+        setCurrentCardIndex(prev => prev + 1)
+      }
+    }
+    
+    // Reset offset
+    setSwipeOffset({ x: 0, y: 0 })
+  }
+
+  const goToCard = (index: number) => {
+    setCurrentCardIndex(index)
+    setSwipeOffset({ x: 0, y: 0 })
+  }
+
   return (
     <section ref={sectionRef} id="beneficios" className="py-12 md:py-32 px-5 md:px-6 relative overflow-hidden">
       {/* Ambient Background */}
@@ -205,74 +265,207 @@ export default function CreativeBenefits() {
           </div>
         </div>
 
-        {/* Premium Grid - Bento Style - Mobile optimized */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12 max-w-[92%] md:max-w-none mx-auto">
-          {benefits.map((benefit, index) => {
-            const rotation = cardRotations[index] || { x: 0, y: 0 }
-            
-            return (
-            <div
-              key={index}
-              ref={(el) => { cardsRef.current[index] = el }}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => {
-                setHoveredIndex(null)
-                handleCardMouseLeave(index)
-              }}
-              onMouseMove={(e) => handleCardMouseMove(e, index)}
-              className={`group relative p-5 md:p-8 rounded-xl md:rounded-2xl border border-white/10 
-                         bg-gradient-to-br ${benefit.color}
-                         backdrop-blur-xl
-                         hover:border-white/30
-                         transition-all duration-200 ease-out
-                         shadow-xl md:shadow-2xl ${benefit.glow}
-                         ${index === 5 ? 'md:col-span-2 lg:col-span-1' : ''}`}
-              style={{
-                transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
-                transformStyle: 'preserve-3d',
-                transformOrigin: 'center bottom',
-                willChange: 'transform, opacity, filter'
-              }}
-            >
-              {/* Glow Effect - hidden on mobile for performance */}
-              <div className={`hidden md:block absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-0 
-                             group-hover:opacity-100 blur-xl transition-opacity duration-700 rounded-2xl -z-10`} />
+        {/* Mobile: Swipeable Stack - Desktop: Grid */}
+        {isMobile ? (
+          <div className="relative mb-12">
+            {/* Swipeable Card Stack */}
+            <div className="relative h-[420px] flex items-center justify-center px-4">
+              {benefits.map((benefit, index) => {
+                const isActive = index === currentCardIndex
+                const isPrev = index < currentCardIndex
+                const offset = index - currentCardIndex
+                const rotation = cardRotations[index] || { x: 0, y: 0 }
+                
+                // Calculate transform based on position in stack
+                const scale = isActive ? 1 : 0.95 - Math.abs(offset) * 0.05
+                const translateY = isActive ? 0 : Math.abs(offset) * 10
+                const opacity = isPrev ? 0 : 1 - Math.abs(offset) * 0.3
+                const zIndex = benefits.length - Math.abs(offset)
+                
+                // Swipe transform
+                const swipeRotation = isDragging && isActive ? swipeOffset.x / 20 : 0
+                const swipeTranslateX = isDragging && isActive ? swipeOffset.x : 0
+                const swipeTranslateY = isDragging && isActive ? swipeOffset.y * 0.1 : 0
 
-              {/* Number Badge */}
-              <div className="flex items-start justify-between mb-4 md:mb-6">
-                <span className="font-mono text-[10px] md:text-xs text-white/30 group-hover:text-white/60 
-                               transition-colors duration-500 tracking-wider">
-                  {benefit.number}
-                </span>
-                <div className="w-9 h-9 md:w-12 md:h-12 transform group-hover:scale-110 transition-transform duration-500">
-                  <Image 
-                    src={benefit.icon} 
-                    alt={benefit.title}
-                    width={48}
-                    height={48}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-              </div>
+                return (
+                  <div
+                    key={index}
+                    ref={isActive ? cardRef : null}
+                    className="absolute inset-0 transition-all duration-300 ease-out"
+                    style={{
+                      transform: `
+                        translateX(${swipeTranslateX + offset * 20}px) 
+                        translateY(${translateY + swipeTranslateY}px) 
+                        scale(${scale}) 
+                        rotate(${swipeRotation}deg)
+                      `,
+                      opacity: opacity,
+                      zIndex: zIndex,
+                      pointerEvents: isActive ? 'auto' : 'none',
+                    }}
+                    onTouchStart={isActive ? handleTouchStart : undefined}
+                    onTouchMove={isActive ? handleTouchMove : undefined}
+                    onTouchEnd={isActive ? handleTouchEnd : undefined}
+                  >
+                    <div className={`h-full p-6 rounded-2xl border border-white/10 
+                                   bg-gradient-to-br ${benefit.color}
+                                   backdrop-blur-xl shadow-2xl
+                                   flex flex-col`}>
+                      {/* Number Badge */}
+                      <div className="flex items-start justify-between mb-6">
+                        <span className="font-mono text-xs text-white/40 tracking-wider">
+                          {benefit.number}
+                        </span>
+                        <div className="w-12 h-12">
+                          <Image 
+                            src={benefit.icon} 
+                            alt={benefit.title}
+                            width={48}
+                            height={48}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                      </div>
 
-              {/* Content */}
-              <div className="space-y-2 md:space-y-3">
-                <h3 className="text-lg md:text-2xl font-bold text-white group-hover:text-white 
-                             transition-all duration-500">
-                  {benefit.title}
-                </h3>
-                <p className="text-sm md:text-base text-white/60 leading-relaxed group-hover:text-white/80 
-                            transition-colors duration-500">
-                  {benefit.description}
-                </p>
-              </div>
+                      {/* Content */}
+                      <div className="flex-1 flex flex-col justify-center space-y-4">
+                        <h3 className="text-2xl font-bold text-white">
+                          {benefit.title}
+                        </h3>
+                        <p className="text-base text-white/70 leading-relaxed">
+                          {benefit.description}
+                        </p>
+                      </div>
 
-              {/* Hover Indicator - hidden on mobile */}
-              <div className={`hidden md:block absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-white/0 via-white/50 to-white/0
-                             transition-all duration-700 ${hoveredIndex === index ? 'opacity-100' : 'opacity-0'}`} />
+                      {/* Swipe hint indicator */}
+                      {isActive && currentCardIndex < benefits.length - 1 && (
+                        <div className="flex justify-center items-center gap-2 text-xs text-white/30 mt-4">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                          </svg>
+                          Desliza
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
             </div>
-          )})}
-        </div>
+
+            {/* Progress Indicators */}
+            <div className="flex justify-center gap-2 mt-6">
+              {benefits.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToCard(index)}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    index === currentCardIndex 
+                      ? 'w-8 bg-white' 
+                      : 'w-2 bg-white/30'
+                  }`}
+                  aria-label={`Ir a beneficio ${index + 1}`}
+                />
+              ))}
+            </div>
+
+            {/* Navigation Arrows */}
+            <div className="flex justify-between items-center mt-6 px-4">
+              <button
+                onClick={() => currentCardIndex > 0 && goToCard(currentCardIndex - 1)}
+                disabled={currentCardIndex === 0}
+                className="p-3 rounded-full bg-white/5 border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:bg-white/10"
+              >
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <span className="text-sm text-white/50 font-mono">
+                {currentCardIndex + 1} / {benefits.length}
+              </span>
+              <button
+                onClick={() => currentCardIndex < benefits.length - 1 && goToCard(currentCardIndex + 1)}
+                disabled={currentCardIndex === benefits.length - 1}
+                className="p-3 rounded-full bg-white/5 border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:bg-white/10"
+              >
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        ) : (
+          // Desktop Grid
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12 max-w-[92%] md:max-w-none mx-auto">
+            {benefits.map((benefit, index) => {
+              const rotation = cardRotations[index] || { x: 0, y: 0 }
+              
+              return (
+              <div
+                key={index}
+                ref={(el) => { cardsRef.current[index] = el }}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => {
+                  setHoveredIndex(null)
+                  handleCardMouseLeave(index)
+                }}
+                onMouseMove={(e) => handleCardMouseMove(e, index)}
+                className={`group relative p-5 md:p-8 rounded-xl md:rounded-2xl border border-white/10 
+                           bg-gradient-to-br ${benefit.color}
+                           backdrop-blur-xl
+                           hover:border-white/30
+                           transition-all duration-200 ease-out
+                           shadow-xl md:shadow-2xl ${benefit.glow}
+                           ${index === 5 ? 'md:col-span-2 lg:col-span-1' : ''}`}
+                style={{
+                  transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
+                  transformStyle: 'preserve-3d',
+                  transformOrigin: 'center bottom',
+                  willChange: 'transform, opacity, filter'
+                }}
+              >
+                {/* Glow Effect */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-0 
+                               group-hover:opacity-100 blur-xl transition-opacity duration-700 rounded-2xl -z-10`} />
+
+                {/* Number Badge */}
+                <div className="flex items-start justify-between mb-4 md:mb-6">
+                  <span className="font-mono text-[10px] md:text-xs text-white/30 group-hover:text-white/60 
+                                 transition-colors duration-500 tracking-wider">
+                    {benefit.number}
+                  </span>
+                  <div className="w-9 h-9 md:w-12 md:h-12 transform group-hover:scale-110 transition-transform duration-500">
+                    <Image 
+                      src={benefit.icon} 
+                      alt={benefit.title}
+                      width={48}
+                      height={48}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="space-y-2 md:space-y-3">
+                  <h3 className="text-lg md:text-2xl font-bold text-white group-hover:text-white 
+                               transition-all duration-500">
+                    {benefit.title}
+                  </h3>
+                  <p className="text-sm md:text-base text-white/60 leading-relaxed group-hover:text-white/80 
+                              transition-colors duration-500">
+                    {benefit.description}
+                  </p>
+                </div>
+
+                {/* Hover Indicator */}
+                <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-white/0 via-white/50 to-white/0
+                               transition-all duration-700 ${hoveredIndex === index ? 'opacity-100' : 'opacity-0'}`} />
+              </div>
+            )})}
+          </div>
+        )}
 
         {/* Bottom Statement - Premium Card */}
         <button 

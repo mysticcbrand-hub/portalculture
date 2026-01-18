@@ -59,6 +59,21 @@ export default function ScrollRevealCourses() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const [mousePositions, setMousePositions] = useState<{ [key: number]: { x: number; y: number; spotX: number; spotY: number } }>({})
   const [scrollProgress, setScrollProgress] = useState<{ [key: number]: number }>({})
+  
+  // Mobile carousel state
+  const [isMobile, setIsMobile] = useState(false)
+  const [currentCourseIndex, setCurrentCourseIndex] = useState(0)
+  const [touchStart, setTouchStart] = useState(0)
+  const [touchEnd, setTouchEnd] = useState(0)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     const observerOptions = {
@@ -160,6 +175,39 @@ export default function ScrollRevealCourses() {
     }))
   }
 
+  // Touch handlers for carousel
+  const handleTouchStartCarousel = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+
+  const handleTouchMoveCarousel = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+  }
+
+  const handleTouchEndCarousel = () => {
+    if (!touchStart || !touchEnd) return
+    
+    const distance = touchStart - touchEnd
+    const threshold = 50
+    
+    if (distance > threshold && currentCourseIndex < courses.length - 1) {
+      // Swiped left - next course
+      setCurrentCourseIndex(prev => prev + 1)
+    }
+    
+    if (distance < -threshold && currentCourseIndex > 0) {
+      // Swiped right - previous course
+      setCurrentCourseIndex(prev => prev - 1)
+    }
+    
+    setTouchStart(0)
+    setTouchEnd(0)
+  }
+
+  const goToCourse = (index: number) => {
+    setCurrentCourseIndex(index)
+  }
+
   return (
     <section id="cursos" className="relative py-12 md:py-32 overflow-hidden">
       {/* Background */}
@@ -185,9 +233,162 @@ export default function ScrollRevealCourses() {
           <p className="text-base md:text-2xl text-white/70 font-light px-4">Diseñados para resolver todos tus problemas</p>
         </div>
 
-        {/* Course Cards - Mobile optimized */}
-        <div className="space-y-6 md:space-y-40 max-w-4xl mx-auto px-1 md:px-0" ref={sectionRef}>
-          {courses.map((course, index) => {
+        {/* Mobile: Horizontal Carousel - Desktop: Vertical Stack */}
+        {isMobile ? (
+          <div className="relative px-4">
+            {/* Carousel */}
+            <div 
+              className="overflow-hidden"
+              onTouchStart={handleTouchStartCarousel}
+              onTouchMove={handleTouchMoveCarousel}
+              onTouchEnd={handleTouchEndCarousel}
+            >
+              <div 
+                className="flex transition-transform duration-500 ease-out"
+                style={{ transform: `translateX(-${currentCourseIndex * 100}%)` }}
+              >
+                {courses.map((course) => (
+                  <div key={course.id} className="w-full flex-shrink-0 px-2">
+                    <div className="relative backdrop-blur-xl bg-white/[0.03] border border-white/[0.08] rounded-2xl p-6 min-h-[400px] overflow-hidden">
+                      {/* Background Image */}
+                      {course.id === 1 && (
+                        <div className="absolute inset-0 opacity-25">
+                          <img src="/atenas-bg.png" alt="" className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                        </div>
+                      )}
+                      {course.id === 2 && (
+                        <div className="absolute inset-0 opacity-25">
+                          <img src="/ares-bg.png" alt="" className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                        </div>
+                      )}
+                      {course.id === 3 && (
+                        <div className="absolute inset-0 opacity-25">
+                          <img src="/apolo-bg.png" alt="" className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                        </div>
+                      )}
+                      {course.id === 4 && (
+                        <div className="absolute inset-0 opacity-25">
+                          <img src="/zeus-bg.png" alt="" className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                        </div>
+                      )}
+                      {course.id === 5 && (
+                        <div className="absolute inset-0 opacity-25">
+                          <img src="/adonis-bg.png" alt="" className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                        </div>
+                      )}
+
+                      {/* Big number background */}
+                      <div
+                        className="absolute top-4 left-4 text-[5rem] font-bold leading-none pointer-events-none"
+                        style={{
+                          background: 'linear-gradient(135deg, #C0C0C0, #FFFFFF, #A8A8A8)',
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text',
+                          opacity: 0.08,
+                        }}
+                      >
+                        {course.number}
+                      </div>
+
+                      {/* Icon */}
+                      <div className="absolute top-4 right-4 w-12 h-12">
+                        <img 
+                          src={course.icon} 
+                          alt={course.title}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+
+                      {/* Content */}
+                      <div className="relative z-10 h-full flex flex-col justify-between pt-16">
+                        <div>
+                          <h3 className="text-2xl font-semibold text-white mb-3 tracking-tight">{course.title}</h3>
+                          <p className="text-base text-white/70 leading-relaxed mb-4">{course.description}</p>
+
+                          {/* Tags */}
+                          <div className="flex flex-wrap gap-2">
+                            {course.tags.map((tag, idx) => (
+                              <span
+                                key={idx}
+                                className={`tag tag-${tag.variant} inline-block px-3 py-1.5 rounded-full text-xs font-medium border`}
+                              >
+                                {tag.text}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Swipe hint */}
+                        {currentCourseIndex < courses.length - 1 && (
+                          <div className="flex justify-center items-center gap-2 text-xs text-white/30 mt-6">
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            </svg>
+                            Desliza para ver más
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Progress bars (like Instagram Stories) */}
+            <div className="flex gap-1 mt-4">
+              {courses.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToCourse(index)}
+                  className="flex-1 h-1 bg-white/20 rounded-full overflow-hidden"
+                >
+                  <div 
+                    className={`h-full bg-white transition-all duration-300 ${
+                      index === currentCourseIndex ? 'w-full' : index < currentCourseIndex ? 'w-full' : 'w-0'
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
+
+            {/* Navigation */}
+            <div className="flex justify-center items-center gap-4 mt-6">
+              <button
+                onClick={() => currentCourseIndex > 0 && goToCourse(currentCourseIndex - 1)}
+                disabled={currentCourseIndex === 0}
+                className="p-2 rounded-full bg-white/5 border border-white/10 disabled:opacity-30 transition-all"
+              >
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <span className="text-sm text-white/50 font-mono">
+                {currentCourseIndex + 1} / {courses.length}
+              </span>
+              <button
+                onClick={() => currentCourseIndex < courses.length - 1 && goToCourse(currentCourseIndex + 1)}
+                disabled={currentCourseIndex === courses.length - 1}
+                className="p-2 rounded-full bg-white/5 border border-white/10 disabled:opacity-30 transition-all"
+              >
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        ) : (
+          // Desktop: Vertical stack
+          <div className="space-y-6 md:space-y-40 max-w-4xl mx-auto px-1 md:px-0" ref={sectionRef}>
+            {courses.map((course, index) => {
             const pos = mousePositions[course.id] || { x: 0, y: 0, spotX: 50, spotY: 50 }
             const progress = scrollProgress[index] || 0
             
@@ -300,7 +501,8 @@ export default function ScrollRevealCourses() {
               </div>
             )
           })}
-        </div>
+          </div>
+        )}
       </div>
 
       <style jsx>{`
