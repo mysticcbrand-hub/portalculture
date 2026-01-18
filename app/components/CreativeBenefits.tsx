@@ -73,8 +73,11 @@ export default function CreativeBenefits() {
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
 
-  // Swoosh up animation estilo Apple
+  // Swoosh up animation estilo Apple - OPTIMIZED for mobile
   useEffect(() => {
+    // Check if mobile for simpler animations
+    const isMobile = window.matchMedia('(max-width: 768px)').matches
+    
     const handleScroll = () => {
       cardsRef.current.forEach((card, index) => {
         if (!card) return
@@ -84,21 +87,31 @@ export default function CreativeBenefits() {
         const cardTop = cardRect.top
 
         // Calcular cuando la card entra en vista desde abajo
-        // progress va de 1 (abajo) a 0 (completamente en vista)
-        const triggerPoint = windowHeight * 0.8 // Empieza cuando está 80% abajo
-        const progress = Math.max(0, Math.min(1, (cardTop - triggerPoint) / (windowHeight * 0.3)))
+        const triggerPoint = windowHeight * 0.85 // Start earlier for smoother entrance
+        const progress = Math.max(0, Math.min(1, (cardTop - triggerPoint) / (windowHeight * 0.25)))
 
         if (cardTop < windowHeight && cardTop > -cardRect.height) {
-          // Swoosh effect: viene desde abajo con blur
-          const translateY = progress * 60 // Se mueve 60px desde abajo
-          const opacity = 1 - progress * 0.8 // Fade in
-          const blur = progress * 8 // Blur que desaparece
-          const scale = 0.95 + (1 - progress) * 0.05 // Slight scale up
+          if (isMobile) {
+            // MOBILE: Simple fade + subtle translateY only (no blur, no scale - smoother)
+            const translateY = progress * 30 // Less movement on mobile
+            const opacity = 1 - progress * 0.6
 
-          card.style.transform = `translateY(${translateY}px) scale(${scale})`
-          card.style.opacity = opacity.toString()
-          card.style.filter = `blur(${blur}px)`
-          card.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease-out, filter 0.6s ease-out'
+            card.style.transform = `translateY(${translateY}px)`
+            card.style.opacity = opacity.toString()
+            card.style.filter = 'none' // No blur on mobile - causes jank
+            card.style.transition = 'transform 0.4s ease-out, opacity 0.4s ease-out'
+          } else {
+            // DESKTOP: Full effect
+            const translateY = progress * 50
+            const opacity = 1 - progress * 0.7
+            const blur = progress * 4 // Reduced blur
+            const scale = 0.97 + (1 - progress) * 0.03
+
+            card.style.transform = `translateY(${translateY}px) scale(${scale})`
+            card.style.opacity = opacity.toString()
+            card.style.filter = `blur(${blur}px)`
+            card.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease-out, filter 0.5s ease-out'
+          }
         }
       })
     }
@@ -138,7 +151,7 @@ export default function CreativeBenefits() {
   }
 
   return (
-    <section ref={sectionRef} id="beneficios" className="py-16 md:py-32 px-4 md:px-6 relative overflow-hidden">
+    <section ref={sectionRef} id="beneficios" className="py-12 md:py-32 px-5 md:px-6 relative overflow-hidden">
       {/* Ambient Background */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
@@ -192,8 +205,8 @@ export default function CreativeBenefits() {
           </div>
         </div>
 
-        {/* Premium Grid - Bento Style */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        {/* Premium Grid - Bento Style - Mobile optimized */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12 max-w-[92%] md:max-w-none mx-auto">
           {benefits.map((benefit, index) => {
             const rotation = cardRotations[index] || { x: 0, y: 0 }
             
@@ -207,12 +220,12 @@ export default function CreativeBenefits() {
                 handleCardMouseLeave(index)
               }}
               onMouseMove={(e) => handleCardMouseMove(e, index)}
-              className={`group relative p-8 rounded-2xl border border-white/10 
+              className={`group relative p-5 md:p-8 rounded-xl md:rounded-2xl border border-white/10 
                          bg-gradient-to-br ${benefit.color}
                          backdrop-blur-xl
                          hover:border-white/30
                          transition-all duration-200 ease-out
-                         shadow-2xl ${benefit.glow}
+                         shadow-xl md:shadow-2xl ${benefit.glow}
                          ${index === 5 ? 'md:col-span-2 lg:col-span-1' : ''}`}
               style={{
                 transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
@@ -221,17 +234,17 @@ export default function CreativeBenefits() {
                 willChange: 'transform, opacity, filter'
               }}
             >
-              {/* Glow Effect */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-0 
+              {/* Glow Effect - hidden on mobile for performance */}
+              <div className={`hidden md:block absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-0 
                              group-hover:opacity-100 blur-xl transition-opacity duration-700 rounded-2xl -z-10`} />
 
               {/* Number Badge */}
-              <div className="flex items-start justify-between mb-6">
-                <span className="font-mono text-xs text-white/30 group-hover:text-white/60 
+              <div className="flex items-start justify-between mb-4 md:mb-6">
+                <span className="font-mono text-[10px] md:text-xs text-white/30 group-hover:text-white/60 
                                transition-colors duration-500 tracking-wider">
                   {benefit.number}
                 </span>
-                <div className="w-12 h-12 transform group-hover:scale-110 transition-transform duration-500">
+                <div className="w-9 h-9 md:w-12 md:h-12 transform group-hover:scale-110 transition-transform duration-500">
                   <Image 
                     src={benefit.icon} 
                     alt={benefit.title}
@@ -243,19 +256,19 @@ export default function CreativeBenefits() {
               </div>
 
               {/* Content */}
-              <div className="space-y-3">
-                <h3 className="text-2xl font-bold text-white group-hover:text-white 
+              <div className="space-y-2 md:space-y-3">
+                <h3 className="text-lg md:text-2xl font-bold text-white group-hover:text-white 
                              transition-all duration-500">
                   {benefit.title}
                 </h3>
-                <p className="text-white/60 leading-relaxed group-hover:text-white/80 
+                <p className="text-sm md:text-base text-white/60 leading-relaxed group-hover:text-white/80 
                             transition-colors duration-500">
                   {benefit.description}
                 </p>
               </div>
 
-              {/* Hover Indicator */}
-              <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-white/0 via-white/50 to-white/0
+              {/* Hover Indicator - hidden on mobile */}
+              <div className={`hidden md:block absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-white/0 via-white/50 to-white/0
                              transition-all duration-700 ${hoveredIndex === index ? 'opacity-100' : 'opacity-0'}`} />
             </div>
           )})}

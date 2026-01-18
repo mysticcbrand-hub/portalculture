@@ -87,9 +87,10 @@ export default function ScrollRevealCourses() {
     }
   }, [])
 
-  // Scroll-driven animations
+  // Scroll-driven animations - OPTIMIZED for mobile
   useEffect(() => {
     let ticking = false
+    const isMobile = window.matchMedia('(max-width: 768px)').matches
 
     const handleScroll = () => {
       if (!ticking) {
@@ -103,7 +104,9 @@ export default function ScrollRevealCourses() {
             const windowCenter = windowHeight / 2
 
             // Calculate progress: -1 (top of screen) to 1 (bottom of screen)
-            const progress = (cardCenter - windowCenter) / windowCenter
+            // On mobile, reduce the effect intensity
+            const rawProgress = (cardCenter - windowCenter) / windowCenter
+            const progress = isMobile ? rawProgress * 0.3 : rawProgress // Reduce effect on mobile
             
             // Only animate when card is in viewport
             if (rect.top < windowHeight && rect.bottom > 0) {
@@ -158,15 +161,15 @@ export default function ScrollRevealCourses() {
   }
 
   return (
-    <section id="cursos" className="relative py-16 md:py-32 overflow-hidden">
+    <section id="cursos" className="relative py-12 md:py-32 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-zinc-950 to-black" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6">
+      <div className="relative z-10 max-w-7xl mx-auto px-5 md:px-6">
         {/* Section Header */}
-        <div className="text-center mb-12 md:mb-32">
-          <span className="font-mono text-xs tracking-wider text-white/30 mb-3 block">/ 03</span>
-          <h2 className="text-[clamp(1.8rem,5vw,5rem)] font-bold leading-[1.1] mb-3 md:mb-6">
+        <div className="text-center mb-8 md:mb-32">
+          <span className="font-mono text-[10px] md:text-xs tracking-wider text-white/30 mb-2 md:mb-3 block">/ 03</span>
+          <h2 className="text-[clamp(1.6rem,5vw,5rem)] font-bold leading-[1.1] mb-2 md:mb-6">
             <span
               className="block"
               style={{
@@ -182,18 +185,21 @@ export default function ScrollRevealCourses() {
           <p className="text-base md:text-2xl text-white/70 font-light px-4">Diseñados para resolver todos tus problemas</p>
         </div>
 
-        {/* Course Cards */}
-        <div className="space-y-12 md:space-y-40 max-w-4xl mx-auto" ref={sectionRef}>
+        {/* Course Cards - Mobile optimized */}
+        <div className="space-y-6 md:space-y-40 max-w-4xl mx-auto px-1 md:px-0" ref={sectionRef}>
           {courses.map((course, index) => {
             const pos = mousePositions[course.id] || { x: 0, y: 0, spotX: 50, spotY: 50 }
             const progress = scrollProgress[index] || 0
             
-            // Calculate scroll-driven transforms
-            const scrollScale = 1 - Math.abs(progress) * 0.05 // Scale down as it moves away from center
-            const scrollOpacity = 1 - Math.abs(progress) * 0.2 // Fade as it moves away (reduced)
-            const scrollBlur = Math.abs(progress) > 0.5 ? Math.abs(progress) * 1.5 : 0 // Blur only when far (max 1.5px)
-            const scrollY = progress * 30 // Subtle parallax
-            const scrollRotateX = progress * -3 // Perspective rotation based on scroll
+            // Check if mobile for simpler transforms
+            const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768
+            
+            // Calculate scroll-driven transforms - SIMPLIFIED for mobile
+            const scrollScale = isMobileView ? 1 : 1 - Math.abs(progress) * 0.05
+            const scrollOpacity = isMobileView ? 1 : 1 - Math.abs(progress) * 0.2
+            const scrollBlur = isMobileView ? 0 : (Math.abs(progress) > 0.5 ? Math.abs(progress) * 1.5 : 0)
+            const scrollY = isMobileView ? 0 : progress * 30
+            const scrollRotateX = isMobileView ? 0 : progress * -3
 
             return (
               <div
@@ -205,9 +211,11 @@ export default function ScrollRevealCourses() {
                 onMouseMove={(e) => handleMouseMove(e, course.id)}
                 onMouseLeave={() => handleMouseLeave(course.id)}
                 style={{
-                  transform: `perspective(1000px) rotateX(${pos.x + scrollRotateX}deg) rotateY(${pos.y}deg) scale3d(${scrollScale}, ${scrollScale}, 1) translateY(${scrollY}px) translateZ(0)`,
+                  transform: isMobileView 
+                    ? 'none' 
+                    : `perspective(1000px) rotateX(${pos.x + scrollRotateX}deg) rotateY(${pos.y}deg) scale3d(${scrollScale}, ${scrollScale}, 1) translateY(${scrollY}px) translateZ(0)`,
                   opacity: scrollOpacity,
-                  filter: `blur(${scrollBlur}px)`,
+                  filter: scrollBlur > 0 ? `blur(${scrollBlur}px)` : 'none',
                   // @ts-ignore
                   '--spot-x': `${pos.spotX}%`,
                   '--spot-y': `${pos.spotY}%`,
@@ -298,16 +306,27 @@ export default function ScrollRevealCourses() {
       <style jsx>{`
         .course-card {
           opacity: 0;
-          transform: perspective(1000px) translateY(60px) rotateX(-15deg);
+          transform: translateY(30px);
           transition: none;
           will-change: transform, opacity;
-          backface-visibility: hidden;
         }
 
         .course-card.visible {
           opacity: 1;
-          transform: perspective(1000px) translateY(0) rotateX(0deg);
-          transition: opacity 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+          transform: translateY(0);
+          transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        
+        @media (min-width: 768px) {
+          .course-card {
+            transform: perspective(1000px) translateY(60px) rotateX(-15deg);
+            backface-visibility: hidden;
+          }
+          
+          .course-card.visible {
+            transform: perspective(1000px) translateY(0) rotateX(0deg);
+            transition: opacity 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+          }
         }
 
         .course-card > div {

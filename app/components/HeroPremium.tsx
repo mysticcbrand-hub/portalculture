@@ -96,7 +96,7 @@ export default function HeroPremium() {
         <div className="h-20 md:h-24" />
         
         {/* Main content - centered */}
-        <div className="flex-1 flex flex-col items-center justify-center px-6 pb-20">
+        <div className="flex-1 flex flex-col items-center justify-center px-5 md:px-6 pb-16 md:pb-20">
           
           {/* Section indicator */}
           <div 

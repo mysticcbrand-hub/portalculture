@@ -335,7 +335,7 @@ Hazlo. Ahora. 🔥`
     <section 
       ref={sectionRef}
       id="ai-coach"
-      className="relative min-h-screen flex items-center justify-center px-4 md:px-6 py-16 md:py-32 overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center px-5 md:px-6 py-12 md:py-32 overflow-hidden"
     >
       {/* Background with animated gradient */}
       <div className="absolute inset-0 bg-black">
@@ -371,7 +371,7 @@ Hazlo. Ahora. 🔥`
 
 
       <div className="relative z-10 max-w-7xl mx-auto w-full">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-20 items-center">
           
           {/* Left: Visual Element - Interactive Chat Preview */}
           <div 
@@ -392,7 +392,7 @@ Hazlo. Ahora. 🔥`
 
             {/* Chat interface mockup */}
             <div 
-              className="relative bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl transition-transform duration-200 ease-out"
+              className="relative bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-xl md:shadow-2xl transition-transform duration-200 ease-out max-w-[95%] md:max-w-none mx-auto"
               onMouseMove={handleCardMouseMove}
               onMouseLeave={handleCardMouseLeave}
               style={{
@@ -401,36 +401,36 @@ Hazlo. Ahora. 🔥`
               }}
             >
               {/* Header */}
-              <div className="flex items-center gap-4 mb-6 pb-6 border-b border-white/10">
+              <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6 pb-4 md:pb-6 border-b border-white/10">
                 <div className="relative">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center overflow-hidden">
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center overflow-hidden">
                     <img 
                       src="/ai.png" 
                       alt="NOVA AI" 
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 rounded-full border-2 border-black" />
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 md:w-4 md:h-4 bg-green-400 rounded-full border-2 border-black" />
                 </div>
                 <div>
-                  <h3 className="text-white font-semibold">NOVA™</h3>
-                  <p className="text-xs text-white/40">Tu coach personal</p>
+                  <h3 className="text-white font-semibold text-sm md:text-base">NOVA™</h3>
+                  <p className="text-[10px] md:text-xs text-white/40">Tu coach personal</p>
                 </div>
               </div>
 
               {/* Messages */}
-              <div className="space-y-4 min-h-[400px]">
+              <div className="space-y-3 md:space-y-4 min-h-[280px] md:min-h-[400px]">
                 {/* User message */}
                 <div className="flex justify-end">
-                  <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 backdrop-blur-sm border border-purple-500/20 rounded-2xl rounded-tr-sm px-4 py-3 max-w-[85%]">
-                    <p className="text-sm text-white/90">{conversations[activeConversation].userMessage}</p>
+                  <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 backdrop-blur-sm border border-purple-500/20 rounded-xl md:rounded-2xl rounded-tr-sm px-3 md:px-4 py-2 md:py-3 max-w-[88%]">
+                    <p className="text-xs md:text-sm text-white/90">{conversations[activeConversation].userMessage}</p>
                   </div>
                 </div>
 
                 {/* AI response */}
                 <div className="flex justify-start">
-                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[90%]">
-                    <div className="text-sm text-white/90 leading-relaxed whitespace-pre-line">
+                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl md:rounded-2xl rounded-tl-sm px-3 md:px-4 py-2 md:py-3 max-w-[92%]">
+                    <div className="text-xs md:text-sm text-white/90 leading-relaxed whitespace-pre-line">
                       {conversations[activeConversation].novaResponse.split(/(\*\*.*?\*\*)/).map((part, i) => {
                         if (part.startsWith('**') && part.endsWith('**')) {
                           return <strong key={i} className="font-bold text-white">{part.slice(2, -2)}</strong>
@@ -438,13 +438,13 @@ Hazlo. Ahora. 🔥`
                         return <span key={i}>{part}</span>
                       })}
                     </div>
-                    <span className="inline-block mt-2 text-[10px] text-white/30">Hace 1s</span>
+                    <span className="inline-block mt-1.5 md:mt-2 text-[9px] md:text-[10px] text-white/30">Hace 1s</span>
                   </div>
                 </div>
               </div>
 
               {/* Typing indicator */}
-              <div className="mt-4 flex items-center gap-2 text-xs text-white/40">
+              <div className="mt-3 md:mt-4 flex items-center gap-2 text-[10px] md:text-xs text-white/40">
                 <div className="flex gap-1">
                   <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                   <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
