@@ -249,36 +249,36 @@ export default function ScrollRevealCourses() {
               >
                 {courses.map((course) => (
                   <div key={course.id} className="w-full flex-shrink-0 px-2">
-                    <div className="relative backdrop-blur-xl bg-white/[0.03] border border-white/[0.08] rounded-2xl p-6 min-h-[400px] overflow-hidden">
+                    <div className="relative bg-white/[0.08] border border-white/[0.15] rounded-2xl p-6 min-h-[400px] overflow-hidden shadow-2xl">
                       {/* Background Image */}
                       {course.id === 1 && (
-                        <div className="absolute inset-0 opacity-25">
+                        <div className="absolute inset-0 opacity-40">
                           <img src="/atenas-bg.png" alt="" className="w-full h-full object-cover" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
                         </div>
                       )}
                       {course.id === 2 && (
-                        <div className="absolute inset-0 opacity-25">
+                        <div className="absolute inset-0 opacity-40">
                           <img src="/ares-bg.png" alt="" className="w-full h-full object-cover" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
                         </div>
                       )}
                       {course.id === 3 && (
-                        <div className="absolute inset-0 opacity-25">
+                        <div className="absolute inset-0 opacity-40">
                           <img src="/apolo-bg.png" alt="" className="w-full h-full object-cover" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
                         </div>
                       )}
                       {course.id === 4 && (
-                        <div className="absolute inset-0 opacity-25">
+                        <div className="absolute inset-0 opacity-40">
                           <img src="/zeus-bg.png" alt="" className="w-full h-full object-cover" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
                         </div>
                       )}
                       {course.id === 5 && (
-                        <div className="absolute inset-0 opacity-25">
+                        <div className="absolute inset-0 opacity-40">
                           <img src="/adonis-bg.png" alt="" className="w-full h-full object-cover" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
                         </div>
                       )}
 

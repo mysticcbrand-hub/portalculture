@@ -277,9 +277,9 @@ export default function CreativeBenefits() {
                 const rotation = cardRotations[index] || { x: 0, y: 0 }
                 
                 // Calculate transform based on position in stack
-                const scale = isActive ? 1 : 0.95 - Math.abs(offset) * 0.05
-                const translateY = isActive ? 0 : Math.abs(offset) * 10
-                const opacity = isPrev ? 0 : 1 - Math.abs(offset) * 0.3
+                const scale = isActive ? 1 : 0.95 - Math.abs(offset) * 0.02
+                const translateY = isActive ? 0 : Math.abs(offset) * 8
+                const opacity = isPrev ? 0 : isActive ? 1 : 0.7 // Cards detrás más visibles
                 const zIndex = benefits.length - Math.abs(offset)
                 
                 // Swipe transform
@@ -291,7 +291,7 @@ export default function CreativeBenefits() {
                   <div
                     key={index}
                     ref={isActive ? cardRef : null}
-                    className="absolute inset-0 transition-all duration-300 ease-out"
+                    className={`absolute inset-0 ${isDragging && isActive ? '' : 'transition-all duration-300 ease-out'}`}
                     style={{
                       transform: `
                         translateX(${swipeTranslateX + offset * 20}px) 
