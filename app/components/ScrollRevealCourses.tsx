@@ -314,11 +314,11 @@ export default function ScrollRevealCourses() {
         {isMobile ? (
           <div className="relative mb-8 px-4">
             {/* Stories Progress Bars - Top */}
-            <div className="flex gap-1 mb-4">
+            <div className="flex gap-1.5 mb-5">
               {courses.map((_, index) => (
-                <div 
+                <button
                   key={index}
-                  className="flex-1 h-1 bg-white/20 rounded-full overflow-hidden"
+                  className="flex-1 h-1 bg-white/15 rounded-full overflow-hidden transition-all cursor-pointer"
                   onClick={() => goToCourse(index)}
                 >
                   <div 
@@ -331,10 +331,10 @@ export default function ScrollRevealCourses() {
                           : '0%',
                       transition: index === currentCourseIndex && !isDragging 
                         ? 'width 0.05s linear' 
-                        : 'width 0.3s ease-out'
+                        : 'width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                     }}
                   />
-                </div>
+                </button>
               ))}
             </div>
 
@@ -344,14 +344,17 @@ export default function ScrollRevealCourses() {
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
+              style={{
+                clipPath: 'inset(0 0 0 0 round 1.5rem)',
+              }}
             >
               {/* Invisible Tap Zones */}
               <div 
-                className="absolute left-0 top-0 w-1/3 h-full z-30 cursor-pointer"
+                className="absolute left-0 top-0 w-1/3 h-full z-30 cursor-pointer active:bg-white/5 transition-colors"
                 onClick={() => handleTapZone('left')}
               />
               <div 
-                className="absolute right-0 top-0 w-1/3 h-full z-30 cursor-pointer"
+                className="absolute right-0 top-0 w-1/3 h-full z-30 cursor-pointer active:bg-white/5 transition-colors"
                 onClick={() => handleTapZone('right')}
               />
 
@@ -360,7 +363,8 @@ export default function ScrollRevealCourses() {
                 className="flex h-full"
                 style={{ 
                   transform: `translateX(calc(-${currentCourseIndex * 100}% + ${isDragging ? dragOffset : 0}px))`,
-                  transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.32, 0.72, 0, 1)'
+                  transition: isDragging ? 'none' : 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                  willChange: 'transform',
                 }}
               >
                 {courses.map((course, index) => {
@@ -373,7 +377,7 @@ export default function ScrollRevealCourses() {
                   }
                   
                   return (
-                    <div key={course.id} className="w-full h-full flex-shrink-0">
+                    <div key={course.id} className="w-full h-full flex-shrink-0 px-0.5">
                       <div className="relative w-full h-full">
                         {/* Background Image - Full screen */}
                         <div className="absolute inset-0">

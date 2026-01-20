@@ -294,12 +294,16 @@ export default function CreativeBenefits() {
               ))}
             </div>
 
-            {/* Swipeable Card */}
+            {/* Swipeable Card - with proper overflow handling */}
             <div 
               className="relative h-[420px] rounded-3xl overflow-hidden"
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
+              style={{
+                // Ensure nothing bleeds outside
+                clipPath: 'inset(0 0 0 0 round 1.5rem)',
+              }}
             >
               {/* Cards container with 3D perspective */}
               <div 
@@ -321,7 +325,7 @@ export default function CreativeBenefits() {
                   const parallaxY = isDragging && isActive ? -Math.abs(dragState.x) / 20 : 0
                   
                   return (
-                  <div key={index} className="w-full h-full flex-shrink-0">
+                  <div key={index} className="w-full h-full flex-shrink-0 px-0.5">
                     <div 
                       className="relative w-full h-full rounded-3xl overflow-hidden"
                       style={{
