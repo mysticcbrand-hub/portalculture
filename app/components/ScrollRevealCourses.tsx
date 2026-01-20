@@ -236,12 +236,22 @@ export default function ScrollRevealCourses() {
     const threshold = 60
     
     if (wasDragging) {
-      // Swipe gesture
-      if (dragOffset < -threshold && currentCourseIndex < courses.length - 1) {
-        setCurrentCourseIndex(prev => prev + 1)
+      // Swipe gesture with loop
+      if (dragOffset < -threshold) {
+        if (currentCourseIndex < courses.length - 1) {
+          setCurrentCourseIndex(prev => prev + 1)
+        } else {
+          // Loop back to first
+          setCurrentCourseIndex(0)
+        }
         setProgressAnimation(0)
-      } else if (dragOffset > threshold && currentCourseIndex > 0) {
-        setCurrentCourseIndex(prev => prev - 1)
+      } else if (dragOffset > threshold) {
+        if (currentCourseIndex > 0) {
+          setCurrentCourseIndex(prev => prev - 1)
+        } else {
+          // Loop to last
+          setCurrentCourseIndex(courses.length - 1)
+        }
         setProgressAnimation(0)
       }
     }
@@ -249,13 +259,23 @@ export default function ScrollRevealCourses() {
     setDragOffset(0)
   }
   
-  // Tap zones - Instagram Stories style
+  // Tap zones - Instagram Stories style with loop
   const handleTapZone = (zone: 'left' | 'right') => {
     setProgressAnimation(0)
-    if (zone === 'right' && currentCourseIndex < courses.length - 1) {
-      setCurrentCourseIndex(prev => prev + 1)
-    } else if (zone === 'left' && currentCourseIndex > 0) {
-      setCurrentCourseIndex(prev => prev - 1)
+    if (zone === 'right') {
+      if (currentCourseIndex < courses.length - 1) {
+        setCurrentCourseIndex(prev => prev + 1)
+      } else {
+        // Loop back to first
+        setCurrentCourseIndex(0)
+      }
+    } else if (zone === 'left') {
+      if (currentCourseIndex > 0) {
+        setCurrentCourseIndex(prev => prev - 1)
+      } else {
+        // Loop to last
+        setCurrentCourseIndex(courses.length - 1)
+      }
     }
   }
 

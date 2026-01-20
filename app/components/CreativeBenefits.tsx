@@ -192,12 +192,22 @@ export default function CreativeBenefits() {
     
     const threshold = 80 // Lower threshold for smoother feel
     
-    if (dragState.x < -threshold && currentCardIndex < benefits.length - 1) {
-      // Swipe left - next
-      setCurrentCardIndex(prev => prev + 1)
-    } else if (dragState.x > threshold && currentCardIndex > 0) {
-      // Swipe right - previous
-      setCurrentCardIndex(prev => prev - 1)
+    if (dragState.x < -threshold) {
+      // Swipe left - next (with loop)
+      if (currentCardIndex < benefits.length - 1) {
+        setCurrentCardIndex(prev => prev + 1)
+      } else {
+        // Loop back to first
+        setCurrentCardIndex(0)
+      }
+    } else if (dragState.x > threshold) {
+      // Swipe right - previous (with loop)
+      if (currentCardIndex > 0) {
+        setCurrentCardIndex(prev => prev - 1)
+      } else {
+        // Loop to last
+        setCurrentCardIndex(benefits.length - 1)
+      }
     }
     
     setDragState({ x: 0, y: 0, startX: 0, startY: 0 })
@@ -291,15 +301,26 @@ export default function CreativeBenefits() {
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
             >
-              {/* Cards container */}
+              {/* Cards container with 3D perspective */}
               <div 
                 className="flex h-full"
                 style={{ 
                   transform: `translateX(calc(-${currentCardIndex * 100}% + ${isDragging ? dragState.x : 0}px))`,
-                  transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.32, 0.72, 0, 1)'
+                  transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.32, 0.72, 0, 1)',
+                  perspective: '1200px',
+                  transformStyle: 'preserve-3d',
                 }}
               >
-                {benefits.map((benefit, index) => (
+                {benefits.map((benefit, index) => {
+                  const isActive = index === currentCardIndex
+                  const offset = index - currentCardIndex
+                  
+                  // Calculate 3D transforms based on drag and position
+                  const dragRotation = isDragging && isActive ? dragState.x / 30 : 0
+                  const dragScale = isDragging && isActive ? 1 - Math.abs(dragState.x) / 2000 : 1
+                  const parallaxY = isDragging && isActive ? -Math.abs(dragState.x) / 20 : 0
+                  
+                  return (
                   <div key={index} className="w-full h-full flex-shrink-0">
                     <div 
                       className="relative w-full h-full rounded-3xl overflow-hidden"
@@ -308,7 +329,15 @@ export default function CreativeBenefits() {
                           rgba(255,255,255,0.12) 0%, 
                           rgba(255,255,255,0.06) 50%,
                           rgba(0,0,0,0.15) 100%)`,
-                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.1)',
+                        boxShadow: `0 ${25 + Math.abs(dragRotation) * 2}px ${50 + Math.abs(dragRotation) * 3}px -12px rgba(0, 0, 0, ${0.5 + Math.abs(dragRotation) * 0.01}), inset 0 1px 0 rgba(255,255,255,0.1)`,
+                        transform: `
+                          perspective(1200px) 
+                          rotateY(${dragRotation}deg) 
+                          scale(${dragScale})
+                          translateZ(${isActive ? 0 : offset * -50}px)
+                        `,
+                        transformStyle: 'preserve-3d',
+                        transition: isDragging ? 'none' : 'all 0.4s cubic-bezier(0.32, 0.72, 0, 1)',
                       }}
                     >
                       {/* Gradient Overlay */}
@@ -325,8 +354,14 @@ export default function CreativeBenefits() {
                       {/* Border glow */}
                       <div className="absolute inset-0 rounded-3xl border border-white/20" />
 
-                      {/* Content */}
-                      <div className="relative z-10 h-full flex flex-col p-7">
+                      {/* Content with parallax */}
+                      <div 
+                        className="relative z-10 h-full flex flex-col p-7"
+                        style={{
+                          transform: `translateY(${parallaxY}px)`,
+                          transition: isDragging ? 'none' : 'transform 0.4s ease-out',
+                        }}
+                      >
                         {/* Header */}
                         <div className="flex items-start justify-between">
                           <span 
@@ -335,11 +370,19 @@ export default function CreativeBenefits() {
                               background: 'linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.15) 100%)',
                               WebkitBackgroundClip: 'text',
                               WebkitTextFillColor: 'transparent',
+                              transform: `translateX(${dragRotation * 0.5}px)`,
+                              transition: isDragging ? 'none' : 'transform 0.4s ease-out',
                             }}
                           >
                             {benefit.number}
                           </span>
-                          <div className="w-16 h-16 p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 shadow-xl">
+                          <div 
+                            className="w-16 h-16 p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 shadow-xl"
+                            style={{
+                              transform: `translateX(${-dragRotation * 0.3}px)`,
+                              transition: isDragging ? 'none' : 'transform 0.4s ease-out',
+                            }}
+                          >
                             <Image 
                               src={benefit.icon} 
                               alt={benefit.title}
@@ -376,7 +419,8 @@ export default function CreativeBenefits() {
                       </div>
                     </div>
                   </div>
-                ))}
+                  )
+                })}
               </div>
             </div>
             
