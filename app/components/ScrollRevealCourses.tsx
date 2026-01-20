@@ -63,8 +63,9 @@ export default function ScrollRevealCourses() {
   // Mobile carousel state
   const [isMobile, setIsMobile] = useState(false)
   const [currentCourseIndex, setCurrentCourseIndex] = useState(0)
-  const [touchStart, setTouchStart] = useState(0)
-  const [touchEnd, setTouchEnd] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragOffset, setDragOffset] = useState(0)
+  const [startX, setStartX] = useState(0)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -175,37 +176,37 @@ export default function ScrollRevealCourses() {
     }))
   }
 
-  // Touch handlers for carousel
-  const handleTouchStartCarousel = (e: React.TouchEvent) => {
-    setTouchStart(e.targetTouches[0].clientX)
+  // Touch handlers for carousel - Premium smooth
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsDragging(true)
+    setStartX(e.touches[0].clientX)
+    setDragOffset(0)
   }
 
-  const handleTouchMoveCarousel = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX)
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging) return
+    const currentX = e.touches[0].clientX
+    const diff = currentX - startX
+    setDragOffset(diff)
   }
 
-  const handleTouchEndCarousel = () => {
-    if (!touchStart || !touchEnd) return
+  const handleTouchEnd = () => {
+    setIsDragging(false)
     
-    const distance = touchStart - touchEnd
-    const threshold = 50
+    const threshold = 60
     
-    if (distance > threshold && currentCourseIndex < courses.length - 1) {
-      // Swiped left - next course
+    if (dragOffset < -threshold && currentCourseIndex < courses.length - 1) {
       setCurrentCourseIndex(prev => prev + 1)
-    }
-    
-    if (distance < -threshold && currentCourseIndex > 0) {
-      // Swiped right - previous course
+    } else if (dragOffset > threshold && currentCourseIndex > 0) {
       setCurrentCourseIndex(prev => prev - 1)
     }
     
-    setTouchStart(0)
-    setTouchEnd(0)
+    setDragOffset(0)
   }
 
   const goToCourse = (index: number) => {
     setCurrentCourseIndex(index)
+    setDragOffset(0)
   }
 
   return (
@@ -233,156 +234,158 @@ export default function ScrollRevealCourses() {
           <p className="text-base md:text-2xl text-white/70 font-light px-4">Diseñados para resolver todos tus problemas</p>
         </div>
 
-        {/* Mobile: Horizontal Carousel - Desktop: Vertical Stack */}
+        {/* Mobile: Premium Horizontal Carousel - Desktop: Vertical Stack */}
         {isMobile ? (
-          <div className="relative px-4">
-            {/* Carousel */}
+          <div className="relative mb-8">
+            {/* Carousel Container */}
             <div 
               className="overflow-hidden"
-              onTouchStart={handleTouchStartCarousel}
-              onTouchMove={handleTouchMoveCarousel}
-              onTouchEnd={handleTouchEndCarousel}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
             >
               <div 
-                className="flex transition-transform duration-500 ease-out"
-                style={{ transform: `translateX(-${currentCourseIndex * 100}%)` }}
+                className="flex"
+                style={{ 
+                  transform: `translateX(calc(-${currentCourseIndex * 100}% + ${isDragging ? dragOffset : 0}px))`,
+                  transition: isDragging ? 'none' : 'transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)'
+                }}
               >
-                {courses.map((course) => (
-                  <div key={course.id} className="w-full flex-shrink-0 px-2">
-                    <div className="relative bg-white/[0.08] border border-white/[0.15] rounded-2xl p-6 min-h-[400px] overflow-hidden shadow-2xl">
-                      {/* Background Image */}
-                      {course.id === 1 && (
-                        <div className="absolute inset-0 opacity-40">
-                          <img src="/atenas-bg.png" alt="" className="w-full h-full object-cover" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
-                        </div>
-                      )}
-                      {course.id === 2 && (
-                        <div className="absolute inset-0 opacity-40">
-                          <img src="/ares-bg.png" alt="" className="w-full h-full object-cover" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
-                        </div>
-                      )}
-                      {course.id === 3 && (
-                        <div className="absolute inset-0 opacity-40">
-                          <img src="/apolo-bg.png" alt="" className="w-full h-full object-cover" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
-                        </div>
-                      )}
-                      {course.id === 4 && (
-                        <div className="absolute inset-0 opacity-40">
-                          <img src="/zeus-bg.png" alt="" className="w-full h-full object-cover" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
-                        </div>
-                      )}
-                      {course.id === 5 && (
-                        <div className="absolute inset-0 opacity-40">
-                          <img src="/adonis-bg.png" alt="" className="w-full h-full object-cover" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
-                        </div>
-                      )}
-
-                      {/* Big number background */}
-                      <div
-                        className="absolute top-4 left-4 text-[5rem] font-bold leading-none pointer-events-none"
+                {courses.map((course, index) => {
+                  const isActive = index === currentCourseIndex
+                  const bgImages: { [key: number]: string } = {
+                    1: '/atenas-bg.png',
+                    2: '/ares-bg.png', 
+                    3: '/apolo-bg.png',
+                    4: '/zeus-bg.png',
+                    5: '/adonis-bg.png'
+                  }
+                  
+                  return (
+                    <div key={course.id} className="w-full flex-shrink-0 px-4">
+                      <div 
+                        className={`
+                          relative h-[420px] rounded-3xl overflow-hidden
+                          border border-white/20
+                          transition-all duration-500 ease-out
+                          ${isActive ? 'scale-100 opacity-100' : 'scale-[0.97] opacity-60'}
+                        `}
                         style={{
-                          background: 'linear-gradient(135deg, #C0C0C0, #FFFFFF, #A8A8A8)',
-                          WebkitBackgroundClip: 'text',
-                          WebkitTextFillColor: 'transparent',
-                          backgroundClip: 'text',
-                          opacity: 0.08,
+                          boxShadow: isActive 
+                            ? '0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.1) inset'
+                            : '0 10px 30px -10px rgba(0, 0, 0, 0.3)',
                         }}
                       >
-                        {course.number}
-                      </div>
-
-                      {/* Icon */}
-                      <div className="absolute top-4 right-4 w-12 h-12">
-                        <img 
-                          src={course.icon} 
-                          alt={course.title}
-                          className="w-full h-full object-contain"
-                        />
-                      </div>
-
-                      {/* Content */}
-                      <div className="relative z-10 h-full flex flex-col justify-between pt-16">
-                        <div>
-                          <h3 className="text-2xl font-semibold text-white mb-3 tracking-tight">{course.title}</h3>
-                          <p className="text-base text-white/70 leading-relaxed mb-4">{course.description}</p>
-
-                          {/* Tags */}
-                          <div className="flex flex-wrap gap-2">
-                            {course.tags.map((tag, idx) => (
-                              <span
-                                key={idx}
-                                className={`tag tag-${tag.variant} inline-block px-3 py-1.5 rounded-full text-xs font-medium border`}
-                              >
-                                {tag.text}
-                              </span>
-                            ))}
-                          </div>
+                        {/* Background Image - Full opacity */}
+                        <div className="absolute inset-0">
+                          <img 
+                            src={bgImages[course.id]} 
+                            alt="" 
+                            className="w-full h-full object-cover"
+                          />
+                          {/* Gradient overlays for readability */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
+                          <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-transparent to-transparent" />
                         </div>
 
-                        {/* Swipe hint */}
-                        {currentCourseIndex < courses.length - 1 && (
-                          <div className="flex justify-center items-center gap-2 text-xs text-white/30 mt-6">
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                            </svg>
-                            Desliza para ver más
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
+                        {/* Glass card overlay */}
+                        <div 
+                          className="absolute inset-0 opacity-60"
+                          style={{
+                            background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%, transparent 100%)',
+                          }}
+                        />
+
+                        {/* Content */}
+                        <div className="relative z-10 h-full flex flex-col p-7">
+                          {/* Header */}
+                          <div className="flex items-start justify-between mb-auto">
+                            <div className="flex items-center gap-3">
+                              <span 
+                                className="text-5xl font-bold"
+                                style={{
+                                  background: 'linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1))',
+                                  WebkitBackgroundClip: 'text',
+                                  WebkitTextFillColor: 'transparent',
+                                }}
+                              >
+                                {course.number}
+                              </span>
+                            </div>
+                            <div className="w-16 h-16 p-2 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20">
+                              <img 
+                                src={course.icon} 
+                                alt={course.title}
+                                className="w-full h-full object-contain"
+                              />
+                            </div>
                           </div>
-                        )}
+
+                          {/* Main content */}
+                          <div className="mt-auto">
+                            {/* Tags */}
+                            <div className="flex flex-wrap gap-2 mb-4">
+                              {course.tags.map((tag, idx) => (
+                                <span
+                                  key={idx}
+                                  className={`tag tag-${tag.variant} px-3 py-1.5 rounded-full text-xs font-semibold border backdrop-blur-sm`}
+                                >
+                                  {tag.text}
+                                </span>
+                              ))}
+                            </div>
+
+                            <h3 className="text-3xl font-bold text-white mb-3 leading-tight">
+                              {course.title}
+                            </h3>
+                            <p className="text-lg text-white/80 leading-relaxed">
+                              {course.description}
+                            </p>
+                          </div>
+
+                          {/* Bottom indicator */}
+                          <div className="flex items-center justify-between pt-6 mt-6 border-t border-white/10">
+                            <span className="text-sm text-white/50 font-mono">
+                              {index + 1} de {courses.length}
+                            </span>
+                            {index < courses.length - 1 && (
+                              <div className="flex items-center gap-1 text-sm text-white/50">
+                                <span>Desliza</span>
+                                <svg className="w-4 h-4 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             </div>
 
-            {/* Progress bars (like Instagram Stories) */}
-            <div className="flex gap-1 mt-4">
+            {/* Progress bar - Apple style */}
+            <div className="flex justify-center gap-1.5 mt-8 px-4">
               {courses.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => goToCourse(index)}
-                  className="flex-1 h-1 bg-white/20 rounded-full overflow-hidden"
+                  className="relative h-1 rounded-full overflow-hidden transition-all duration-500"
+                  style={{
+                    width: index === currentCourseIndex ? '32px' : '8px',
+                    backgroundColor: index === currentCourseIndex ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.2)',
+                  }}
+                  aria-label={`Ir a curso ${index + 1}`}
                 >
-                  <div 
-                    className={`h-full bg-white transition-all duration-300 ${
-                      index === currentCourseIndex ? 'w-full' : index < currentCourseIndex ? 'w-full' : 'w-0'
-                    }`}
-                  />
+                  {index === currentCourseIndex && (
+                    <div 
+                      className="absolute inset-0 bg-white/50 animate-pulse"
+                      style={{ animationDuration: '2s' }}
+                    />
+                  )}
                 </button>
               ))}
-            </div>
-
-            {/* Navigation */}
-            <div className="flex justify-center items-center gap-4 mt-6">
-              <button
-                onClick={() => currentCourseIndex > 0 && goToCourse(currentCourseIndex - 1)}
-                disabled={currentCourseIndex === 0}
-                className="p-2 rounded-full bg-white/5 border border-white/10 disabled:opacity-30 transition-all"
-              >
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <span className="text-sm text-white/50 font-mono">
-                {currentCourseIndex + 1} / {courses.length}
-              </span>
-              <button
-                onClick={() => currentCourseIndex < courses.length - 1 && goToCourse(currentCourseIndex + 1)}
-                disabled={currentCourseIndex === courses.length - 1}
-                className="p-2 rounded-full bg-white/5 border border-white/10 disabled:opacity-30 transition-all"
-              >
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
             </div>
           </div>
         ) : (

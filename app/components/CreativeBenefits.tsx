@@ -265,135 +265,130 @@ export default function CreativeBenefits() {
           </div>
         </div>
 
-        {/* Mobile: Swipeable Stack - Desktop: Grid */}
+        {/* Mobile: Premium Horizontal Carousel - Desktop: Grid */}
         {isMobile ? (
-          <div className="relative mb-12">
-            {/* Swipeable Card Stack */}
-            <div className="relative h-[420px] flex items-center justify-center px-4">
-              {benefits.map((benefit, index) => {
-                const isActive = index === currentCardIndex
-                const isPrev = index < currentCardIndex
-                const offset = index - currentCardIndex
-                const rotation = cardRotations[index] || { x: 0, y: 0 }
-                
-                // Calculate transform based on position in stack
-                const scale = isActive ? 1 : 0.95 - Math.abs(offset) * 0.02
-                const translateY = isActive ? 0 : Math.abs(offset) * 8
-                const opacity = isPrev ? 0 : isActive ? 1 : 0.7 // Cards detrás más visibles
-                const zIndex = benefits.length - Math.abs(offset)
-                
-                // Swipe transform
-                const swipeRotation = isDragging && isActive ? swipeOffset.x / 20 : 0
-                const swipeTranslateX = isDragging && isActive ? swipeOffset.x : 0
-                const swipeTranslateY = isDragging && isActive ? swipeOffset.y * 0.1 : 0
+          <div className="relative mb-8">
+            {/* Horizontal Carousel Container */}
+            <div 
+              className="overflow-hidden"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
+              <div 
+                className="flex transition-transform duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+                style={{ 
+                  transform: `translateX(calc(-${currentCardIndex * 100}% + ${isDragging ? swipeOffset.x : 0}px))`,
+                  transition: isDragging ? 'none' : 'transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)'
+                }}
+              >
+                {benefits.map((benefit, index) => {
+                  const isActive = index === currentCardIndex
+                  
+                  return (
+                    <div
+                      key={index}
+                      className="w-full flex-shrink-0 px-4"
+                    >
+                      <div 
+                        className={`
+                          relative h-[380px] p-7 rounded-3xl overflow-hidden
+                          border border-white/20
+                          transition-all duration-500 ease-out
+                          ${isActive ? 'scale-100 opacity-100' : 'scale-[0.97] opacity-60'}
+                        `}
+                        style={{
+                          background: `linear-gradient(145deg, 
+                            rgba(255,255,255,0.12) 0%, 
+                            rgba(255,255,255,0.05) 50%,
+                            rgba(0,0,0,0.2) 100%)`,
+                          boxShadow: isActive 
+                            ? '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.1) inset'
+                            : '0 10px 30px -10px rgba(0, 0, 0, 0.3)',
+                        }}
+                      >
+                        {/* Gradient Overlay */}
+                        <div 
+                          className={`absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-40`}
+                        />
+                        
+                        {/* Glass shine effect */}
+                        <div 
+                          className="absolute inset-0 opacity-30"
+                          style={{
+                            background: 'linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%, transparent 100%)',
+                          }}
+                        />
 
-                return (
-                  <div
-                    key={index}
-                    ref={isActive ? cardRef : null}
-                    className={`absolute inset-0 ${isDragging && isActive ? '' : 'transition-all duration-300 ease-out'}`}
-                    style={{
-                      transform: `
-                        translateX(${swipeTranslateX + offset * 20}px) 
-                        translateY(${translateY + swipeTranslateY}px) 
-                        scale(${scale}) 
-                        rotate(${swipeRotation}deg)
-                      `,
-                      opacity: opacity,
-                      zIndex: zIndex,
-                      pointerEvents: isActive ? 'auto' : 'none',
-                    }}
-                    onTouchStart={isActive ? handleTouchStart : undefined}
-                    onTouchMove={isActive ? handleTouchMove : undefined}
-                    onTouchEnd={isActive ? handleTouchEnd : undefined}
-                  >
-                    <div className={`h-full p-6 rounded-2xl border border-white/10 
-                                   bg-gradient-to-br ${benefit.color}
-                                   backdrop-blur-xl shadow-2xl
-                                   flex flex-col`}>
-                      {/* Number Badge */}
-                      <div className="flex items-start justify-between mb-6">
-                        <span className="font-mono text-xs text-white/40 tracking-wider">
-                          {benefit.number}
-                        </span>
-                        <div className="w-12 h-12">
-                          <Image 
-                            src={benefit.icon} 
-                            alt={benefit.title}
-                            width={48}
-                            height={48}
-                            className="w-full h-full object-contain"
-                          />
+                        {/* Content */}
+                        <div className="relative z-10 h-full flex flex-col">
+                          {/* Header with number and icon */}
+                          <div className="flex items-center justify-between mb-8">
+                            <div className="flex items-center gap-3">
+                              <span className="text-4xl font-bold text-white/20">{benefit.number}</span>
+                            </div>
+                            <div className="w-14 h-14 p-2 rounded-2xl bg-white/10 backdrop-blur-sm">
+                              <Image 
+                                src={benefit.icon} 
+                                alt={benefit.title}
+                                width={48}
+                                height={48}
+                                className="w-full h-full object-contain"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Main content - centered */}
+                          <div className="flex-1 flex flex-col justify-center">
+                            <h3 className="text-3xl font-bold text-white mb-4 leading-tight">
+                              {benefit.title}
+                            </h3>
+                            <p className="text-lg text-white/80 leading-relaxed">
+                              {benefit.description}
+                            </p>
+                          </div>
+
+                          {/* Bottom indicator */}
+                          <div className="flex items-center justify-between pt-6 border-t border-white/10">
+                            <span className="text-sm text-white/40 font-mono">
+                              {index + 1} de {benefits.length}
+                            </span>
+                            <div className="flex items-center gap-1 text-sm text-white/50">
+                              <span>Desliza</span>
+                              <svg className="w-4 h-4 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </div>
+                          </div>
                         </div>
                       </div>
-
-                      {/* Content */}
-                      <div className="flex-1 flex flex-col justify-center space-y-4">
-                        <h3 className="text-2xl font-bold text-white">
-                          {benefit.title}
-                        </h3>
-                        <p className="text-base text-white/70 leading-relaxed">
-                          {benefit.description}
-                        </p>
-                      </div>
-
-                      {/* Swipe hint indicator */}
-                      {isActive && currentCardIndex < benefits.length - 1 && (
-                        <div className="flex justify-center items-center gap-2 text-xs text-white/30 mt-4">
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                          </svg>
-                          Desliza
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </svg>
-                        </div>
-                      )}
                     </div>
-                  </div>
-                )
-              })}
+                  )
+                })}
+              </div>
             </div>
 
-            {/* Progress Indicators */}
-            <div className="flex justify-center gap-2 mt-6">
+            {/* Progress bar - Apple style */}
+            <div className="flex justify-center gap-1.5 mt-8 px-4">
               {benefits.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => goToCard(index)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    index === currentCardIndex 
-                      ? 'w-8 bg-white' 
-                      : 'w-2 bg-white/30'
-                  }`}
+                  className="relative h-1 rounded-full overflow-hidden transition-all duration-500"
+                  style={{
+                    width: index === currentCardIndex ? '32px' : '8px',
+                    backgroundColor: index === currentCardIndex ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.2)',
+                  }}
                   aria-label={`Ir a beneficio ${index + 1}`}
-                />
+                >
+                  {index === currentCardIndex && (
+                    <div 
+                      className="absolute inset-0 bg-white/50 animate-pulse"
+                      style={{ animationDuration: '2s' }}
+                    />
+                  )}
+                </button>
               ))}
-            </div>
-
-            {/* Navigation Arrows */}
-            <div className="flex justify-between items-center mt-6 px-4">
-              <button
-                onClick={() => currentCardIndex > 0 && goToCard(currentCardIndex - 1)}
-                disabled={currentCardIndex === 0}
-                className="p-3 rounded-full bg-white/5 border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:bg-white/10"
-              >
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <span className="text-sm text-white/50 font-mono">
-                {currentCardIndex + 1} / {benefits.length}
-              </span>
-              <button
-                onClick={() => currentCardIndex < benefits.length - 1 && goToCard(currentCardIndex + 1)}
-                disabled={currentCardIndex === benefits.length - 1}
-                className="p-3 rounded-full bg-white/5 border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:bg-white/10"
-              >
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
             </div>
           </div>
         ) : (
