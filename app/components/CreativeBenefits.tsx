@@ -296,13 +296,14 @@ export default function CreativeBenefits() {
 
             {/* Swipeable Card - with proper overflow handling */}
             <div 
-              className="relative h-[420px] rounded-3xl overflow-hidden"
+              className="relative h-[420px] rounded-3xl overflow-hidden bg-black/20"
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
               style={{
-                // Ensure nothing bleeds outside
+                // Ensure nothing bleeds outside - extra padding
                 clipPath: 'inset(0 0 0 0 round 1.5rem)',
+                WebkitMaskImage: '-webkit-radial-gradient(white, black)',
               }}
             >
               {/* Cards container with 3D perspective */}
@@ -325,7 +326,7 @@ export default function CreativeBenefits() {
                   const parallaxY = isDragging && isActive ? -Math.abs(dragState.x) / 20 : 0
                   
                   return (
-                  <div key={index} className="w-full h-full flex-shrink-0 px-0.5">
+                  <div key={index} className="w-full h-full flex-shrink-0 px-1">
                     <div 
                       className="relative w-full h-full rounded-3xl overflow-hidden"
                       style={{
@@ -347,16 +348,24 @@ export default function CreativeBenefits() {
                       {/* Gradient Overlay */}
                       <div className={`absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-60`} />
                       
-                      {/* Glass shine effect */}
+                      {/* Glass shine effect - enhanced */}
                       <div 
                         className="absolute inset-0 pointer-events-none"
                         style={{
-                          background: 'linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 40%, transparent 60%)',
+                          background: 'linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 30%, transparent 60%)',
                         }}
                       />
                       
-                      {/* Border glow */}
-                      <div className="absolute inset-0 rounded-3xl border border-white/20" />
+                      {/* Border glow with subtle animation */}
+                      <div className="absolute inset-0 rounded-3xl border border-white/15 transition-all duration-300" />
+                      
+                      {/* Inner shadow for depth */}
+                      <div 
+                        className="absolute inset-0 rounded-3xl pointer-events-none"
+                        style={{
+                          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.1)',
+                        }}
+                      />
 
                       {/* Content with parallax */}
                       <div 

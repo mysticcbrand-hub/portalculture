@@ -340,21 +340,22 @@ export default function ScrollRevealCourses() {
 
             {/* Card Container with tap zones */}
             <div 
-              className="relative h-[480px] rounded-3xl overflow-hidden"
+              className="relative h-[480px] rounded-3xl overflow-hidden bg-black/20"
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
               style={{
                 clipPath: 'inset(0 0 0 0 round 1.5rem)',
+                WebkitMaskImage: '-webkit-radial-gradient(white, black)',
               }}
             >
               {/* Invisible Tap Zones */}
               <div 
-                className="absolute left-0 top-0 w-1/3 h-full z-30 cursor-pointer active:bg-white/5 transition-colors"
+                className="absolute left-0 top-0 w-1/3 h-full z-30 cursor-pointer active:bg-white/3 transition-colors duration-200"
                 onClick={() => handleTapZone('left')}
               />
               <div 
-                className="absolute right-0 top-0 w-1/3 h-full z-30 cursor-pointer active:bg-white/5 transition-colors"
+                className="absolute right-0 top-0 w-1/3 h-full z-30 cursor-pointer active:bg-white/3 transition-colors duration-200"
                 onClick={() => handleTapZone('right')}
               />
 
@@ -363,7 +364,7 @@ export default function ScrollRevealCourses() {
                 className="flex h-full"
                 style={{ 
                   transform: `translateX(calc(-${currentCourseIndex * 100}% + ${isDragging ? dragOffset : 0}px))`,
-                  transition: isDragging ? 'none' : 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                  transition: isDragging ? 'none' : 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
                   willChange: 'transform',
                 }}
               >
@@ -377,8 +378,8 @@ export default function ScrollRevealCourses() {
                   }
                   
                   return (
-                    <div key={course.id} className="w-full h-full flex-shrink-0 px-0.5">
-                      <div className="relative w-full h-full">
+                    <div key={course.id} className="w-full h-full flex-shrink-0 px-1">
+                      <div className="relative w-full h-full rounded-3xl overflow-hidden">
                         {/* Background Image - Full screen */}
                         <div className="absolute inset-0">
                           <img 
@@ -391,13 +392,16 @@ export default function ScrollRevealCourses() {
                           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent" />
                         </div>
 
-                        {/* Glass shine */}
+                        {/* Glass shine - enhanced */}
                         <div 
                           className="absolute inset-0 pointer-events-none"
                           style={{
-                            background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 40%)',
+                            background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 30%, transparent 60%)',
                           }}
                         />
+                        
+                        {/* Border glow */}
+                        <div className="absolute inset-0 rounded-3xl border border-white/10" />
 
                         {/* Content */}
                         <div className="relative z-10 h-full flex flex-col p-6">
