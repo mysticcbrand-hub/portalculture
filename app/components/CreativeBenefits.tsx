@@ -61,13 +61,11 @@ export default function CreativeBenefits() {
   const cardsRef = useRef<(HTMLDivElement | null)[]>([])
   const sectionRef = useRef<HTMLDivElement>(null)
   
-  // Mobile Tinder-style swipe state
+  // Mobile smooth carousel state
   const [isMobile, setIsMobile] = useState(false)
   const [currentCardIndex, setCurrentCardIndex] = useState(0)
   const [dragState, setDragState] = useState({ x: 0, y: 0, startX: 0, startY: 0 })
   const [isDragging, setIsDragging] = useState(false)
-  const [exitDirection, setExitDirection] = useState<'left' | 'right' | null>(null)
-  const [isAnimatingOut, setIsAnimatingOut] = useState(false)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -167,9 +165,9 @@ export default function CreativeBenefits() {
     }))
   }
 
-  // Tinder-style swipe handlers with physics
+  // Smooth swipe handlers - addictive and elegant
   const handleTouchStart = (e: React.TouchEvent) => {
-    if (!isMobile || isAnimatingOut) return
+    if (!isMobile) return
     const touch = e.touches[0]
     setIsDragging(true)
     setDragState({
@@ -181,7 +179,7 @@ export default function CreativeBenefits() {
   }
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging || !isMobile || isAnimatingOut) return
+    if (!isDragging || !isMobile) return
     const touch = e.touches[0]
     const deltaX = touch.clientX - dragState.startX
     const deltaY = touch.clientY - dragState.startY
@@ -189,66 +187,26 @@ export default function CreativeBenefits() {
   }
 
   const handleTouchEnd = () => {
-    if (!isMobile || isAnimatingOut) return
+    if (!isMobile) return
     setIsDragging(false)
     
-    const threshold = 120 // pixels to trigger swipe
-    const velocity = Math.abs(dragState.x) / 10 // Simple velocity estimation
+    const threshold = 80 // Lower threshold for smoother feel
     
-    if (Math.abs(dragState.x) > threshold || velocity > 8) {
-      // Card flies away!
-      const direction = dragState.x > 0 ? 'right' : 'left'
-      setExitDirection(direction)
-      setIsAnimatingOut(true)
-      
-      // After animation, move to next/prev card
-      setTimeout(() => {
-        if (direction === 'left' && currentCardIndex < benefits.length - 1) {
-          setCurrentCardIndex(prev => prev + 1)
-        } else if (direction === 'right' && currentCardIndex > 0) {
-          setCurrentCardIndex(prev => prev - 1)
-        }
-        setExitDirection(null)
-        setIsAnimatingOut(false)
-        setDragState({ x: 0, y: 0, startX: 0, startY: 0 })
-      }, 300)
-    } else {
-      // Snap back with spring animation
-      setDragState({ x: 0, y: 0, startX: 0, startY: 0 })
+    if (dragState.x < -threshold && currentCardIndex < benefits.length - 1) {
+      // Swipe left - next
+      setCurrentCardIndex(prev => prev + 1)
+    } else if (dragState.x > threshold && currentCardIndex > 0) {
+      // Swipe right - previous
+      setCurrentCardIndex(prev => prev - 1)
     }
+    
+    setDragState({ x: 0, y: 0, startX: 0, startY: 0 })
   }
 
   const goToCard = (index: number) => {
-    if (isAnimatingOut) return
     setCurrentCardIndex(index)
     setDragState({ x: 0, y: 0, startX: 0, startY: 0 })
   }
-  
-  // Calculate card transform based on drag
-  const getCardTransform = (index: number) => {
-    const isTopCard = index === currentCardIndex
-    const offset = index - currentCardIndex
-    
-    if (isTopCard) {
-      const rotation = (dragState.x / 20) * (isDragging ? 1 : 0)
-      const exitX = exitDirection === 'left' ? -500 : exitDirection === 'right' ? 500 : 0
-      const exitRotation = exitDirection === 'left' ? -30 : exitDirection === 'right' ? 30 : 0
-      
-      if (isAnimatingOut) {
-        return `translateX(${exitX}px) translateY(${dragState.y * 0.3}px) rotate(${exitRotation}deg)`
-      }
-      return `translateX(${dragState.x}px) translateY(${dragState.y * 0.3}px) rotate(${rotation}deg)`
-    }
-    
-    // Stack cards behind with subtle offset
-    const scale = 1 - (offset * 0.04)
-    const translateY = offset * 12
-    return `translateY(${translateY}px) scale(${scale})`
-  }
-  
-  // Get like/nope indicator opacity
-  const getLikeOpacity = () => Math.min(dragState.x / 100, 1)
-  const getNopeOpacity = () => Math.min(-dragState.x / 100, 1)
 
   return (
     <section ref={sectionRef} id="beneficios" className="py-12 md:py-32 px-5 md:px-6 relative overflow-hidden">
@@ -305,104 +263,83 @@ export default function CreativeBenefits() {
           </div>
         </div>
 
-        {/* Mobile: Tinder-style Card Stack - Desktop: Grid */}
+        {/* Mobile: Elegant Swipe Carousel - Desktop: Grid */}
         {isMobile ? (
           <div className="relative mb-8 px-4">
-            {/* Card Stack Container */}
+            {/* Progress bars - Top (like Stories) */}
+            <div className="flex gap-1.5 mb-5">
+              {benefits.map((_, index) => (
+                <div 
+                  key={index}
+                  className="flex-1 h-1 bg-white/15 rounded-full overflow-hidden cursor-pointer"
+                  onClick={() => goToCard(index)}
+                >
+                  <div 
+                    className="h-full bg-white rounded-full transition-all duration-300"
+                    style={{
+                      width: index < currentCardIndex ? '100%' : index === currentCardIndex ? '100%' : '0%',
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Swipeable Card */}
             <div 
-              className="relative h-[440px] flex items-center justify-center"
+              className="relative h-[420px] rounded-3xl overflow-hidden"
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
             >
-              {/* Render cards in reverse order so top card is rendered last (on top) */}
-              {[...benefits].map((benefit, index) => {
-                const isTopCard = index === currentCardIndex
-                const isVisible = index >= currentCardIndex && index < currentCardIndex + 3
-                const offset = index - currentCardIndex
-                
-                if (!isVisible) return null
-                
-                return (
-                  <div
-                    key={index}
-                    className="absolute inset-0 flex items-center justify-center"
-                    style={{
-                      zIndex: benefits.length - offset,
-                      pointerEvents: isTopCard ? 'auto' : 'none',
-                    }}
-                  >
+              {/* Cards container */}
+              <div 
+                className="flex h-full"
+                style={{ 
+                  transform: `translateX(calc(-${currentCardIndex * 100}% + ${isDragging ? dragState.x : 0}px))`,
+                  transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.32, 0.72, 0, 1)'
+                }}
+              >
+                {benefits.map((benefit, index) => (
+                  <div key={index} className="w-full h-full flex-shrink-0">
                     <div 
-                      className="relative w-full h-full rounded-3xl overflow-hidden border border-white/20"
+                      className="relative w-full h-full rounded-3xl overflow-hidden"
                       style={{
-                        transform: getCardTransform(index),
-                        transition: isDragging && isTopCard 
-                          ? 'none' 
-                          : 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                        opacity: isTopCard ? 1 : 1 - (offset * 0.15),
                         background: `linear-gradient(145deg, 
-                          rgba(255,255,255,0.15) 0%, 
-                          rgba(255,255,255,0.08) 30%,
-                          rgba(0,0,0,0.1) 100%)`,
-                        boxShadow: isTopCard 
-                          ? '0 30px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.15) inset, 0 0 40px rgba(255,255,255,0.05) inset'
-                          : '0 15px 30px -10px rgba(0, 0, 0, 0.4)',
+                          rgba(255,255,255,0.12) 0%, 
+                          rgba(255,255,255,0.06) 50%,
+                          rgba(0,0,0,0.15) 100%)`,
+                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.1)',
                       }}
                     >
                       {/* Gradient Overlay */}
-                      <div className={`absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-50`} />
+                      <div className={`absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-60`} />
                       
                       {/* Glass shine effect */}
                       <div 
-                        className="absolute inset-0"
+                        className="absolute inset-0 pointer-events-none"
                         style={{
-                          background: 'linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 30%, transparent 60%)',
+                          background: 'linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 40%, transparent 60%)',
                         }}
                       />
                       
-                      {/* LIKE indicator */}
-                      {isTopCard && dragState.x > 0 && (
-                        <div 
-                          className="absolute top-8 left-6 px-4 py-2 rounded-lg border-4 border-green-400 z-20"
-                          style={{
-                            opacity: getLikeOpacity(),
-                            transform: `rotate(-20deg) scale(${0.8 + getLikeOpacity() * 0.4})`,
-                            transition: isDragging ? 'none' : 'all 0.3s ease-out',
-                          }}
-                        >
-                          <span className="text-2xl font-black text-green-400 tracking-wider">LIKE</span>
-                        </div>
-                      )}
-                      
-                      {/* NOPE indicator */}
-                      {isTopCard && dragState.x < 0 && (
-                        <div 
-                          className="absolute top-8 right-6 px-4 py-2 rounded-lg border-4 border-red-400 z-20"
-                          style={{
-                            opacity: getNopeOpacity(),
-                            transform: `rotate(20deg) scale(${0.8 + getNopeOpacity() * 0.4})`,
-                            transition: isDragging ? 'none' : 'all 0.3s ease-out',
-                          }}
-                        >
-                          <span className="text-2xl font-black text-red-400 tracking-wider">NOPE</span>
-                        </div>
-                      )}
+                      {/* Border glow */}
+                      <div className="absolute inset-0 rounded-3xl border border-white/20" />
 
                       {/* Content */}
                       <div className="relative z-10 h-full flex flex-col p-7">
-                        {/* Header with number and icon */}
-                        <div className="flex items-start justify-between mb-6">
+                        {/* Header */}
+                        <div className="flex items-start justify-between">
                           <span 
-                            className="text-6xl font-black"
+                            className="text-7xl font-black leading-none"
                             style={{
-                              background: 'linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.1))',
+                              background: 'linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.15) 100%)',
                               WebkitBackgroundClip: 'text',
                               WebkitTextFillColor: 'transparent',
                             }}
                           >
                             {benefit.number}
                           </span>
-                          <div className="w-16 h-16 p-3 rounded-2xl bg-white/15 backdrop-blur-md border border-white/20 shadow-lg">
+                          <div className="w-16 h-16 p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 shadow-xl">
                             <Image 
                               src={benefit.icon} 
                               alt={benefit.title}
@@ -413,64 +350,40 @@ export default function CreativeBenefits() {
                           </div>
                         </div>
 
-                        {/* Main content - centered */}
-                        <div className="flex-1 flex flex-col justify-center">
-                          <h3 className="text-3xl font-bold text-white mb-4 leading-tight drop-shadow-lg">
+                        {/* Spacer */}
+                        <div className="flex-1" />
+
+                        {/* Main content - Bottom */}
+                        <div className="space-y-4">
+                          <h3 className="text-3xl font-bold text-white leading-tight">
                             {benefit.title}
                           </h3>
-                          <p className="text-lg text-white/90 leading-relaxed drop-shadow">
+                          <p className="text-lg text-white/85 leading-relaxed">
                             {benefit.description}
                           </p>
-                        </div>
-
-                        {/* Bottom - swipe hint */}
-                        <div className="flex items-center justify-center gap-8 pt-6 border-t border-white/15">
-                          <div className="flex items-center gap-2 text-red-400/70">
-                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                          
+                          {/* Swipe hint */}
+                          <div className="flex items-center justify-center gap-2 pt-4 text-white/40">
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                             </svg>
-                            <span className="text-xs font-semibold uppercase tracking-wider">Anterior</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-green-400/70">
-                            <span className="text-xs font-semibold uppercase tracking-wider">Siguiente</span>
-                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            <span className="text-sm">Desliza</span>
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                             </svg>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                )
-              })}
-            </div>
-
-            {/* Progress dots */}
-            <div className="flex justify-center gap-2 mt-6">
-              {benefits.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => goToCard(index)}
-                  className="relative transition-all duration-300"
-                  aria-label={`Ir a beneficio ${index + 1}`}
-                >
-                  <div 
-                    className={`rounded-full transition-all duration-500 ${
-                      index === currentCardIndex 
-                        ? 'w-8 h-2 bg-white' 
-                        : index < currentCardIndex 
-                          ? 'w-2 h-2 bg-white/60' 
-                          : 'w-2 h-2 bg-white/20'
-                    }`}
-                  />
-                </button>
-              ))}
+                ))}
+              </div>
             </div>
             
-            {/* Card counter */}
-            <div className="text-center mt-4">
-              <span className="text-sm text-white/40 font-mono">
-                {currentCardIndex + 1} / {benefits.length}
+            {/* Counter */}
+            <div className="text-center mt-5">
+              <span className="text-sm text-white/50 font-medium">
+                {currentCardIndex + 1} de {benefits.length}
               </span>
             </div>
           </div>
