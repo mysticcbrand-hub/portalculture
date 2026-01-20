@@ -60,12 +60,15 @@ export default function ScrollRevealCourses() {
   const [mousePositions, setMousePositions] = useState<{ [key: number]: { x: number; y: number; spotX: number; spotY: number } }>({})
   const [scrollProgress, setScrollProgress] = useState<{ [key: number]: number }>({})
   
-  // Mobile carousel state
+  // Mobile Stories-style carousel state
   const [isMobile, setIsMobile] = useState(false)
   const [currentCourseIndex, setCurrentCourseIndex] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const [dragOffset, setDragOffset] = useState(0)
   const [startX, setStartX] = useState(0)
+  const [progressAnimation, setProgressAnimation] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
+  const progressIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -75,6 +78,40 @@ export default function ScrollRevealCourses() {
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
+  
+  // Auto-advance like Instagram Stories (optional - only when not interacting)
+  useEffect(() => {
+    if (!isMobile || isDragging || isPaused) return
+    
+    setProgressAnimation(0)
+    const duration = 5000 // 5 seconds per story
+    const interval = 50
+    let progress = 0
+    
+    progressIntervalRef.current = setInterval(() => {
+      progress += (interval / duration) * 100
+      setProgressAnimation(progress)
+      
+      if (progress >= 100) {
+        if (currentCourseIndex < courses.length - 1) {
+          setCurrentCourseIndex(prev => prev + 1)
+          progress = 0
+          setProgressAnimation(0)
+        } else {
+          // Reset to first when reaching end
+          setCurrentCourseIndex(0)
+          progress = 0
+          setProgressAnimation(0)
+        }
+      }
+    }, interval)
+    
+    return () => {
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current)
+      }
+    }
+  }, [isMobile, currentCourseIndex, isDragging, isPaused])
 
   useEffect(() => {
     const observerOptions = {
@@ -176,11 +213,12 @@ export default function ScrollRevealCourses() {
     }))
   }
 
-  // Touch handlers for carousel - Premium smooth
+  // Touch handlers for carousel - with tap zones like Instagram Stories
   const handleTouchStart = (e: React.TouchEvent) => {
     setIsDragging(true)
     setStartX(e.touches[0].clientX)
     setDragOffset(0)
+    setIsPaused(true) // Pause auto-advance when touching
   }
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -190,23 +228,41 @@ export default function ScrollRevealCourses() {
     setDragOffset(diff)
   }
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const wasDragging = Math.abs(dragOffset) > 10
     setIsDragging(false)
+    setIsPaused(false) // Resume auto-advance
     
     const threshold = 60
     
-    if (dragOffset < -threshold && currentCourseIndex < courses.length - 1) {
-      setCurrentCourseIndex(prev => prev + 1)
-    } else if (dragOffset > threshold && currentCourseIndex > 0) {
-      setCurrentCourseIndex(prev => prev - 1)
+    if (wasDragging) {
+      // Swipe gesture
+      if (dragOffset < -threshold && currentCourseIndex < courses.length - 1) {
+        setCurrentCourseIndex(prev => prev + 1)
+        setProgressAnimation(0)
+      } else if (dragOffset > threshold && currentCourseIndex > 0) {
+        setCurrentCourseIndex(prev => prev - 1)
+        setProgressAnimation(0)
+      }
     }
     
     setDragOffset(0)
+  }
+  
+  // Tap zones - Instagram Stories style
+  const handleTapZone = (zone: 'left' | 'right') => {
+    setProgressAnimation(0)
+    if (zone === 'right' && currentCourseIndex < courses.length - 1) {
+      setCurrentCourseIndex(prev => prev + 1)
+    } else if (zone === 'left' && currentCourseIndex > 0) {
+      setCurrentCourseIndex(prev => prev - 1)
+    }
   }
 
   const goToCourse = (index: number) => {
     setCurrentCourseIndex(index)
     setDragOffset(0)
+    setProgressAnimation(0)
   }
 
   return (
@@ -234,25 +290,60 @@ export default function ScrollRevealCourses() {
           <p className="text-base md:text-2xl text-white/70 font-light px-4">Diseñados para resolver todos tus problemas</p>
         </div>
 
-        {/* Mobile: Premium Horizontal Carousel - Desktop: Vertical Stack */}
+        {/* Mobile: Instagram Stories-style Carousel - Desktop: Vertical Stack */}
         {isMobile ? (
-          <div className="relative mb-8">
-            {/* Carousel Container */}
+          <div className="relative mb-8 px-4">
+            {/* Stories Progress Bars - Top */}
+            <div className="flex gap-1 mb-4">
+              {courses.map((_, index) => (
+                <div 
+                  key={index}
+                  className="flex-1 h-1 bg-white/20 rounded-full overflow-hidden"
+                  onClick={() => goToCourse(index)}
+                >
+                  <div 
+                    className="h-full bg-white rounded-full"
+                    style={{
+                      width: index < currentCourseIndex 
+                        ? '100%' 
+                        : index === currentCourseIndex 
+                          ? `${progressAnimation}%`
+                          : '0%',
+                      transition: index === currentCourseIndex && !isDragging 
+                        ? 'width 0.05s linear' 
+                        : 'width 0.3s ease-out'
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Card Container with tap zones */}
             <div 
-              className="overflow-hidden"
+              className="relative h-[480px] rounded-3xl overflow-hidden"
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
             >
+              {/* Invisible Tap Zones */}
               <div 
-                className="flex"
+                className="absolute left-0 top-0 w-1/3 h-full z-30 cursor-pointer"
+                onClick={() => handleTapZone('left')}
+              />
+              <div 
+                className="absolute right-0 top-0 w-1/3 h-full z-30 cursor-pointer"
+                onClick={() => handleTapZone('right')}
+              />
+
+              {/* Cards */}
+              <div 
+                className="flex h-full"
                 style={{ 
                   transform: `translateX(calc(-${currentCourseIndex * 100}% + ${isDragging ? dragOffset : 0}px))`,
-                  transition: isDragging ? 'none' : 'transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)'
+                  transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.32, 0.72, 0, 1)'
                 }}
               >
                 {courses.map((course, index) => {
-                  const isActive = index === currentCourseIndex
                   const bgImages: { [key: number]: string } = {
                     1: '/atenas-bg.png',
                     2: '/ares-bg.png', 
@@ -262,100 +353,97 @@ export default function ScrollRevealCourses() {
                   }
                   
                   return (
-                    <div key={course.id} className="w-full flex-shrink-0 px-4">
-                      <div 
-                        className={`
-                          relative h-[420px] rounded-3xl overflow-hidden
-                          border border-white/20
-                          transition-all duration-500 ease-out
-                          ${isActive ? 'scale-100 opacity-100' : 'scale-[0.97] opacity-60'}
-                        `}
-                        style={{
-                          boxShadow: isActive 
-                            ? '0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.1) inset'
-                            : '0 10px 30px -10px rgba(0, 0, 0, 0.3)',
-                        }}
-                      >
-                        {/* Background Image - Full opacity */}
+                    <div key={course.id} className="w-full h-full flex-shrink-0">
+                      <div className="relative w-full h-full">
+                        {/* Background Image - Full screen */}
                         <div className="absolute inset-0">
                           <img 
                             src={bgImages[course.id]} 
                             alt="" 
                             className="w-full h-full object-cover"
                           />
-                          {/* Gradient overlays for readability */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
-                          <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-transparent to-transparent" />
+                          {/* Gradient overlays */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent" />
                         </div>
 
-                        {/* Glass card overlay */}
+                        {/* Glass shine */}
                         <div 
-                          className="absolute inset-0 opacity-60"
+                          className="absolute inset-0 pointer-events-none"
                           style={{
-                            background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%, transparent 100%)',
+                            background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 40%)',
                           }}
                         />
 
                         {/* Content */}
-                        <div className="relative z-10 h-full flex flex-col p-7">
-                          {/* Header */}
-                          <div className="flex items-start justify-between mb-auto">
+                        <div className="relative z-10 h-full flex flex-col p-6">
+                          {/* Header with icon */}
+                          <div className="flex items-start justify-between mb-4">
                             <div className="flex items-center gap-3">
-                              <span 
-                                className="text-5xl font-bold"
-                                style={{
-                                  background: 'linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1))',
-                                  WebkitBackgroundClip: 'text',
-                                  WebkitTextFillColor: 'transparent',
-                                }}
-                              >
-                                {course.number}
-                              </span>
+                              <div className="w-12 h-12 p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20">
+                                <img 
+                                  src={course.icon} 
+                                  alt={course.title}
+                                  className="w-full h-full object-contain"
+                                />
+                              </div>
+                              <div>
+                                <p className="text-white/60 text-xs font-medium uppercase tracking-wider">Templo</p>
+                                <p className="text-white font-semibold">{course.title.split(' ').pop()}</p>
+                              </div>
                             </div>
-                            <div className="w-16 h-16 p-2 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20">
-                              <img 
-                                src={course.icon} 
-                                alt={course.title}
-                                className="w-full h-full object-contain"
-                              />
-                            </div>
+                            <span 
+                              className="text-4xl font-black"
+                              style={{
+                                background: 'linear-gradient(135deg, rgba(255,255,255,0.5), rgba(255,255,255,0.2))',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                              }}
+                            >
+                              {course.number}
+                            </span>
                           </div>
 
-                          {/* Main content */}
-                          <div className="mt-auto">
+                          {/* Spacer */}
+                          <div className="flex-1" />
+
+                          {/* Main content - Bottom */}
+                          <div className="space-y-4">
                             {/* Tags */}
-                            <div className="flex flex-wrap gap-2 mb-4">
+                            <div className="flex flex-wrap gap-2">
                               {course.tags.map((tag, idx) => (
                                 <span
                                   key={idx}
-                                  className={`tag tag-${tag.variant} px-3 py-1.5 rounded-full text-xs font-semibold border backdrop-blur-sm`}
+                                  className={`tag tag-${tag.variant} px-3 py-1.5 rounded-full text-xs font-bold border backdrop-blur-md`}
                                 >
                                   {tag.text}
                                 </span>
                               ))}
                             </div>
 
-                            <h3 className="text-3xl font-bold text-white mb-3 leading-tight">
+                            <h3 className="text-3xl font-bold text-white leading-tight drop-shadow-lg">
                               {course.title}
                             </h3>
-                            <p className="text-lg text-white/80 leading-relaxed">
+                            <p className="text-base text-white/90 leading-relaxed drop-shadow">
                               {course.description}
                             </p>
-                          </div>
-
-                          {/* Bottom indicator */}
-                          <div className="flex items-center justify-between pt-6 mt-6 border-t border-white/10">
-                            <span className="text-sm text-white/50 font-mono">
-                              {index + 1} de {courses.length}
-                            </span>
-                            {index < courses.length - 1 && (
-                              <div className="flex items-center gap-1 text-sm text-white/50">
-                                <span>Desliza</span>
-                                <svg className="w-4 h-4 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            
+                            {/* Tap hint */}
+                            <div className="flex items-center justify-center gap-6 pt-4 text-white/40">
+                              <div className="flex items-center gap-1">
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                                </svg>
+                                <span className="text-xs">Toca izq</span>
+                              </div>
+                              <span className="text-xs">·</span>
+                              <div className="flex items-center gap-1">
+                                <span className="text-xs">Toca der</span>
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                                 </svg>
                               </div>
-                            )}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -364,28 +452,12 @@ export default function ScrollRevealCourses() {
                 })}
               </div>
             </div>
-
-            {/* Progress bar - Apple style */}
-            <div className="flex justify-center gap-1.5 mt-8 px-4">
-              {courses.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => goToCourse(index)}
-                  className="relative h-1 rounded-full overflow-hidden transition-all duration-500"
-                  style={{
-                    width: index === currentCourseIndex ? '32px' : '8px',
-                    backgroundColor: index === currentCourseIndex ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.2)',
-                  }}
-                  aria-label={`Ir a curso ${index + 1}`}
-                >
-                  {index === currentCourseIndex && (
-                    <div 
-                      className="absolute inset-0 bg-white/50 animate-pulse"
-                      style={{ animationDuration: '2s' }}
-                    />
-                  )}
-                </button>
-              ))}
+            
+            {/* Course counter */}
+            <div className="text-center mt-4">
+              <span className="text-sm text-white/40 font-mono">
+                {currentCourseIndex + 1} / {courses.length}
+              </span>
             </div>
           </div>
         ) : (

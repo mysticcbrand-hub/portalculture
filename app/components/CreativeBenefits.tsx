@@ -61,13 +61,13 @@ export default function CreativeBenefits() {
   const cardsRef = useRef<(HTMLDivElement | null)[]>([])
   const sectionRef = useRef<HTMLDivElement>(null)
   
-  // Mobile swipe state
+  // Mobile Tinder-style swipe state
   const [isMobile, setIsMobile] = useState(false)
   const [currentCardIndex, setCurrentCardIndex] = useState(0)
-  const [swipeOffset, setSwipeOffset] = useState({ x: 0, y: 0 })
+  const [dragState, setDragState] = useState({ x: 0, y: 0, startX: 0, startY: 0 })
   const [isDragging, setIsDragging] = useState(false)
-  const [startPos, setStartPos] = useState({ x: 0, y: 0 })
-  const cardRef = useRef<HTMLDivElement>(null)
+  const [exitDirection, setExitDirection] = useState<'left' | 'right' | null>(null)
+  const [isAnimatingOut, setIsAnimatingOut] = useState(false)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -167,48 +167,88 @@ export default function CreativeBenefits() {
     }))
   }
 
-  // Swipe handlers for mobile
+  // Tinder-style swipe handlers with physics
   const handleTouchStart = (e: React.TouchEvent) => {
-    if (!isMobile) return
+    if (!isMobile || isAnimatingOut) return
+    const touch = e.touches[0]
     setIsDragging(true)
-    setStartPos({
-      x: e.touches[0].clientX,
-      y: e.touches[0].clientY
+    setDragState({
+      x: 0,
+      y: 0,
+      startX: touch.clientX,
+      startY: touch.clientY
     })
   }
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging || !isMobile) return
-    const deltaX = e.touches[0].clientX - startPos.x
-    const deltaY = e.touches[0].clientY - startPos.y
-    setSwipeOffset({ x: deltaX, y: deltaY })
+    if (!isDragging || !isMobile || isAnimatingOut) return
+    const touch = e.touches[0]
+    const deltaX = touch.clientX - dragState.startX
+    const deltaY = touch.clientY - dragState.startY
+    setDragState(prev => ({ ...prev, x: deltaX, y: deltaY }))
   }
 
   const handleTouchEnd = () => {
-    if (!isMobile) return
+    if (!isMobile || isAnimatingOut) return
     setIsDragging(false)
     
-    const threshold = 100 // pixels to trigger swipe
+    const threshold = 120 // pixels to trigger swipe
+    const velocity = Math.abs(dragState.x) / 10 // Simple velocity estimation
     
-    if (Math.abs(swipeOffset.x) > threshold) {
-      // Swipe left or right
-      if (swipeOffset.x > 0 && currentCardIndex > 0) {
-        // Swipe right - previous card
-        setCurrentCardIndex(prev => prev - 1)
-      } else if (swipeOffset.x < 0 && currentCardIndex < benefits.length - 1) {
-        // Swipe left - next card
-        setCurrentCardIndex(prev => prev + 1)
-      }
+    if (Math.abs(dragState.x) > threshold || velocity > 8) {
+      // Card flies away!
+      const direction = dragState.x > 0 ? 'right' : 'left'
+      setExitDirection(direction)
+      setIsAnimatingOut(true)
+      
+      // After animation, move to next/prev card
+      setTimeout(() => {
+        if (direction === 'left' && currentCardIndex < benefits.length - 1) {
+          setCurrentCardIndex(prev => prev + 1)
+        } else if (direction === 'right' && currentCardIndex > 0) {
+          setCurrentCardIndex(prev => prev - 1)
+        }
+        setExitDirection(null)
+        setIsAnimatingOut(false)
+        setDragState({ x: 0, y: 0, startX: 0, startY: 0 })
+      }, 300)
+    } else {
+      // Snap back with spring animation
+      setDragState({ x: 0, y: 0, startX: 0, startY: 0 })
     }
-    
-    // Reset offset
-    setSwipeOffset({ x: 0, y: 0 })
   }
 
   const goToCard = (index: number) => {
+    if (isAnimatingOut) return
     setCurrentCardIndex(index)
-    setSwipeOffset({ x: 0, y: 0 })
+    setDragState({ x: 0, y: 0, startX: 0, startY: 0 })
   }
+  
+  // Calculate card transform based on drag
+  const getCardTransform = (index: number) => {
+    const isTopCard = index === currentCardIndex
+    const offset = index - currentCardIndex
+    
+    if (isTopCard) {
+      const rotation = (dragState.x / 20) * (isDragging ? 1 : 0)
+      const exitX = exitDirection === 'left' ? -500 : exitDirection === 'right' ? 500 : 0
+      const exitRotation = exitDirection === 'left' ? -30 : exitDirection === 'right' ? 30 : 0
+      
+      if (isAnimatingOut) {
+        return `translateX(${exitX}px) translateY(${dragState.y * 0.3}px) rotate(${exitRotation}deg)`
+      }
+      return `translateX(${dragState.x}px) translateY(${dragState.y * 0.3}px) rotate(${rotation}deg)`
+    }
+    
+    // Stack cards behind with subtle offset
+    const scale = 1 - (offset * 0.04)
+    const translateY = offset * 12
+    return `translateY(${translateY}px) scale(${scale})`
+  }
+  
+  // Get like/nope indicator opacity
+  const getLikeOpacity = () => Math.min(dragState.x / 100, 1)
+  const getNopeOpacity = () => Math.min(-dragState.x / 100, 1)
 
   return (
     <section ref={sectionRef} id="beneficios" className="py-12 md:py-32 px-5 md:px-6 relative overflow-hidden">
@@ -265,130 +305,173 @@ export default function CreativeBenefits() {
           </div>
         </div>
 
-        {/* Mobile: Premium Horizontal Carousel - Desktop: Grid */}
+        {/* Mobile: Tinder-style Card Stack - Desktop: Grid */}
         {isMobile ? (
-          <div className="relative mb-8">
-            {/* Horizontal Carousel Container */}
+          <div className="relative mb-8 px-4">
+            {/* Card Stack Container */}
             <div 
-              className="overflow-hidden"
+              className="relative h-[440px] flex items-center justify-center"
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
             >
-              <div 
-                className="flex transition-transform duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
-                style={{ 
-                  transform: `translateX(calc(-${currentCardIndex * 100}% + ${isDragging ? swipeOffset.x : 0}px))`,
-                  transition: isDragging ? 'none' : 'transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)'
-                }}
-              >
-                {benefits.map((benefit, index) => {
-                  const isActive = index === currentCardIndex
-                  
-                  return (
-                    <div
-                      key={index}
-                      className="w-full flex-shrink-0 px-4"
+              {/* Render cards in reverse order so top card is rendered last (on top) */}
+              {[...benefits].map((benefit, index) => {
+                const isTopCard = index === currentCardIndex
+                const isVisible = index >= currentCardIndex && index < currentCardIndex + 3
+                const offset = index - currentCardIndex
+                
+                if (!isVisible) return null
+                
+                return (
+                  <div
+                    key={index}
+                    className="absolute inset-0 flex items-center justify-center"
+                    style={{
+                      zIndex: benefits.length - offset,
+                      pointerEvents: isTopCard ? 'auto' : 'none',
+                    }}
+                  >
+                    <div 
+                      className="relative w-full h-full rounded-3xl overflow-hidden border border-white/20"
+                      style={{
+                        transform: getCardTransform(index),
+                        transition: isDragging && isTopCard 
+                          ? 'none' 
+                          : 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                        opacity: isTopCard ? 1 : 1 - (offset * 0.15),
+                        background: `linear-gradient(145deg, 
+                          rgba(255,255,255,0.15) 0%, 
+                          rgba(255,255,255,0.08) 30%,
+                          rgba(0,0,0,0.1) 100%)`,
+                        boxShadow: isTopCard 
+                          ? '0 30px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.15) inset, 0 0 40px rgba(255,255,255,0.05) inset'
+                          : '0 15px 30px -10px rgba(0, 0, 0, 0.4)',
+                      }}
                     >
+                      {/* Gradient Overlay */}
+                      <div className={`absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-50`} />
+                      
+                      {/* Glass shine effect */}
                       <div 
-                        className={`
-                          relative h-[380px] p-7 rounded-3xl overflow-hidden
-                          border border-white/20
-                          transition-all duration-500 ease-out
-                          ${isActive ? 'scale-100 opacity-100' : 'scale-[0.97] opacity-60'}
-                        `}
+                        className="absolute inset-0"
                         style={{
-                          background: `linear-gradient(145deg, 
-                            rgba(255,255,255,0.12) 0%, 
-                            rgba(255,255,255,0.05) 50%,
-                            rgba(0,0,0,0.2) 100%)`,
-                          boxShadow: isActive 
-                            ? '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.1) inset'
-                            : '0 10px 30px -10px rgba(0, 0, 0, 0.3)',
+                          background: 'linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 30%, transparent 60%)',
                         }}
-                      >
-                        {/* Gradient Overlay */}
+                      />
+                      
+                      {/* LIKE indicator */}
+                      {isTopCard && dragState.x > 0 && (
                         <div 
-                          className={`absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-40`}
-                        />
-                        
-                        {/* Glass shine effect */}
-                        <div 
-                          className="absolute inset-0 opacity-30"
+                          className="absolute top-8 left-6 px-4 py-2 rounded-lg border-4 border-green-400 z-20"
                           style={{
-                            background: 'linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%, transparent 100%)',
+                            opacity: getLikeOpacity(),
+                            transform: `rotate(-20deg) scale(${0.8 + getLikeOpacity() * 0.4})`,
+                            transition: isDragging ? 'none' : 'all 0.3s ease-out',
                           }}
-                        />
+                        >
+                          <span className="text-2xl font-black text-green-400 tracking-wider">LIKE</span>
+                        </div>
+                      )}
+                      
+                      {/* NOPE indicator */}
+                      {isTopCard && dragState.x < 0 && (
+                        <div 
+                          className="absolute top-8 right-6 px-4 py-2 rounded-lg border-4 border-red-400 z-20"
+                          style={{
+                            opacity: getNopeOpacity(),
+                            transform: `rotate(20deg) scale(${0.8 + getNopeOpacity() * 0.4})`,
+                            transition: isDragging ? 'none' : 'all 0.3s ease-out',
+                          }}
+                        >
+                          <span className="text-2xl font-black text-red-400 tracking-wider">NOPE</span>
+                        </div>
+                      )}
 
-                        {/* Content */}
-                        <div className="relative z-10 h-full flex flex-col">
-                          {/* Header with number and icon */}
-                          <div className="flex items-center justify-between mb-8">
-                            <div className="flex items-center gap-3">
-                              <span className="text-4xl font-bold text-white/20">{benefit.number}</span>
-                            </div>
-                            <div className="w-14 h-14 p-2 rounded-2xl bg-white/10 backdrop-blur-sm">
-                              <Image 
-                                src={benefit.icon} 
-                                alt={benefit.title}
-                                width={48}
-                                height={48}
-                                className="w-full h-full object-contain"
-                              />
-                            </div>
+                      {/* Content */}
+                      <div className="relative z-10 h-full flex flex-col p-7">
+                        {/* Header with number and icon */}
+                        <div className="flex items-start justify-between mb-6">
+                          <span 
+                            className="text-6xl font-black"
+                            style={{
+                              background: 'linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.1))',
+                              WebkitBackgroundClip: 'text',
+                              WebkitTextFillColor: 'transparent',
+                            }}
+                          >
+                            {benefit.number}
+                          </span>
+                          <div className="w-16 h-16 p-3 rounded-2xl bg-white/15 backdrop-blur-md border border-white/20 shadow-lg">
+                            <Image 
+                              src={benefit.icon} 
+                              alt={benefit.title}
+                              width={48}
+                              height={48}
+                              className="w-full h-full object-contain"
+                            />
                           </div>
+                        </div>
 
-                          {/* Main content - centered */}
-                          <div className="flex-1 flex flex-col justify-center">
-                            <h3 className="text-3xl font-bold text-white mb-4 leading-tight">
-                              {benefit.title}
-                            </h3>
-                            <p className="text-lg text-white/80 leading-relaxed">
-                              {benefit.description}
-                            </p>
+                        {/* Main content - centered */}
+                        <div className="flex-1 flex flex-col justify-center">
+                          <h3 className="text-3xl font-bold text-white mb-4 leading-tight drop-shadow-lg">
+                            {benefit.title}
+                          </h3>
+                          <p className="text-lg text-white/90 leading-relaxed drop-shadow">
+                            {benefit.description}
+                          </p>
+                        </div>
+
+                        {/* Bottom - swipe hint */}
+                        <div className="flex items-center justify-center gap-8 pt-6 border-t border-white/15">
+                          <div className="flex items-center gap-2 text-red-400/70">
+                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            <span className="text-xs font-semibold uppercase tracking-wider">Anterior</span>
                           </div>
-
-                          {/* Bottom indicator */}
-                          <div className="flex items-center justify-between pt-6 border-t border-white/10">
-                            <span className="text-sm text-white/40 font-mono">
-                              {index + 1} de {benefits.length}
-                            </span>
-                            <div className="flex items-center gap-1 text-sm text-white/50">
-                              <span>Desliza</span>
-                              <svg className="w-4 h-4 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                            </div>
+                          <div className="flex items-center gap-2 text-green-400/70">
+                            <span className="text-xs font-semibold uppercase tracking-wider">Siguiente</span>
+                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
                           </div>
                         </div>
                       </div>
                     </div>
-                  )
-                })}
-              </div>
+                  </div>
+                )
+              })}
             </div>
 
-            {/* Progress bar - Apple style */}
-            <div className="flex justify-center gap-1.5 mt-8 px-4">
+            {/* Progress dots */}
+            <div className="flex justify-center gap-2 mt-6">
               {benefits.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => goToCard(index)}
-                  className="relative h-1 rounded-full overflow-hidden transition-all duration-500"
-                  style={{
-                    width: index === currentCardIndex ? '32px' : '8px',
-                    backgroundColor: index === currentCardIndex ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.2)',
-                  }}
+                  className="relative transition-all duration-300"
                   aria-label={`Ir a beneficio ${index + 1}`}
                 >
-                  {index === currentCardIndex && (
-                    <div 
-                      className="absolute inset-0 bg-white/50 animate-pulse"
-                      style={{ animationDuration: '2s' }}
-                    />
-                  )}
+                  <div 
+                    className={`rounded-full transition-all duration-500 ${
+                      index === currentCardIndex 
+                        ? 'w-8 h-2 bg-white' 
+                        : index < currentCardIndex 
+                          ? 'w-2 h-2 bg-white/60' 
+                          : 'w-2 h-2 bg-white/20'
+                    }`}
+                  />
                 </button>
               ))}
+            </div>
+            
+            {/* Card counter */}
+            <div className="text-center mt-4">
+              <span className="text-sm text-white/40 font-mono">
+                {currentCardIndex + 1} / {benefits.length}
+              </span>
             </div>
           </div>
         ) : (
