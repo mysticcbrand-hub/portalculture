@@ -183,6 +183,12 @@ export default function CreativeBenefits() {
     const touch = e.touches[0]
     const deltaX = touch.clientX - dragState.startX
     const deltaY = touch.clientY - dragState.startY
+    
+    // Lock vertical scroll if horizontal swipe is detected
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      e.preventDefault() // Prevent vertical scroll
+    }
+    
     setDragState(prev => ({ ...prev, x: deltaX, y: deltaY }))
   }
 
@@ -304,6 +310,7 @@ export default function CreativeBenefits() {
                 // Ensure nothing bleeds outside - extra padding
                 clipPath: 'inset(0 0 0 0 round 1.5rem)',
                 WebkitMaskImage: '-webkit-radial-gradient(white, black)',
+                touchAction: 'pan-x', // Only allow horizontal panning
               }}
             >
               {/* Cards container with 3D perspective */}
