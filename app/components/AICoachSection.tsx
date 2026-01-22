@@ -154,9 +154,9 @@ Hazlo. Ahora. 🔥`
               }}
             />
 
-            {/* Chat interface mockup - simplified for mobile */}
+            {/* Chat interface mockup - HORIZONTAL on mobile for better use of space */}
             <div 
-              className="relative bg-white/[0.03] md:bg-white/[0.02] md:backdrop-blur-xl border border-white/10 rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-lg md:shadow-2xl max-w-[94%] md:max-w-none mx-auto"
+              className="relative bg-white/[0.03] md:bg-white/[0.02] md:backdrop-blur-xl border border-white/10 rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-lg md:shadow-2xl max-w-[94%] md:max-w-none mx-auto aspect-[16/9] md:aspect-auto"
               onMouseMove={handleCardMouseMove}
               onMouseLeave={handleCardMouseLeave}
               style={{
@@ -182,8 +182,8 @@ Hazlo. Ahora. 🔥`
                 </div>
               </div>
 
-              {/* Messages */}
-              <div className="space-y-3 md:space-y-4 min-h-[280px] md:min-h-[400px]">
+              {/* Messages - scrollable on mobile */}
+              <div className="space-y-2 md:space-y-4 flex-1 overflow-y-auto min-h-0 md:min-h-[400px]">
                 {/* User message */}
                 <div className="flex justify-end">
                   <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 backdrop-blur-sm border border-purple-500/20 rounded-xl md:rounded-2xl rounded-tr-sm px-3 md:px-4 py-2 md:py-3 max-w-[88%]">

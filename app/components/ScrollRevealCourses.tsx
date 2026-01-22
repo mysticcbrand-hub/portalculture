@@ -438,18 +438,6 @@ export default function ScrollRevealCourses() {
 
                           {/* Main content - Bottom */}
                           <div className="space-y-4">
-                            {/* Tags */}
-                            <div className="flex flex-wrap gap-2">
-                              {course.tags.map((tag, idx) => (
-                                <span
-                                  key={idx}
-                                  className={`tag tag-${tag.variant} px-3 py-1.5 rounded-full text-xs font-bold border backdrop-blur-md`}
-                                >
-                                  {tag.text}
-                                </span>
-                              ))}
-                            </div>
-
                             <h3 className="text-3xl font-bold text-white leading-tight drop-shadow-lg">
                               {course.title}
                             </h3>
