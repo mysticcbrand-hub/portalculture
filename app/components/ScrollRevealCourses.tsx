@@ -369,12 +369,13 @@ export default function ScrollRevealCourses() {
                 }}
               >
                 {courses.map((course, index) => {
+                  // Use vertical images for mobile (uppercase filenames)
                   const bgImages: { [key: number]: string } = {
-                    1: '/atenas-bg.png',
-                    2: '/ares-bg.png', 
-                    3: '/apolo-bg.png',
-                    4: '/zeus-bg.png',
-                    5: '/adonis-bg.png'
+                    1: '/ATENAS_VERTICAL.png',
+                    2: '/ARES_VERTICAL.png', 
+                    3: '/APOLO_VERTICAL.png',
+                    4: '/ZEUS_VERTICAL.png',
+                    5: '/ADONIS_VERTICAL.png'
                   }
                   
                   return (
