@@ -79,9 +79,31 @@ export default function ScrollRevealCourses() {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
   
-  // Auto-advance like Instagram Stories (optional - only when not interacting)
+  // Detect when section is in viewport to auto-start stories
+  const [hasStarted, setHasStarted] = useState(false)
+  
   useEffect(() => {
-    if (!isMobile || isDragging || isPaused) return
+    if (!isMobile) return
+    
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasStarted) {
+          setHasStarted(true) // Start stories when scrolled into view
+        }
+      },
+      { threshold: 0.3 } // Start when 30% visible
+    )
+    
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+    
+    return () => observer.disconnect()
+  }, [isMobile, hasStarted])
+  
+  // Auto-advance like Instagram Stories (starts when section is visible)
+  useEffect(() => {
+    if (!isMobile || isDragging || isPaused || !hasStarted) return
     
     setProgressAnimation(0)
     const duration = 5000 // 5 seconds per story
@@ -111,7 +133,7 @@ export default function ScrollRevealCourses() {
         clearInterval(progressIntervalRef.current)
       }
     }
-  }, [isMobile, currentCourseIndex, isDragging, isPaused])
+  }, [isMobile, currentCourseIndex, isDragging, isPaused, hasStarted])
 
   useEffect(() => {
     const observerOptions = {
