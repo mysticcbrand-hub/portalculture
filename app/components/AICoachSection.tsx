@@ -139,9 +139,9 @@ Hazlo. Ahora. 🔥`
       <div className="relative z-10 max-w-7xl mx-auto w-full">
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-20 items-center">
           
-          {/* Left: Visual Element - Interactive Chat Preview */}
+          {/* Left: Visual Element - Interactive Chat Preview - HIDDEN ON MOBILE */}
           <div 
-            className={`relative transition-all duration-700 ${
+            className={`hidden lg:block relative transition-all duration-700 ${
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
