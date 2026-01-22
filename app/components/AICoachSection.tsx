@@ -137,7 +137,7 @@ Hazlo. Ahora. 🔥`
 
 
       <div className="relative z-10 max-w-7xl mx-auto w-full">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-20 items-center">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-20 items-center">
           
           {/* Left: Visual Element - Interactive Chat Preview */}
           <div 
