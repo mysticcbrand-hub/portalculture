@@ -137,11 +137,12 @@ Hazlo. Ahora. 🔥`
 
 
       <div className="relative z-10 max-w-7xl mx-auto w-full">
+        {/* Mobile: Column layout with content first, Desktop: Grid with chat on left */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-20 items-center">
           
-          {/* Chat Preview - Different layouts for mobile/desktop */}
+          {/* Chat Preview - Order 2 on mobile, order 1 on desktop */}
           <div 
-            className={`relative transition-all duration-700 ${
+            className={`order-2 lg:order-1 relative transition-all duration-700 ${
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
@@ -280,9 +281,9 @@ Hazlo. Ahora. 🔥`
             </div>
           </div>
 
-          {/* Right: Content */}
+          {/* Right: Content - Order 1 on mobile, order 2 on desktop */}
           <div 
-            className={`transition-all duration-1000 delay-300 ${
+            className={`order-1 lg:order-2 transition-all duration-1000 delay-300 ${
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}
           >

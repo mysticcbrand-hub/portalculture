@@ -308,7 +308,7 @@ export default function ScrollRevealCourses() {
   }
 
   return (
-    <section id="cursos" className="relative py-12 md:py-32 overflow-hidden">
+    <section id="cursos" className="relative py-12 md:py-32 overflow-hidden" ref={sectionRef}>
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-zinc-950 to-black" />
 
@@ -501,7 +501,7 @@ export default function ScrollRevealCourses() {
           </div>
         ) : (
           // Desktop: Vertical stack
-          <div className="space-y-6 md:space-y-40 max-w-4xl mx-auto px-1 md:px-0" ref={sectionRef}>
+          <div className="space-y-6 md:space-y-40 max-w-4xl mx-auto px-1 md:px-0">
             {courses.map((course, index) => {
             const pos = mousePositions[course.id] || { x: 0, y: 0, spotX: 50, spotY: 50 }
             const progress = scrollProgress[index] || 0
