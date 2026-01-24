@@ -13,9 +13,13 @@ export default function PagoExitoso() {
     const tickTimer = setTimeout(() => setShowTick(true), 400)
     const contentTimer = setTimeout(() => setShowContent(true), 800)
     
+    // Force default cursor on this page
+    document.body.style.cursor = 'auto'
+    
     return () => {
       clearTimeout(tickTimer)
       clearTimeout(contentTimer)
+      document.body.style.cursor = ''
     }
   }, [])
 
@@ -24,7 +28,7 @@ export default function PagoExitoso() {
   }
 
   return (
-    <main className="min-h-screen bg-black flex items-center justify-center px-6">
+    <main className="min-h-screen bg-black flex items-center justify-center px-6" style={{ cursor: 'auto' }}>
       {/* Subtle ambient glow */}
       <div 
         className="fixed inset-0 pointer-events-none"
@@ -144,6 +148,7 @@ export default function PagoExitoso() {
             text-base font-medium
             rounded-full
             overflow-hidden
+            cursor-pointer
             transition-all duration-500 ease-out
             hover:shadow-[0_0_40px_rgba(255,255,255,0.15)]
             active:scale-[0.98]
