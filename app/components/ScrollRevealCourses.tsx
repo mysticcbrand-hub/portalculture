@@ -58,7 +58,9 @@ export default function ScrollRevealCourses() {
   const cardsRef = useRef<(HTMLDivElement | null)[]>([])
   const sectionRef = useRef<HTMLDivElement>(null)
   const [mousePositions, setMousePositions] = useState<{ [key: number]: { x: number; y: number; spotX: number; spotY: number } }>({})
-  const [scrollProgress, setScrollProgress] = useState<{ [key: number]: number }>({})
+  
+  // Section visibility for smooth reveal
+  const [isVisible, setIsVisible] = useState(false)
   
   // Mobile Stories-style carousel state
   const [isMobile, setIsMobile] = useState(false)
@@ -79,19 +81,20 @@ export default function ScrollRevealCourses() {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
   
-  // Detect when section is in viewport to auto-start stories
+  // Detect when section is in viewport - for both reveal AND auto-start stories
   const [hasStarted, setHasStarted] = useState(false)
   
   useEffect(() => {
-    if (!isMobile) return
-    
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !hasStarted) {
-          setHasStarted(true) // Start stories when scrolled into view
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          if (isMobile && !hasStarted) {
+            setHasStarted(true) // Start stories when scrolled into view
+          }
         }
       },
-      { threshold: 0.3 } // Start when 30% visible
+      { threshold: 0.15 }
     )
     
     if (sectionRef.current) {
@@ -135,12 +138,10 @@ export default function ScrollRevealCourses() {
     }
   }, [isMobile, currentCourseIndex, isDragging, isPaused, hasStarted])
 
+  // Individual card reveal with stagger effect (desktop only)
   useEffect(() => {
-    const observerOptions = {
-      threshold: 0.2,
-      rootMargin: '-50px',
-    }
-
+    if (isMobile) return
+    
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -149,7 +150,10 @@ export default function ScrollRevealCourses() {
       })
     }
 
-    const observer = new IntersectionObserver(observerCallback, observerOptions)
+    const observer = new IntersectionObserver(observerCallback, {
+      threshold: 0.2,
+      rootMargin: '-50px',
+    })
 
     cardsRef.current.forEach((card) => {
       if (card) observer.observe(card)
@@ -160,49 +164,7 @@ export default function ScrollRevealCourses() {
         if (card) observer.unobserve(card)
       })
     }
-  }, [])
-
-  // Scroll-driven animations - OPTIMIZED for mobile
-  useEffect(() => {
-    let ticking = false
-    const isMobile = window.matchMedia('(max-width: 768px)').matches
-
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          cardsRef.current.forEach((card, index) => {
-            if (!card) return
-
-            const rect = card.getBoundingClientRect()
-            const windowHeight = window.innerHeight
-            const cardCenter = rect.top + rect.height / 2
-            const windowCenter = windowHeight / 2
-
-            // Calculate progress: -1 (top of screen) to 1 (bottom of screen)
-            // On mobile, reduce the effect intensity
-            const rawProgress = (cardCenter - windowCenter) / windowCenter
-            const progress = isMobile ? rawProgress * 0.3 : rawProgress // Reduce effect on mobile
-            
-            // Only animate when card is in viewport
-            if (rect.top < windowHeight && rect.bottom > 0) {
-              setScrollProgress(prev => ({
-                ...prev,
-                [index]: progress
-              }))
-            }
-          })
-          
-          ticking = false
-        })
-        ticking = true
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll() // Initial call
-    
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [isMobile])
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, courseId: number) => {
     // Skip 3D effect on mobile/touch devices for better performance
@@ -312,9 +274,9 @@ export default function ScrollRevealCourses() {
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-zinc-950 to-black" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-5 md:px-6">
+      <div className={`relative z-10 max-w-7xl mx-auto px-5 md:px-6 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         {/* Section Header */}
-        <div className="text-center mb-8 md:mb-32">
+        <div className={`text-center mb-8 md:mb-32 transition-all duration-700 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
           <span className="font-mono text-[10px] md:text-xs tracking-wider text-white/30 mb-2 md:mb-3 block">/ 03</span>
           <h2 className="text-[clamp(1.6rem,5vw,5rem)] font-bold leading-[1.1] mb-2 md:mb-6">
             <span
@@ -334,7 +296,7 @@ export default function ScrollRevealCourses() {
 
         {/* Mobile: Instagram Stories-style Carousel - Desktop: Vertical Stack */}
         {isMobile ? (
-          <div className="relative mb-8 px-4">
+          <div className={`relative mb-8 px-4 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             {/* Stories Progress Bars - Top */}
             <div className="flex gap-1.5 mb-5">
               {courses.map((_, index) => (
@@ -500,21 +462,10 @@ export default function ScrollRevealCourses() {
             </div>
           </div>
         ) : (
-          // Desktop: Vertical stack
-          <div className="space-y-6 md:space-y-40 max-w-4xl mx-auto px-1 md:px-0">
+          // Desktop: Vertical stack with smooth reveal
+          <div className={`space-y-6 md:space-y-40 max-w-4xl mx-auto px-1 md:px-0 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             {courses.map((course, index) => {
             const pos = mousePositions[course.id] || { x: 0, y: 0, spotX: 50, spotY: 50 }
-            const progress = scrollProgress[index] || 0
-            
-            // Check if mobile for simpler transforms
-            const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768
-            
-            // Calculate scroll-driven transforms - SIMPLIFIED for mobile
-            const scrollScale = isMobileView ? 1 : 1 - Math.abs(progress) * 0.05
-            const scrollOpacity = isMobileView ? 1 : 1 - Math.abs(progress) * 0.2
-            const scrollBlur = isMobileView ? 0 : (Math.abs(progress) > 0.5 ? Math.abs(progress) * 1.5 : 0)
-            const scrollY = isMobileView ? 0 : progress * 30
-            const scrollRotateX = isMobileView ? 0 : progress * -3
 
             return (
               <div
@@ -526,14 +477,11 @@ export default function ScrollRevealCourses() {
                 onMouseMove={(e) => handleMouseMove(e, course.id)}
                 onMouseLeave={() => handleMouseLeave(course.id)}
                 style={{
-                  transform: isMobileView 
-                    ? 'none' 
-                    : `perspective(1000px) rotateX(${pos.x + scrollRotateX}deg) rotateY(${pos.y}deg) scale3d(${scrollScale}, ${scrollScale}, 1) translateY(${scrollY}px) translateZ(0)`,
-                  opacity: scrollOpacity,
-                  filter: scrollBlur > 0 ? `blur(${scrollBlur}px)` : 'none',
                   // @ts-ignore
                   '--spot-x': `${pos.spotX}%`,
                   '--spot-y': `${pos.spotY}%`,
+                  // Stagger delay for each card
+                  transitionDelay: `${300 + index * 100}ms`,
                 }}
               >
                 {/* Backdrop blur card */}
@@ -622,26 +570,19 @@ export default function ScrollRevealCourses() {
       <style jsx>{`
         .course-card {
           opacity: 0;
-          transform: translateY(30px);
-          transition: none;
+          transform: translateY(40px);
+          transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
           will-change: transform, opacity;
         }
 
         .course-card.visible {
           opacity: 1;
           transform: translateY(0);
-          transition: opacity 0.5s ease-out, transform 0.5s ease-out;
         }
         
         @media (min-width: 768px) {
-          .course-card {
-            transform: perspective(1000px) translateY(60px) rotateX(-15deg);
-            backface-visibility: hidden;
-          }
-          
-          .course-card.visible {
-            transform: perspective(1000px) translateY(0) rotateX(0deg);
-            transition: opacity 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+          .course-card:hover > div {
+            transform: perspective(1000px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg));
           }
         }
 

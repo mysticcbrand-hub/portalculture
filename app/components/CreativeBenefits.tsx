@@ -61,6 +61,9 @@ export default function CreativeBenefits() {
   const cardsRef = useRef<(HTMLDivElement | null)[]>([])
   const sectionRef = useRef<HTMLDivElement>(null)
   
+  // Section visibility for smooth reveal
+  const [isVisible, setIsVisible] = useState(false)
+  
   // Mobile smooth carousel state
   const [isMobile, setIsMobile] = useState(false)
   const [currentCardIndex, setCurrentCardIndex] = useState(0)
@@ -76,6 +79,24 @@ export default function CreativeBenefits() {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
+  // Smooth reveal on scroll into view (like AICoachSection)
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      { threshold: 0.15 }
+    )
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [])
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({
@@ -86,55 +107,6 @@ export default function CreativeBenefits() {
 
     window.addEventListener('mousemove', handleMouseMove)
     return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
-
-  // Swoosh up animation estilo Apple - OPTIMIZED for mobile
-  useEffect(() => {
-    // Check if mobile for simpler animations
-    const isMobile = window.matchMedia('(max-width: 768px)').matches
-    
-    const handleScroll = () => {
-      cardsRef.current.forEach((card, index) => {
-        if (!card) return
-
-        const cardRect = card.getBoundingClientRect()
-        const windowHeight = window.innerHeight
-        const cardTop = cardRect.top
-
-        // Calcular cuando la card entra en vista desde abajo
-        const triggerPoint = windowHeight * 0.85 // Start earlier for smoother entrance
-        const progress = Math.max(0, Math.min(1, (cardTop - triggerPoint) / (windowHeight * 0.25)))
-
-        if (cardTop < windowHeight && cardTop > -cardRect.height) {
-          if (isMobile) {
-            // MOBILE: Simple fade + subtle translateY only (no blur, no scale - smoother)
-            const translateY = progress * 30 // Less movement on mobile
-            const opacity = 1 - progress * 0.6
-
-            card.style.transform = `translateY(${translateY}px)`
-            card.style.opacity = opacity.toString()
-            card.style.filter = 'none' // No blur on mobile - causes jank
-            card.style.transition = 'transform 0.4s ease-out, opacity 0.4s ease-out'
-          } else {
-            // DESKTOP: Full effect
-            const translateY = progress * 50
-            const opacity = 1 - progress * 0.7
-            const blur = progress * 4 // Reduced blur
-            const scale = 0.97 + (1 - progress) * 0.03
-
-            card.style.transform = `translateY(${translateY}px) scale(${scale})`
-            card.style.opacity = opacity.toString()
-            card.style.filter = `blur(${blur}px)`
-            card.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease-out, filter 0.5s ease-out'
-          }
-        }
-      })
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll() // Call inicial
-
-    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>, index: number) => {
@@ -232,9 +204,9 @@ export default function CreativeBenefits() {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className={`max-w-7xl mx-auto relative z-10 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         {/* Header */}
-        <div className="text-center mb-16 md:mb-20 relative">
+        <div className={`text-center mb-16 md:mb-20 relative transition-all duration-700 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
           <p className="text-[10px] md:text-xs font-mono text-white/30 tracking-wider mb-3 md:mb-4">/ 02 BENEFICIOS</p>
           <h2 className="text-2xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent px-4">
             Dentro de Portal Culture
@@ -281,7 +253,7 @@ export default function CreativeBenefits() {
 
         {/* Mobile: Elegant Swipe Carousel - Desktop: Grid */}
         {isMobile ? (
-          <div className="relative mb-8 px-4">
+          <div className={`relative mb-8 px-4 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             {/* Progress bars - Top (like Stories) */}
             <div className="flex gap-1.5 mb-5">
               {benefits.map((_, index) => (
@@ -453,7 +425,7 @@ export default function CreativeBenefits() {
           </div>
         ) : (
           // Desktop Grid
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12 max-w-[92%] md:max-w-none mx-auto">
+          <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12 max-w-[92%] md:max-w-none mx-auto transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             {benefits.map((benefit, index) => {
               const rotation = cardRotations[index] || { x: 0, y: 0 }
               
