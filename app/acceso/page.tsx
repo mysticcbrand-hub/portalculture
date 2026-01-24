@@ -14,7 +14,7 @@ export default function AccesoPage() {
   }
 
   const handleFastPass = () => {
-    window.open('https://whop.com/portalculture/acceso-inmediato/', '_blank')
+    window.open('https://whop.com/checkout/plan_2juGEWOZ7uBGM', '_blank')
   }
 
   return (
