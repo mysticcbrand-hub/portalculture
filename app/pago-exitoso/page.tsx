@@ -24,7 +24,7 @@ export default function PagoExitoso() {
   }, [])
 
   const handleContinue = () => {
-    window.location.href = 'https://app-portalculture.vercel.app/login'
+    window.location.href = 'https://app-portalculture.vercel.app'
   }
 
   return (
