@@ -69,6 +69,8 @@ export default function CreativeBenefits() {
   const [currentCardIndex, setCurrentCardIndex] = useState(0)
   const [dragState, setDragState] = useState({ x: 0, y: 0, startX: 0, startY: 0 })
   const [isDragging, setIsDragging] = useState(false)
+  const [isHorizontalSwipe, setIsHorizontalSwipe] = useState(false)
+  const carouselRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -137,11 +139,12 @@ export default function CreativeBenefits() {
     }))
   }
 
-  // Smooth swipe handlers - addictive and elegant
+  // Smooth swipe handlers with proper vertical scroll lock
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!isMobile) return
     const touch = e.touches[0]
     setIsDragging(true)
+    setIsHorizontalSwipe(false)
     setDragState({
       x: 0,
       y: 0,
@@ -156,38 +159,47 @@ export default function CreativeBenefits() {
     const deltaX = touch.clientX - dragState.startX
     const deltaY = touch.clientY - dragState.startY
     
-    // Only lock vertical scroll if clearly swiping horizontally (threshold increased)
-    if (Math.abs(deltaX) > 15 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
-      e.preventDefault() // Prevent vertical scroll only when clearly horizontal
+    // Determine swipe direction on first significant movement
+    if (!isHorizontalSwipe && (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10)) {
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal swipe detected - lock it in
+        setIsHorizontalSwipe(true)
+      }
     }
     
-    setDragState(prev => ({ ...prev, x: deltaX, y: deltaY }))
+    // If horizontal swipe, prevent vertical scroll and update drag
+    if (isHorizontalSwipe || (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 5)) {
+      e.preventDefault()
+      e.stopPropagation()
+      setDragState(prev => ({ ...prev, x: deltaX, y: deltaY }))
+    }
   }
 
   const handleTouchEnd = () => {
     if (!isMobile) return
-    setIsDragging(false)
     
-    const threshold = 80 // Lower threshold for smoother feel
+    const threshold = 50 // Responsive threshold
     
-    if (dragState.x < -threshold) {
-      // Swipe left - next (with loop)
-      if (currentCardIndex < benefits.length - 1) {
-        setCurrentCardIndex(prev => prev + 1)
-      } else {
-        // Loop back to first
-        setCurrentCardIndex(0)
-      }
-    } else if (dragState.x > threshold) {
-      // Swipe right - previous (with loop)
-      if (currentCardIndex > 0) {
-        setCurrentCardIndex(prev => prev - 1)
-      } else {
-        // Loop to last
-        setCurrentCardIndex(benefits.length - 1)
+    if (isHorizontalSwipe || Math.abs(dragState.x) > threshold) {
+      if (dragState.x < -threshold) {
+        // Swipe left - next (with loop)
+        if (currentCardIndex < benefits.length - 1) {
+          setCurrentCardIndex(prev => prev + 1)
+        } else {
+          setCurrentCardIndex(0)
+        }
+      } else if (dragState.x > threshold) {
+        // Swipe right - previous (with loop)
+        if (currentCardIndex > 0) {
+          setCurrentCardIndex(prev => prev - 1)
+        } else {
+          setCurrentCardIndex(benefits.length - 1)
+        }
       }
     }
     
+    setIsDragging(false)
+    setIsHorizontalSwipe(false)
     setDragState({ x: 0, y: 0, startX: 0, startY: 0 })
   }
 
@@ -274,15 +286,16 @@ export default function CreativeBenefits() {
 
             {/* Swipeable Card - with proper overflow handling */}
             <div 
+              ref={carouselRef}
               className="relative h-[420px] rounded-3xl overflow-hidden bg-black/20"
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
               style={{
-                // Ensure nothing bleeds outside - extra padding
                 clipPath: 'inset(0 0 0 0 round 1.5rem)',
                 WebkitMaskImage: '-webkit-radial-gradient(white, black)',
-                touchAction: 'pan-y pan-x', // Allow both directions, preventDefault handles the lock
+                // Lock vertical scroll when horizontal swipe is detected
+                touchAction: isHorizontalSwipe ? 'pan-x' : 'pan-y',
               }}
             >
               {/* Cards container with 3D perspective */}
