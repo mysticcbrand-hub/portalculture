@@ -243,7 +243,7 @@ export default function HeroPremium() {
           >
             {/* Primary CTA - with 3D effect */}
             <a
-              href="/acceso"
+              href="https://app-portalculture.vercel.app"
               className="
                 group relative
                 inline-flex items-center gap-2.5

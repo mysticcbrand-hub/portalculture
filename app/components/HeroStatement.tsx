@@ -244,7 +244,7 @@ export default function HeroStatement() {
             
             {/* CTA Premium */}
             <a
-              href="/acceso"
+              href="https://app-portalculture.vercel.app"
               className="group relative inline-flex items-center gap-3 px-8 md:px-10 py-4 md:py-5 rounded-full overflow-hidden text-black font-semibold text-sm md:text-base tracking-wide transition-all duration-500 hover:scale-[1.03] active:scale-[0.98]"
               style={{
                 background: 'linear-gradient(135deg, #ffffff 0%, #e8e8e8 100%)',

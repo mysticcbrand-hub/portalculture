@@ -531,7 +531,7 @@ export default function AvatarComparison() {
               No es solo acceso. Es tener personas que entienden tu lucha, te empujan cuando flaqueas y celebran tus victorias.
             </p>
             <a
-              href="/acceso"
+              href="https://app-portalculture.vercel.app"
               className="inline-flex items-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 text-sm md:text-base font-semibold 
                        bg-white/5 border border-white/20 rounded-full text-white 
                        transition-all duration-500 hover:scale-105 hover:-translate-y-1 hover:border-white/40 hover:bg-white/10"

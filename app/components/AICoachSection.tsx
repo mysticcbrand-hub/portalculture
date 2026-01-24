@@ -328,7 +328,7 @@ Hazlo. Ahora. 🔥`
 
             {/* CTA */}
             <a
-              href="/acceso"
+              href="https://app-portalculture.vercel.app"
               className="group relative inline-flex items-center gap-3 px-8 py-4 text-base font-medium overflow-hidden rounded-full
                        bg-white/5 border border-white/10 hover:border-white/20
                        transition-all duration-500 hover:scale-[1.02]"

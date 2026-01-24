@@ -46,7 +46,7 @@ export default function CreativeCTA({ onCtaClick }: CreativeCTAProps) {
 
         {/* CTA Button - Large and Prominent */}
         <a
-          href="/acceso"
+          href="https://app-portalculture.vercel.app"
           className="group relative px-8 md:px-12 py-4 md:py-6 text-base md:text-xl font-medium rounded-full
                    border-2 border-white/30 hover:border-white/50
                    transition-all duration-700

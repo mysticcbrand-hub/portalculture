@@ -106,7 +106,7 @@ export default function Hero() {
             }}
           >
             <a
-              href="/acceso"
+              href="https://app-portalculture.vercel.app"
               className="group inline-flex items-center gap-3 px-8 py-4 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm text-white text-sm font-medium tracking-wide transition-all duration-300 hover:bg-white/10 hover:border-white/30 hover:scale-[1.02]"
             >
               <span>Solicitar Acceso</span>
