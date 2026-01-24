@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import haptics from '@/lib/haptics'
 
 interface Course {
   id: number
@@ -284,11 +285,13 @@ export default function ScrollRevealCourses() {
     const threshold = 50
     
     if (wasHorizontal && Math.abs(dragOffset) > threshold) {
+      haptics.swipe() // Premium haptic feedback on story change
       if (dragOffset < -threshold) {
         if (currentCourseIndex < courses.length - 1) {
           setCurrentCourseIndex(prev => prev + 1)
         } else {
           setCurrentCourseIndex(0)
+          haptics.snap() // Extra feedback when looping
         }
         setProgressAnimation(0)
       } else if (dragOffset > threshold) {
@@ -296,6 +299,7 @@ export default function ScrollRevealCourses() {
           setCurrentCourseIndex(prev => prev - 1)
         } else {
           setCurrentCourseIndex(courses.length - 1)
+          haptics.snap() // Extra feedback when looping
         }
         setProgressAnimation(0)
       }

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
+import { hapticImpact, hapticSelection } from '@/lib/haptics'
 
 interface CardRotation {
   [key: number]: { x: number; y: number }

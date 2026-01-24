@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
+import haptics from '@/lib/haptics'
 
 const benefits = [
   {
@@ -187,12 +188,14 @@ export default function CreativeBenefits() {
     const wasHorizontal = swipeDirectionRef.current === 'horizontal'
     
     if (wasHorizontal && Math.abs(dragState.x) > threshold) {
+      haptics.swipe() // Premium haptic feedback on card change
       if (dragState.x < -threshold) {
         // Swipe left - next (with loop)
         if (currentCardIndex < benefits.length - 1) {
           setCurrentCardIndex(prev => prev + 1)
         } else {
           setCurrentCardIndex(0)
+          haptics.snap() // Extra feedback when looping back
         }
       } else if (dragState.x > threshold) {
         // Swipe right - previous (with loop)

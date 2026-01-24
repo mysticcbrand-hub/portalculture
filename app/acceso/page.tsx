@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
+import haptics from '@/lib/haptics'
 
 const CustomCursor = dynamic(() => import('../components/CustomCursor'), { ssr: false })
 
@@ -10,11 +11,21 @@ export default function AccesoPage() {
   const [hoveredOption, setHoveredOption] = useState<number | null>(null)
 
   const handleWaitlist = () => {
+    haptics.buttonPress() // Medium impact for secondary action
     window.location.href = 'https://app-portalculture.vercel.app'
   }
 
   const handleFastPass = () => {
+    haptics.buttonPrimary() // Heavy impact for primary CTA (purchase)
     window.open('https://whop.com/checkout/plan_2juGEWOZ7uBGM', '_blank')
+  }
+
+  // Card hover haptic - light tap when entering a card
+  const handleCardHover = (option: number) => {
+    if (hoveredOption !== option) {
+      haptics.glassTap() // Light tap for glass surface interaction
+    }
+    setHoveredOption(option)
   }
 
   return (
@@ -116,9 +127,10 @@ export default function AccesoPage() {
           
           {/* Option 1: Acceso Inmediato (Pago) */}
           <div
-            onMouseEnter={() => setHoveredOption(1)}
+            onMouseEnter={() => handleCardHover(1)}
+            onTouchStart={() => handleCardHover(1)}
             onMouseLeave={() => setHoveredOption(null)}
-            className="order-1 group relative backdrop-blur-xl bg-white/5 border border-white/20 rounded-2xl lg:rounded-3xl p-4 lg:p-10 transition-all duration-500 hover:bg-white/8 hover:border-white/30 hover:scale-[1.01] lg:hover:scale-105"
+            className="order-1 group relative liquid-glass-card p-4 lg:p-10"
           >
             {/* Header - Horizontal layout on mobile */}
             <div className="flex items-start justify-between gap-4 mb-3 lg:mb-6">
@@ -165,9 +177,11 @@ export default function AccesoPage() {
             {/* CTA */}
             <button
               onClick={handleFastPass}
-              className="w-full px-5 py-3 lg:px-8 lg:py-4 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black text-sm lg:text-base font-bold rounded-xl transition-all duration-300 active:scale-95 lg:hover:scale-105"
+              className="relative w-full px-5 py-3 lg:px-8 lg:py-4 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black text-sm lg:text-base font-bold rounded-xl transition-all duration-300 active:scale-95 lg:hover:scale-105 overflow-hidden"
             >
-              Acceder Ya →
+              <span className="relative z-10">Acceder Ya →</span>
+              {/* Shimmer effect */}
+              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
             </button>
             
             <p className="text-xs lg:text-sm text-center mt-3 lg:mt-4">
@@ -177,12 +191,11 @@ export default function AccesoPage() {
 
           {/* Option 2: Waitlist (Gratis) */}
           <div
-            onMouseEnter={() => setHoveredOption(2)}
+            onMouseEnter={() => handleCardHover(2)}
+            onTouchStart={() => handleCardHover(2)}
             onMouseLeave={() => setHoveredOption(null)}
-            className="order-2 group relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl lg:rounded-3xl p-4 lg:p-10 transition-all duration-500 hover:bg-white/8 hover:border-white/20 hover:scale-[1.01] lg:hover:scale-105"
+            className="order-2 group relative liquid-glass-card p-4 lg:p-10"
           >
-            {/* Glow effect - desktop only */}
-            <div className="hidden lg:block absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-2xl" />
 
             {/* Header - Horizontal layout on mobile */}
             <div className="flex items-start justify-between gap-4 mb-3 lg:mb-6">
@@ -228,7 +241,7 @@ export default function AccesoPage() {
 
             <button
               onClick={handleWaitlist}
-              className="w-full px-5 py-3 lg:px-8 lg:py-4 bg-white/10 hover:bg-white/15 text-white text-sm lg:text-base font-semibold rounded-xl transition-all duration-300 border border-white/20 hover:border-white/30 active:scale-95"
+              className="liquid-glass-button w-full text-sm lg:text-base font-semibold"
             >
               Unirse a la Lista
             </button>

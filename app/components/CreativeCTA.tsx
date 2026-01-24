@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import haptics from '@/lib/haptics'
 
 interface CreativeCTAProps {
   onCtaClick: () => void
@@ -20,6 +21,10 @@ export default function CreativeCTA({ onCtaClick }: CreativeCTAProps) {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  const handleCtaClick = () => {
+    haptics.buttonPrimary() // Heavy impact for main CTA
+  }
 
   return (
     <section className="relative min-h-[80vh] md:min-h-screen flex items-center justify-center px-5 md:px-6 py-20 md:py-40">
@@ -44,34 +49,20 @@ export default function CreativeCTA({ onCtaClick }: CreativeCTAProps) {
           <span className="text-white">Construid juntos.</span>
         </p>
 
-        {/* CTA Button - Large and Prominent */}
+        {/* CTA Button - Liquid Glass Primary */}
         <a
           href="https://app-portalculture.vercel.app"
-          className="group relative px-8 md:px-12 py-4 md:py-6 text-base md:text-xl font-medium rounded-full
-                   border-2 border-white/30 hover:border-white/50
-                   transition-all duration-700
-                   hover:scale-105 inline-block
-                   shadow-[0_0_20px_rgba(255,255,255,0.08)]
-                   hover:shadow-[0_0_40px_rgba(255,255,255,0.2),0_0_60px_rgba(220,220,220,0.15),inset_0_1px_0_rgba(255,255,255,0.3)]"
+          onClick={handleCtaClick}
+          onTouchStart={handleCtaClick}
+          className="liquid-glass-primary inline-block px-8 md:px-12 py-4 md:py-6 text-base md:text-xl font-medium rounded-full"
         >
           <span className="relative z-10">Solicitar Acceso Ahora</span>
-          
-          {/* Animated Chrome Background - Subtle */}
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-white/10 via-gray-100/12 to-white/10
-                        opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          
-          {/* Chrome Glow Effect - Elegant - Hidden on mobile for performance */}
-          <div className="hidden md:block absolute inset-0 rounded-full blur-2xl bg-white/20 
-                        opacity-0 group-hover:opacity-50 transition-opacity duration-700 -z-10 scale-125" />
         </a>
 
         {/* Sub Info */}
         <div className="mt-8 md:mt-12 flex flex-wrap items-center justify-center gap-3 md:gap-6 text-xs md:text-sm font-mono">
-          <span className="text-red-400 font-semibold">⚡ PLAZAS LIMITADAS</span>
-          <span className="text-white/40 hidden md:inline">·</span>
-          <span className="text-yellow-400 font-semibold">Precio sube pronto</span>
-          <span className="text-white/40 hidden md:inline">·</span>
-          <span className="text-white/40 hidden md:inline">Asegura tu plaza</span>
+          <span className="liquid-glass-chip text-red-400 font-semibold">⚡ PLAZAS LIMITADAS</span>
+          <span className="liquid-glass-chip text-yellow-400 font-semibold">Precio sube pronto</span>
         </div>
       </div>
     </section>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
+import { hapticImpact } from '@/lib/haptics'
 
 export default function HeroPremium() {
   const [mounted, setMounted] = useState(false)
@@ -258,6 +259,7 @@ export default function HeroPremium() {
                 overflow-hidden
               "
               style={{ perspective: '500px' }}
+              onClick={() => hapticImpact('heavy')}
               onMouseMove={(e) => {
                 // Skip 3D effect on mobile (touch devices)
                 if (window.matchMedia('(hover: none)').matches) return
