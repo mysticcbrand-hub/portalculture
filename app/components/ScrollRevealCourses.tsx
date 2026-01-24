@@ -58,6 +58,7 @@ export default function ScrollRevealCourses() {
   const cardsRef = useRef<(HTMLDivElement | null)[]>([])
   const sectionRef = useRef<HTMLDivElement>(null)
   const [mousePositions, setMousePositions] = useState<{ [key: number]: { x: number; y: number; spotX: number; spotY: number } }>({})
+  const [scrollProgress, setScrollProgress] = useState<{ [key: number]: number }>({})
   
   // Section visibility for smooth reveal
   const [isVisible, setIsVisible] = useState(false)
@@ -164,6 +165,47 @@ export default function ScrollRevealCourses() {
         if (card) observer.unobserve(card)
       })
     }
+  }, [isMobile])
+
+  // Scroll-driven animations (desktop only)
+  useEffect(() => {
+    if (isMobile) return
+    
+    let ticking = false
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          cardsRef.current.forEach((card, index) => {
+            if (!card) return
+
+            const rect = card.getBoundingClientRect()
+            const windowHeight = window.innerHeight
+            const cardCenter = rect.top + rect.height / 2
+            const windowCenter = windowHeight / 2
+
+            // Calculate progress: -1 (top of screen) to 1 (bottom of screen)
+            const progress = (cardCenter - windowCenter) / windowCenter
+            
+            // Only animate when card is in viewport
+            if (rect.top < windowHeight && rect.bottom > 0) {
+              setScrollProgress(prev => ({
+                ...prev,
+                [index]: progress
+              }))
+            }
+          })
+          
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll() // Initial call
+    
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [isMobile])
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, courseId: number) => {
@@ -462,10 +504,18 @@ export default function ScrollRevealCourses() {
             </div>
           </div>
         ) : (
-          // Desktop: Vertical stack with smooth reveal
-          <div className={`space-y-6 md:space-y-40 max-w-4xl mx-auto px-1 md:px-0 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+          // Desktop: Vertical stack with scroll-driven 3D animations
+          <div className="space-y-32 md:space-y-40 max-w-4xl mx-auto">
             {courses.map((course, index) => {
             const pos = mousePositions[course.id] || { x: 0, y: 0, spotX: 50, spotY: 50 }
+            const progress = scrollProgress[index] || 0
+            
+            // Calculate scroll-driven transforms
+            const scrollScale = 1 - Math.abs(progress) * 0.05 // Scale down as it moves away from center
+            const scrollOpacity = 1 - Math.abs(progress) * 0.2 // Fade as it moves away (reduced)
+            const scrollBlur = Math.abs(progress) > 0.5 ? Math.abs(progress) * 1.5 : 0 // Blur only when far (max 1.5px)
+            const scrollY = progress * 30 // Subtle parallax
+            const scrollRotateX = progress * -3 // Perspective rotation based on scroll
 
             return (
               <div
@@ -477,11 +527,12 @@ export default function ScrollRevealCourses() {
                 onMouseMove={(e) => handleMouseMove(e, course.id)}
                 onMouseLeave={() => handleMouseLeave(course.id)}
                 style={{
+                  transform: `perspective(1000px) rotateX(${pos.x + scrollRotateX}deg) rotateY(${pos.y}deg) scale3d(${scrollScale}, ${scrollScale}, 1) translateY(${scrollY}px) translateZ(0)`,
+                  opacity: scrollOpacity,
+                  filter: `blur(${scrollBlur}px)`,
                   // @ts-ignore
                   '--spot-x': `${pos.spotX}%`,
                   '--spot-y': `${pos.spotY}%`,
-                  // Stagger delay for each card
-                  transitionDelay: `${300 + index * 100}ms`,
                 }}
               >
                 {/* Backdrop blur card */}
@@ -570,20 +621,16 @@ export default function ScrollRevealCourses() {
       <style jsx>{`
         .course-card {
           opacity: 0;
-          transform: translateY(40px);
-          transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+          transform: perspective(1000px) translateY(60px) rotateX(-15deg);
+          transition: none;
           will-change: transform, opacity;
+          backface-visibility: hidden;
         }
 
         .course-card.visible {
           opacity: 1;
-          transform: translateY(0);
-        }
-        
-        @media (min-width: 768px) {
-          .course-card:hover > div {
-            transform: perspective(1000px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg));
-          }
+          transform: perspective(1000px) translateY(0) rotateX(0deg);
+          transition: opacity 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .course-card > div {
