@@ -10,7 +10,7 @@ export default function AccesoPage() {
   const [hoveredOption, setHoveredOption] = useState<number | null>(null)
 
   const handleWaitlist = () => {
-    window.open('https://whop.com/checkout/plan_2kXdGgagLpw4A', '_blank')
+    window.location.href = 'https://app-portalculture.vercel.app'
   }
 
   const handleFastPass = () => {
