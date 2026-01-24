@@ -11,6 +11,22 @@ export default function AvatarComparison() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [cardRotations, setCardRotations] = useState<CardRotation>({})
+  
+  // Mobile swipe state
+  const [isMobile, setIsMobile] = useState(false)
+  const [currentCard, setCurrentCard] = useState(0) // 0 = ANTES, 1 = DESPUÉS
+  const [dragOffset, setDragOffset] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const [startX, setStartX] = useState(0)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -53,6 +69,41 @@ export default function AvatarComparison() {
       ...prev,
       [cardId]: { x: 0, y: 0 }
     }))
+  }
+
+  // Mobile swipe handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!isMobile) return
+    setIsDragging(true)
+    setStartX(e.touches[0].clientX)
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || !isMobile) return
+    const currentX = e.touches[0].clientX
+    const diff = currentX - startX
+    
+    // Only prevent if horizontal swipe
+    if (Math.abs(diff) > 20) {
+      e.preventDefault()
+    }
+    
+    setDragOffset(diff)
+  }
+
+  const handleTouchEnd = () => {
+    if (!isMobile) return
+    setIsDragging(false)
+    
+    const threshold = 80
+    
+    if (dragOffset < -threshold && currentCard === 0) {
+      setCurrentCard(1) // ANTES -> DESPUÉS
+    } else if (dragOffset > threshold && currentCard === 1) {
+      setCurrentCard(0) // DESPUÉS -> ANTES
+    }
+    
+    setDragOffset(0)
   }
 
   const stats = {
@@ -112,8 +163,190 @@ export default function AvatarComparison() {
           </p>
         </div>
 
-        {/* Comparison Grid - Square Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 mb-10 md:mb-20 max-w-[95%] md:max-w-none mx-auto">
+        {/* Mobile: Swipeable Story-style - Desktop: Grid */}
+        {isMobile ? (
+          <div className="mb-10 px-4">
+            {/* Progress indicator */}
+            <div className="flex gap-2 mb-6">
+              <button
+                onClick={() => setCurrentCard(0)}
+                className={`flex-1 h-1 rounded-full transition-all duration-300 ${
+                  currentCard === 0 ? 'bg-red-400' : 'bg-white/20'
+                }`}
+              />
+              <button
+                onClick={() => setCurrentCard(1)}
+                className={`flex-1 h-1 rounded-full transition-all duration-300 ${
+                  currentCard === 1 ? 'bg-green-400' : 'bg-white/20'
+                }`}
+              />
+            </div>
+
+            {/* Swipeable card container */}
+            <div 
+              className="relative h-[520px] rounded-3xl overflow-hidden"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              style={{
+                clipPath: 'inset(0 0 0 0 round 1.5rem)',
+                touchAction: 'pan-y pan-x',
+              }}
+            >
+              <div 
+                className="flex h-full"
+                style={{
+                  transform: `translateX(calc(-${currentCard * 100}% + ${isDragging ? dragOffset : 0}px))`,
+                  transition: isDragging ? 'none' : 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                }}
+              >
+                {/* ANTES Card - Mobile */}
+                <div className="w-full h-full flex-shrink-0 px-1">
+                  <div className="relative w-full h-full rounded-3xl overflow-hidden border border-red-500/20 bg-gradient-to-br from-red-500/5 to-black shadow-2xl">
+                    {/* Background image */}
+                    <div className="absolute inset-0 -z-10">
+                      <img
+                        src="/avatars/triste.png"
+                        alt="Antes"
+                        className="w-full h-full object-cover"
+                        style={{ 
+                          filter: 'grayscale(100%) brightness(0.4)',
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/40" />
+                    </div>
+
+                    {/* Content */}
+                    <div className="relative h-full flex flex-col p-7">
+                      {/* Badge */}
+                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/20 border border-red-500/30 backdrop-blur-md w-fit">
+                        <span className="text-2xl">😔</span>
+                        <span className="text-sm font-bold text-red-400 tracking-wider">ANTES</span>
+                      </div>
+
+                      <div className="flex-1" />
+
+                      {/* Title */}
+                      <h3 className="text-4xl font-black text-white mb-4 leading-tight">
+                        Solo.<br />Sin rumbo.
+                      </h3>
+
+                      {/* Stats */}
+                      <div className="space-y-3 mb-6">
+                        {stats.before.map((stat, idx) => (
+                          <div key={idx}>
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-sm text-white/70 font-medium">{stat.label}</span>
+                              <span className="text-sm font-mono text-red-400 font-bold">{stat.value}%</span>
+                            </div>
+                            <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                              <div 
+                                className={`h-full bg-gradient-to-r ${stat.color} rounded-full transition-all duration-1000 ease-out`}
+                                style={{ 
+                                  width: isVisible ? `${stat.value}%` : '0%',
+                                  transitionDelay: `${idx * 100}ms`
+                                }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Footer */}
+                      <p className="text-xs text-white/40 text-center py-3 border-t border-white/10">
+                        Sin apoyo, el progreso es lento y solitario
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* DESPUÉS Card - Mobile */}
+                <div className="w-full h-full flex-shrink-0 px-1">
+                  <div className="relative w-full h-full rounded-3xl overflow-hidden border border-green-500/20 bg-gradient-to-br from-green-500/5 to-black shadow-2xl">
+                    {/* Background image */}
+                    <div className="absolute inset-0 -z-10">
+                      <img
+                        src="/avatars/chad2.png"
+                        alt="Después"
+                        className="w-full h-full object-cover object-bottom"
+                        style={{ 
+                          filter: 'brightness(0.6)',
+                          transform: 'scale(1.2)',
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+                    </div>
+
+                    {/* Content */}
+                    <div className="relative h-full flex flex-col p-7">
+                      {/* Badge */}
+                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/20 border border-green-500/30 backdrop-blur-md w-fit">
+                        <span className="text-2xl">🔥</span>
+                        <span className="text-sm font-bold text-green-400 tracking-wider">DESPUÉS</span>
+                      </div>
+
+                      <div className="flex-1" />
+
+                      {/* Title */}
+                      <h3 className="text-4xl font-black text-white mb-4 leading-tight">
+                        Imparable.<br />En comunidad.
+                      </h3>
+
+                      {/* Stats */}
+                      <div className="space-y-3 mb-6">
+                        {stats.after.map((stat, idx) => (
+                          <div key={idx}>
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-sm text-white/70 font-medium">{stat.label}</span>
+                              <span className="text-sm font-mono text-green-400 font-bold">{stat.value}%</span>
+                            </div>
+                            <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden relative">
+                              <div 
+                                className={`h-full bg-gradient-to-r ${stat.color} rounded-full transition-all duration-1000 ease-out`}
+                                style={{ 
+                                  width: isVisible ? `${stat.value}%` : '0%',
+                                  transitionDelay: `${idx * 100 + 200}ms`
+                                }}
+                              >
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Footer */}
+                      <p className="text-xs text-green-400/80 text-center py-3 border-t border-white/10 font-medium">
+                        Con comunidad, el crecimiento se multiplica ×10
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Swipe hint */}
+            <div className="flex items-center justify-center gap-6 mt-6 text-white/40 text-sm">
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                <span>Desliza</span>
+              </div>
+              <span>·</span>
+              <span>{currentCard === 0 ? 'ANTES' : 'DESPUÉS'}</span>
+              <span>·</span>
+              <div className="flex items-center gap-2">
+                <span>para comparar</span>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        ) : (
+          // Desktop Grid
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 mb-10 md:mb-20 max-w-[95%] md:max-w-none mx-auto">
           
           {/* BEFORE Card */}
           <div
@@ -282,6 +515,7 @@ export default function AvatarComparison() {
             </div>
           </div>
         </div>
+        )}
 
         {/* CTA */}
         <div 
