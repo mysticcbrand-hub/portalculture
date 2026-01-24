@@ -24,7 +24,7 @@ export default function PagoExitoso() {
   }, [])
 
   const handleContinue = () => {
-    window.location.href = 'https://app-portalculture.vercel.app'
+    window.location.href = 'https://discord.gg/dgB4d5UzFr'
   }
 
   return (
