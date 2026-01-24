@@ -173,11 +173,11 @@ export default function AccesoPage() {
             </p>
           </div>
 
-          {/* Option 1: Waitlist - Secondary (Shown SECOND on mobile) */}
+          {/* Option 1: Fast Pass - Pago (PRIMERO) */}
           <div
             onMouseEnter={() => setHoveredOption(1)}
             onMouseLeave={() => setHoveredOption(null)}
-            className="order-2 lg:order-1 group relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-6 lg:p-10 transition-all duration-500 hover:bg-white/8 hover:border-white/20 hover:scale-[1.01] lg:hover:scale-105"
+            className="order-1 group relative backdrop-blur-xl bg-white/5 border border-white/20 rounded-3xl p-5 lg:p-10 transition-all duration-500 hover:bg-white/8 hover:border-white/30 hover:scale-[1.01] lg:hover:scale-105"
           >
             {/* Glow effect */}
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-2xl" />
