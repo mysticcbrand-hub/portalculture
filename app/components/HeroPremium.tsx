@@ -44,37 +44,46 @@ export default function HeroPremium() {
     <section ref={heroRef} className="relative min-h-screen bg-black overflow-hidden">
       
       {/* ============================================
-          BACKGROUND - Clean gradient like /04 section
+          BACKGROUND - Apple-style premium gradient (anti-banding)
           ============================================ */}
       
-      {/* Subtle gradient glow - responds to mouse */}
+      {/* Multi-stop gradient for smooth transitions - NO banding */}
       <div 
         className="absolute inset-0 pointer-events-none transition-all duration-1000 ease-out"
         style={{
           background: `radial-gradient(
             ellipse 80% 60% at ${50 + (mousePosition.x - 0.5) * 8}% ${45 + (mousePosition.y - 0.5) * 8}%,
-            rgba(99, 102, 241, 0.08) 0%,
-            rgba(139, 92, 246, 0.04) 30%,
+            rgba(99, 102, 241, 0.12) 0%,
+            rgba(107, 100, 245, 0.09) 15%,
+            rgba(120, 95, 248, 0.06) 30%,
+            rgba(139, 92, 246, 0.04) 45%,
+            rgba(150, 90, 245, 0.02) 60%,
+            transparent 75%
+          )`,
+        }}
+      />
+      
+      {/* Secondary accent with smooth falloff */}
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(
+            ellipse 60% 40% at 70% 20%,
+            rgba(168, 85, 247, 0.06) 0%,
+            rgba(160, 88, 245, 0.04) 25%,
+            rgba(150, 90, 242, 0.02) 50%,
             transparent 70%
           )`,
         }}
       />
       
-      {/* Secondary subtle accent */}
-      <div 
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse 60% 40% at 70% 20%, rgba(168, 85, 247, 0.04) 0%, transparent 50%)',
-        }}
-      />
-      
-      {/* Noise texture - subtle */}
+      {/* High-quality noise dithering for anti-banding */}
       <div 
         className="absolute inset-0 pointer-events-none z-[5]"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          opacity: 0.04,
-          mixBlendMode: 'overlay',
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          opacity: 0.06,
+          mixBlendMode: 'soft-light',
         }}
       />
 
