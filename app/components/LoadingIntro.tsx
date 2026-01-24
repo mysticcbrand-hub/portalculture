@@ -4,59 +4,84 @@ import { useEffect, useState, useRef } from 'react'
 
 export default function LoadingIntro() {
   const [isVisible, setIsVisible] = useState(true)
-  const [isMobile, setIsMobile] = useState(false)
+  const [videoFailed, setVideoFailed] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
+  const hasPlayedRef = useRef(false)
 
   useEffect(() => {
-    // Detect mobile device
-    const checkMobile = () => {
-      return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768
+    // Detect iOS/Safari which has strict autoplay policies
+    const isIOSorSafari = () => {
+      const ua = navigator.userAgent
+      const isIOS = /iPhone|iPad|iPod/i.test(ua)
+      const isSafari = /^((?!chrome|android).)*safari/i.test(ua)
+      const isWebkit = 'webkitAudioContext' in window
+      return isIOS || (isSafari && !('chrome' in window))
     }
-    setIsMobile(checkMobile())
 
     // Prevent scrolling during intro
     document.body.style.overflow = 'hidden'
-    
-    // Add class to body for content fade-in coordination
     document.body.classList.add('intro-loading')
 
-    // Aggressive video play strategy
     const video = videoRef.current
+    let playInterval: NodeJS.Timeout | null = null
+    let failureTimeout: NodeJS.Timeout | null = null
+
     if (video) {
       // Force all attributes
       video.muted = true
       video.playsInline = true
       video.autoplay = true
+      // Set volume to 0 as extra measure for Safari
+      video.volume = 0
       
-      // Multiple play attempts with delays
+      // Track if video actually started playing
+      const onPlaying = () => {
+        hasPlayedRef.current = true
+        if (failureTimeout) clearTimeout(failureTimeout)
+      }
+      video.addEventListener('playing', onPlaying)
+
+      // Play attempt function
       const playVideo = () => {
-        video.play().catch(() => {
-          // Retry after small delay
-          setTimeout(() => video.play().catch(() => {}), 50)
-        })
+        if (hasPlayedRef.current) return
+        
+        const playPromise = video.play()
+        if (playPromise !== undefined) {
+          playPromise.catch((err) => {
+            // NotAllowedError means autoplay was blocked
+            if (err.name === 'NotAllowedError' || err.name === 'AbortError') {
+              // On iOS/Safari, switch to fallback immediately
+              if (isIOSorSafari()) {
+                setVideoFailed(true)
+              }
+            }
+          })
+        }
       }
       
-      // Immediate attempt
+      // Initial play attempts
       playVideo()
-      
-      // Retry after 100ms
       setTimeout(playVideo, 100)
-      
-      // Retry after 200ms
       setTimeout(playVideo, 200)
       
-      // Continuous retry every 100ms
-      const playInterval = setInterval(() => {
-        if (video.paused) {
+      // Continuous retry for a short period
+      playInterval = setInterval(() => {
+        if (video.paused && !hasPlayedRef.current && !videoFailed) {
           playVideo()
         }
-      }, 100)
+      }, 150)
+
+      // If video hasn't played after 500ms, show fallback
+      failureTimeout = setTimeout(() => {
+        if (!hasPlayedRef.current) {
+          setVideoFailed(true)
+        }
+      }, 500)
 
       // Hide intro after 2.5 seconds
       const timer = setTimeout(() => {
-        clearInterval(playInterval)
+        if (playInterval) clearInterval(playInterval)
         setIsVisible(false)
-        // Remove loading class to trigger content fade-in
         document.body.classList.remove('intro-loading')
         setTimeout(() => {
           document.body.style.overflow = 'unset'
@@ -65,17 +90,29 @@ export default function LoadingIntro() {
 
       return () => {
         clearTimeout(timer)
-        clearInterval(playInterval)
+        if (playInterval) clearInterval(playInterval)
+        if (failureTimeout) clearTimeout(failureTimeout)
+        video.removeEventListener('playing', onPlaying)
         document.body.style.overflow = 'unset'
         document.body.classList.remove('intro-loading')
       }
     }
 
+    // Fallback if no video element
+    const timer = setTimeout(() => {
+      setIsVisible(false)
+      document.body.classList.remove('intro-loading')
+      setTimeout(() => {
+        document.body.style.overflow = 'unset'
+      }, 800)
+    }, 2500)
+
     return () => {
+      clearTimeout(timer)
       document.body.style.overflow = 'unset'
       document.body.classList.remove('intro-loading')
     }
-  }, [])
+  }, [videoFailed])
 
   if (!isVisible) {
     return null
@@ -83,36 +120,50 @@ export default function LoadingIntro() {
 
   return (
     <div className="fixed inset-0 z-[10000] bg-black flex items-center justify-center intro-container">
-      {/* Logo - Video */}
+      {/* Logo Container */}
       <div className="relative flex items-center justify-center logo-wrapper">
+        {/* Video - hidden when failed */}
         <video
           ref={videoRef}
           autoPlay
           muted
           playsInline
           preload="auto"
-          className="logo-video"
+          className={`logo-video ${videoFailed ? 'hidden' : ''}`}
           loop
           poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 280'%3E%3Crect fill='%23000000' width='280' height='280'/%3E%3C/svg%3E"
+          // @ts-ignore - webkit-playsinline is needed for older iOS
+          webkit-playsinline="true"
+          x-webkit-airplay="deny"
           onLoadedMetadata={(e) => {
-            e.currentTarget.muted = true
-            e.currentTarget.play().catch(() => {})
+            const vid = e.currentTarget
+            vid.muted = true
+            vid.volume = 0
+            vid.play().catch(() => {})
           }}
           onCanPlay={(e) => {
-            e.currentTarget.muted = true
-            e.currentTarget.play().catch(() => {})
-          }}
-          onLoadedData={(e) => {
-            e.currentTarget.muted = true  
-            e.currentTarget.play().catch(() => {})
-          }}
-          onClick={(e) => {
-            // Fallback: if user clicks, play
-            e.currentTarget.play().catch(() => {})
+            const vid = e.currentTarget
+            vid.muted = true
+            vid.volume = 0
+            vid.play().catch(() => {})
           }}
         >
           <source src="/logo-3d.mp4" type="video/mp4" />
         </video>
+
+        {/* Fallback: Animated Logo for Safari/iOS */}
+        {videoFailed && (
+          <div className="logo-fallback">
+            <div className="logo-circle">
+              <div className="logo-inner">
+                <span className="logo-text">P</span>
+              </div>
+              <div className="logo-ring"></div>
+              <div className="logo-ring ring-2"></div>
+              <div className="logo-glow"></div>
+            </div>
+          </div>
+        )}
       </div>
 
       <style jsx>{`
@@ -129,6 +180,75 @@ export default function LoadingIntro() {
           width: clamp(200px, 50vw, 280px);
           height: clamp(200px, 50vw, 280px);
           object-fit: contain;
+        }
+
+        .logo-video.hidden {
+          display: none;
+        }
+
+        /* Fallback Animated Logo */
+        .logo-fallback {
+          width: clamp(200px, 50vw, 280px);
+          height: clamp(200px, 50vw, 280px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .logo-circle {
+          position: relative;
+          width: 140px;
+          height: 140px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .logo-inner {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+          border: 2px solid rgba(255, 255, 255, 0.15);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          z-index: 2;
+          animation: innerPulse 2s ease-in-out infinite;
+        }
+
+        .logo-text {
+          font-family: 'VeryVogue', serif;
+          font-size: 48px;
+          font-weight: 400;
+          background: linear-gradient(180deg, #ffffff 0%, #888888 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: textShine 2s ease-in-out infinite;
+        }
+
+        .logo-ring {
+          position: absolute;
+          inset: -10px;
+          border-radius: 50%;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          animation: ringPulse 2s ease-in-out infinite;
+        }
+
+        .logo-ring.ring-2 {
+          inset: -20px;
+          border-color: rgba(255, 255, 255, 0.05);
+          animation-delay: 0.3s;
+        }
+
+        .logo-glow {
+          position: absolute;
+          inset: -30px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+          animation: glowPulse 2s ease-in-out infinite;
         }
 
         @keyframes logoRise {
@@ -152,6 +272,48 @@ export default function LoadingIntro() {
           100% {
             opacity: 0;
             pointer-events: none;
+          }
+        }
+
+        @keyframes innerPulse {
+          0%, 100% {
+            transform: scale(1);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+          }
+          50% {
+            transform: scale(1.02);
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.15);
+          }
+        }
+
+        @keyframes textShine {
+          0%, 100% {
+            opacity: 0.9;
+          }
+          50% {
+            opacity: 1;
+          }
+        }
+
+        @keyframes ringPulse {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.5;
+          }
+          50% {
+            transform: scale(1.05);
+            opacity: 1;
+          }
+        }
+
+        @keyframes glowPulse {
+          0%, 100% {
+            opacity: 0.5;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.1);
           }
         }
       `}</style>
