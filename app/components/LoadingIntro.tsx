@@ -1,25 +1,19 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
-import Image from 'next/image'
 
 export default function LoadingIntro() {
   const [isVisible, setIsVisible] = useState(true)
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
   const [videoCanPlay, setVideoCanPlay] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
+  const mobileVideoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     // Detect mobile/tablet
     const checkMobile = () => {
-      const ua = navigator.userAgent
-      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
       const isSmallScreen = window.innerWidth < 1024
-      const isIOS = /iPhone|iPad|iPod/i.test(ua)
-      const isSafari = /^((?!chrome|android).)*safari/i.test(ua)
-      // Use GIF on mobile, touch devices, iOS, or Safari
-      return isTouchDevice || isSmallScreen || isIOS || isSafari
+      return isSmallScreen
     }
     setIsMobile(checkMobile())
 
@@ -43,20 +37,27 @@ export default function LoadingIntro() {
     }
   }, [])
 
-  // Try to play video on desktop
+  // Play video (works for both mobile and desktop)
   useEffect(() => {
-    if (isMobile || !videoRef.current) return
+    const video = isMobile ? mobileVideoRef.current : videoRef.current
+    if (!video) return
 
-    const video = videoRef.current
     video.muted = true
     video.playsInline = true
     
-    const playPromise = video.play()
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => setVideoCanPlay(true))
-        .catch(() => setVideoCanPlay(false))
+    // For iOS, we need to load and play after user gesture or immediately if allowed
+    const attemptPlay = async () => {
+      try {
+        await video.load()
+        await video.play()
+        setVideoCanPlay(true)
+      } catch (e) {
+        // If autoplay fails, show video anyway (it will be paused but visible)
+        setVideoCanPlay(true)
+      }
     }
+    
+    attemptPlay()
   }, [isMobile])
 
   if (!isVisible) {
@@ -68,7 +69,7 @@ export default function LoadingIntro() {
       {/* Logo Container */}
       <div className="relative flex items-center justify-center logo-wrapper">
         
-        {/* DESKTOP: MP4 Video (better quality, smaller file) */}
+        {/* DESKTOP: MP4 Video (high quality) */}
         {!isMobile && (
           <video
             ref={videoRef}
@@ -78,27 +79,28 @@ export default function LoadingIntro() {
             loop
             preload="auto"
             className={`logo-media ${videoCanPlay ? 'loaded' : ''}`}
-            onCanPlay={() => setVideoCanPlay(true)}
+            onCanPlayThrough={() => setVideoCanPlay(true)}
           >
             <source src="/logo-3d.mp4" type="video/mp4" />
           </video>
         )}
 
-        {/* MOBILE: WebP animado (ligero, autoplay garantizado) */}
+        {/* MOBILE: Optimized small MP4 (117KB, instant load) */}
         {isMobile && (
-          <picture>
-            <source srcSet="/logo-3d.webp" type="image/webp" />
-            <Image
-              src="/logo-3d-small.gif"
-              alt="Portal Culture"
-              width={480}
-              height={480}
-              priority
-              unoptimized
-              className={`logo-media ${isLoaded ? 'loaded' : ''}`}
-              onLoad={() => setIsLoaded(true)}
-            />
-          </picture>
+          <video
+            ref={mobileVideoRef}
+            autoPlay
+            muted
+            playsInline
+            loop
+            preload="auto"
+            className={`logo-media ${videoCanPlay ? 'loaded' : ''}`}
+            onCanPlayThrough={() => setVideoCanPlay(true)}
+            // iOS Safari specific attributes
+            webkit-playsinline="true"
+          >
+            <source src="/logo-3d-mobile.mp4" type="video/mp4" />
+          </video>
         )}
       </div>
 
@@ -112,17 +114,15 @@ export default function LoadingIntro() {
           animation: logoRise 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
         }
 
-        .logo-media,
-        :global(.logo-media) {
+        .logo-media {
           width: clamp(200px, 50vw, 300px);
           height: clamp(200px, 50vw, 300px);
           object-fit: contain;
           opacity: 0;
-          transition: opacity 0.4s ease;
+          transition: opacity 0.3s ease;
         }
 
-        .logo-media.loaded,
-        :global(.logo-media.loaded) {
+        .logo-media.loaded {
           opacity: 1;
         }
 
