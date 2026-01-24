@@ -1,13 +1,14 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
+import Image from 'next/image'
 
 export default function LoadingIntro() {
   const [isVisible, setIsVisible] = useState(true)
   const [videoCanPlay, setVideoCanPlay] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
-  const mobileVideoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     // Detect mobile/tablet
@@ -37,22 +38,19 @@ export default function LoadingIntro() {
     }
   }, [])
 
-  // Play video (works for both mobile and desktop)
+  // Play video on desktop only
   useEffect(() => {
-    const video = isMobile ? mobileVideoRef.current : videoRef.current
-    if (!video) return
+    if (isMobile || !videoRef.current) return
 
+    const video = videoRef.current
     video.muted = true
     video.playsInline = true
     
-    // For iOS, we need to load and play after user gesture or immediately if allowed
     const attemptPlay = async () => {
       try {
-        await video.load()
         await video.play()
         setVideoCanPlay(true)
       } catch (e) {
-        // If autoplay fails, show video anyway (it will be paused but visible)
         setVideoCanPlay(true)
       }
     }
@@ -69,7 +67,7 @@ export default function LoadingIntro() {
       {/* Logo Container */}
       <div className="relative flex items-center justify-center logo-wrapper">
         
-        {/* DESKTOP: MP4 Video (high quality) */}
+        {/* DESKTOP: MP4 Video (high quality, animated) */}
         {!isMobile && (
           <video
             ref={videoRef}
@@ -85,22 +83,17 @@ export default function LoadingIntro() {
           </video>
         )}
 
-        {/* MOBILE: Optimized small MP4 (117KB, instant load) */}
+        {/* MOBILE: Static image (no friction, instant load) */}
         {isMobile && (
-          <video
-            ref={mobileVideoRef}
-            autoPlay
-            muted
-            playsInline
-            loop
-            preload="auto"
-            className={`logo-media ${videoCanPlay ? 'loaded' : ''}`}
-            onCanPlayThrough={() => setVideoCanPlay(true)}
-            // iOS Safari specific attributes
-            webkit-playsinline="true"
-          >
-            <source src="/logo-3d-mobile.mp4" type="video/mp4" />
-          </video>
+          <Image
+            src="/logo-3d-frame.png"
+            alt="Portal Culture"
+            width={400}
+            height={400}
+            priority
+            className={`logo-media ${imageLoaded ? 'loaded' : ''}`}
+            onLoad={() => setImageLoaded(true)}
+          />
         )}
       </div>
 
@@ -114,7 +107,8 @@ export default function LoadingIntro() {
           animation: logoRise 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
         }
 
-        .logo-media {
+        .logo-media,
+        :global(.logo-media) {
           width: clamp(200px, 50vw, 300px);
           height: clamp(200px, 50vw, 300px);
           object-fit: contain;
@@ -122,7 +116,8 @@ export default function LoadingIntro() {
           transition: opacity 0.3s ease;
         }
 
-        .logo-media.loaded {
+        .logo-media.loaded,
+        :global(.logo-media.loaded) {
           opacity: 1;
         }
 

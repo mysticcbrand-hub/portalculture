@@ -22,8 +22,8 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
-        {/* Preload intro videos for instant playback */}
-        <link rel="preload" href="/logo-3d-mobile.mp4" as="video" type="video/mp4" />
+        {/* Preload intro assets for instant display */}
+        <link rel="preload" href="/logo-3d-frame.png" as="image" type="image/png" />
         <link rel="preload" href="/logo-3d.mp4" as="video" type="video/mp4" />
         
         <link rel="preconnect" href="https://fonts.googleapis.com" />
