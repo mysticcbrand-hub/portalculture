@@ -239,35 +239,55 @@ export default function ScrollRevealCourses() {
     }))
   }
 
-  // Touch handlers for carousel - with tap zones like Instagram Stories
+  // Touch handlers for carousel - with proper vertical scroll lock
+  const swipeDirectionRef = useRef<'horizontal' | 'vertical' | null>(null)
+  const startYRef = useRef(0)
+  const [isHorizontalSwipe, setIsHorizontalSwipe] = useState(false)
+  
   const handleTouchStart = (e: React.TouchEvent) => {
+    swipeDirectionRef.current = null
     setIsDragging(true)
     setStartX(e.touches[0].clientX)
+    startYRef.current = e.touches[0].clientY
     setDragOffset(0)
-    setIsPaused(true) // Pause auto-advance when touching
+    setIsPaused(true)
+    setIsHorizontalSwipe(false)
   }
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging) return
     const currentX = e.touches[0].clientX
-    const diff = currentX - startX
-    setDragOffset(diff)
+    const currentY = e.touches[0].clientY
+    const deltaX = currentX - startX
+    const deltaY = currentY - startYRef.current
+    
+    // Determine direction on first significant movement
+    if (swipeDirectionRef.current === null && (Math.abs(deltaX) > 8 || Math.abs(deltaY) > 8)) {
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        swipeDirectionRef.current = 'horizontal'
+        setIsHorizontalSwipe(true)
+      } else {
+        swipeDirectionRef.current = 'vertical'
+      }
+    }
+    
+    // Only handle horizontal swipes
+    if (swipeDirectionRef.current === 'horizontal') {
+      e.preventDefault()
+      e.stopPropagation()
+      setDragOffset(deltaX)
+    }
   }
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const wasDragging = Math.abs(dragOffset) > 10
-    setIsDragging(false)
-    setIsPaused(false) // Resume auto-advance
+  const handleTouchEnd = () => {
+    const wasHorizontal = swipeDirectionRef.current === 'horizontal'
+    const threshold = 50
     
-    const threshold = 60
-    
-    if (wasDragging) {
-      // Swipe gesture with loop
+    if (wasHorizontal && Math.abs(dragOffset) > threshold) {
       if (dragOffset < -threshold) {
         if (currentCourseIndex < courses.length - 1) {
           setCurrentCourseIndex(prev => prev + 1)
         } else {
-          // Loop back to first
           setCurrentCourseIndex(0)
         }
         setProgressAnimation(0)
@@ -275,13 +295,16 @@ export default function ScrollRevealCourses() {
         if (currentCourseIndex > 0) {
           setCurrentCourseIndex(prev => prev - 1)
         } else {
-          // Loop to last
           setCurrentCourseIndex(courses.length - 1)
         }
         setProgressAnimation(0)
       }
     }
     
+    swipeDirectionRef.current = null
+    setIsDragging(false)
+    setIsPaused(false)
+    setIsHorizontalSwipe(false)
     setDragOffset(0)
   }
   
@@ -373,6 +396,7 @@ export default function ScrollRevealCourses() {
               style={{
                 clipPath: 'inset(0 0 0 0 round 1.5rem)',
                 WebkitMaskImage: '-webkit-radial-gradient(white, black)',
+                touchAction: isHorizontalSwipe ? 'pan-x' : 'pan-y',
               }}
             >
               {/* Invisible Tap Zones */}

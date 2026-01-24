@@ -154,7 +154,7 @@ export default function HeroPremium() {
               <div className="absolute inset-0 bg-gradient-to-br from-white/[0.12] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               {/* Logo */}
               <Image 
-                src="/logo.png" 
+                src="/WHOP_MEJOR.png" 
                 alt="Portal" 
                 width={56} 
                 height={56}
