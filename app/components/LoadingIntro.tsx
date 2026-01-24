@@ -1,13 +1,11 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
-import Image from 'next/image'
 
 export default function LoadingIntro() {
   const [isVisible, setIsVisible] = useState(true)
   const [videoCanPlay, setVideoCanPlay] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const [imageLoaded, setImageLoaded] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
@@ -16,9 +14,16 @@ export default function LoadingIntro() {
       const isSmallScreen = window.innerWidth < 1024
       return isSmallScreen
     }
-    setIsMobile(checkMobile())
+    const mobile = checkMobile()
+    setIsMobile(mobile)
 
-    // Prevent scrolling during intro
+    // Skip loading screen entirely on mobile
+    if (mobile) {
+      setIsVisible(false)
+      return
+    }
+
+    // Desktop: show loading animation
     document.body.style.overflow = 'hidden'
     document.body.classList.add('intro-loading')
 
@@ -67,34 +72,19 @@ export default function LoadingIntro() {
       {/* Logo Container */}
       <div className="relative flex items-center justify-center logo-wrapper">
         
-        {/* DESKTOP: MP4 Video (high quality, animated) */}
-        {!isMobile && (
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            playsInline
-            loop
-            preload="auto"
-            className={`logo-media ${videoCanPlay ? 'loaded' : ''}`}
-            onCanPlayThrough={() => setVideoCanPlay(true)}
-          >
-            <source src="/logo-3d.mp4" type="video/mp4" />
-          </video>
-        )}
-
-        {/* MOBILE: Static image (no friction, instant load) */}
-        {isMobile && (
-          <Image
-            src="/logo-3d-frame.png"
-            alt="Portal Culture"
-            width={400}
-            height={400}
-            priority
-            className={`logo-media ${imageLoaded ? 'loaded' : ''}`}
-            onLoad={() => setImageLoaded(true)}
-          />
-        )}
+        {/* MP4 Video (desktop only) */}
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          playsInline
+          loop
+          preload="auto"
+          className={`logo-media ${videoCanPlay ? 'loaded' : ''}`}
+          onCanPlayThrough={() => setVideoCanPlay(true)}
+        >
+          <source src="/logo-3d.mp4" type="video/mp4" />
+        </video>
       </div>
 
       <style jsx>{`
@@ -107,8 +97,7 @@ export default function LoadingIntro() {
           animation: logoRise 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
         }
 
-        .logo-media,
-        :global(.logo-media) {
+        .logo-media {
           width: clamp(200px, 50vw, 300px);
           height: clamp(200px, 50vw, 300px);
           object-fit: contain;
@@ -116,8 +105,7 @@ export default function LoadingIntro() {
           transition: opacity 0.3s ease;
         }
 
-        .logo-media.loaded,
-        :global(.logo-media.loaded) {
+        .logo-media.loaded {
           opacity: 1;
         }
 
