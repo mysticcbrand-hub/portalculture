@@ -114,87 +114,62 @@ export default function AccesoPage() {
         {/* Options - MOBILE: Premium first (order-1), DESKTOP: Grid natural order */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
           
-          {/* Option 2: Fast Pass - PREMIUM (Shown FIRST on mobile) */}
+          {/* Option 2: Fast Pass (Shown FIRST on mobile) */}
           <div
             onMouseEnter={() => setHoveredOption(2)}
             onMouseLeave={() => setHoveredOption(null)}
-            className="order-1 lg:order-2 group relative backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 border-2 border-yellow-500/30 rounded-3xl p-6 lg:p-10 transition-all duration-500 hover:bg-white/10 hover:border-yellow-500/50 hover:scale-[1.02] lg:hover:scale-105 overflow-hidden"
+            className="order-1 lg:order-2 group relative backdrop-blur-xl bg-white/5 border border-white/20 rounded-3xl p-5 lg:p-10 transition-all duration-500 hover:bg-white/8 hover:border-white/30 hover:scale-[1.01] lg:hover:scale-105"
           >
-            {/* Recommended badge - Mobile optimized */}
-            <div className="absolute -top-3 -right-3 lg:-top-4 lg:-right-4">
-              <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-black px-4 py-1.5 lg:px-6 lg:py-2 rounded-full text-xs lg:text-sm font-bold shadow-lg rotate-12 animate-pulse">
-                ⭐ RECOMENDADO
+            <div className="mb-4 lg:mb-6">
+              <span className="text-xs font-mono text-yellow-400 uppercase tracking-wider">Opción 2</span>
+              <h2 className="text-2xl lg:text-4xl font-bold text-white mt-2 mb-2 lg:mb-4">Acceso Inmediato</h2>
+              
+              {/* Pricing */}
+              <div className="flex items-baseline gap-2 mb-1">
+                <span className="text-4xl lg:text-5xl font-bold text-white">7€</span>
+                <span className="text-white/50 text-sm">una vez</span>
               </div>
+              <p className="text-xs lg:text-sm text-yellow-400">Oferta de lanzamiento · Precio normal: 47€</p>
             </div>
 
-            {/* Strong glow - reduced on mobile for performance */}
-            <div className="hidden lg:block absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-yellow-500/20 to-orange-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-2xl" style={{ zIndex: -1 }} />
-
-            <div className="mb-5 lg:mb-6">
-              <span className="text-xs lg:text-sm font-mono text-yellow-400 uppercase tracking-wider">Acceso Inmediato</span>
-              <h2 className="text-3xl lg:text-4xl font-black text-white mt-2 mb-3 lg:mb-4">Entra Ya</h2>
-              
-              {/* Pricing - Mobile emphasis */}
-              <div className="mb-3 lg:mb-2">
-                <div className="flex items-baseline gap-2 mb-1">
-                  <span className="text-5xl lg:text-6xl font-black bg-gradient-to-r from-white to-yellow-200 bg-clip-text text-transparent">7€</span>
-                  <span className="text-white/50 text-sm lg:text-base">una vez</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs lg:text-sm text-white/40 line-through">47€</span>
-                  <span className="text-xs lg:text-sm text-green-400 font-bold">85% OFF</span>
-                </div>
-              </div>
-              
-              {/* Urgency indicator - Mobile optimized */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-500/20 border border-red-500/30 rounded-full mb-4 lg:mb-6">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                </span>
-                <span className="text-xs text-red-300 font-semibold">Solo quedan 7 plazas a este precio</span>
-              </div>
-            </div>
-
-            {/* Benefits - Compact on mobile */}
-            <ul className="space-y-3 lg:space-y-4 mb-6 lg:mb-8">
-              <li className="flex items-start gap-3 text-white/90">
+            {/* Benefits */}
+            <ul className="space-y-2.5 lg:space-y-4 mb-5 lg:mb-8">
+              <li className="flex items-start gap-2.5 text-white/90">
                 <svg className="w-5 h-5 lg:w-6 lg:h-6 text-yellow-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                <span className="text-sm lg:text-base font-semibold">Dashboard + Discord desbloqueados al instante</span>
+                <span className="text-sm lg:text-base">Acceso instantáneo al Dashboard</span>
               </li>
-              <li className="flex items-start gap-3 text-white/90">
+              <li className="flex items-start gap-2.5 text-white/90">
                 <svg className="w-5 h-5 lg:w-6 lg:h-6 text-yellow-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <span className="text-sm lg:text-base">Sin esperas ni aprobaciones</span>
               </li>
-              <li className="flex items-start gap-3 text-white/90">
+              <li className="flex items-start gap-2.5 text-white/90">
                 <svg className="w-5 h-5 lg:w-6 lg:h-6 text-yellow-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span className="text-sm lg:text-base">Los 5 Templos + IA Coach NOVA</span>
+                <span className="text-sm lg:text-base">Discord + 5 Templos + NOVA</span>
               </li>
-              <li className="flex items-start gap-3 text-white/90">
+              <li className="flex items-start gap-2.5 text-white/90">
                 <svg className="w-5 h-5 lg:w-6 lg:h-6 text-yellow-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span className="text-sm lg:text-base font-semibold">Acceso de por vida · Valor infinito</span>
+                <span className="text-sm lg:text-base">Acceso de por vida</span>
               </li>
             </ul>
 
-            {/* CTA - Ultra prominent on mobile */}
+            {/* CTA */}
             <button
               onClick={handleFastPass}
-              className="w-full px-6 py-4 lg:px-8 lg:py-5 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black text-base lg:text-lg font-black rounded-2xl transition-all duration-300 shadow-xl shadow-yellow-500/50 hover:shadow-yellow-500/70 active:scale-95 lg:hover:scale-105"
+              className="w-full px-6 py-3 lg:px-8 lg:py-4 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black text-sm lg:text-base font-bold rounded-xl transition-all duration-300 shadow-lg shadow-yellow-500/50 hover:shadow-yellow-500/70 active:scale-95 lg:hover:scale-105"
             >
-              Acceder Ahora →
+              Acceder Ya →
             </button>
 
-            {/* Trust - Mobile friendly */}
             <p className="text-xs text-white/50 text-center mt-3 lg:mt-4">
-              🔒 Pago seguro · Acceso instantáneo · Sin suscripción
+              🔒 Pago seguro con Whop
             </p>
           </div>
 
@@ -245,65 +220,6 @@ export default function AccesoPage() {
 
             <p className="text-xs text-white/40 text-center mt-4">
               Sin compromiso · 100% gratuito
-            </p>
-          </div>
-
-          {/* Option 2: Fast Pass */}
-          <div
-            onMouseEnter={() => setHoveredOption(2)}
-            onMouseLeave={() => setHoveredOption(null)}
-            className="group relative backdrop-blur-xl bg-white/5 border-2 border-white/20 rounded-3xl p-8 md:p-10 transition-all duration-500 hover:bg-white/10 hover:border-white/30 hover:scale-105 overflow-hidden"
-          >
-
-            {/* Strong glow effect */}
-            <div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-yellow-500/20 to-orange-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-2xl" style={{ zIndex: -1 }} />
-
-            <div className="mb-6">
-              <span className="text-sm font-mono text-yellow-400 uppercase tracking-wider">Opción 2</span>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mt-2 mb-4">Acceso Inmediato</h2>
-              <div className="flex items-baseline gap-2 mb-2">
-                <span className="text-5xl font-bold bg-gradient-to-r from-white to-yellow-200 bg-clip-text text-transparent">7€</span>
-                <span className="text-white/50">una vez</span>
-              </div>
-              <p className="text-sm text-yellow-400 font-semibold">Oferta de lanzamiento · Precio normal: 47€</p>
-            </div>
-
-            <ul className="space-y-4 mb-8">
-              <li className="flex items-start gap-3 text-white/90">
-                <svg className="w-6 h-6 text-yellow-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                <span className="font-semibold">Acceso instantáneo al Dashboard</span>
-              </li>
-              <li className="flex items-start gap-3 text-white/90">
-                <svg className="w-6 h-6 text-yellow-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Sin esperas ni aprobaciones</span>
-              </li>
-              <li className="flex items-start gap-3 text-white/90">
-                <svg className="w-6 h-6 text-yellow-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Discord + 5 Cursos desbloqueados al instante</span>
-              </li>
-              <li className="flex items-start gap-3 text-white/90">
-                <svg className="w-6 h-6 text-yellow-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Acceso de por vida</span>
-              </li>
-            </ul>
-
-            <button
-              onClick={handleFastPass}
-              className="w-full px-8 py-4 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black font-bold rounded-xl transition-all duration-300 shadow-lg shadow-yellow-500/50 hover:shadow-yellow-500/70 hover:scale-105"
-            >
-              Acceder Ya →
-            </button>
-
-            <p className="text-xs text-white/60 text-center mt-4">
-              🔒 Pago seguro con Whop · Valor Infinito
             </p>
           </div>
         </div>
