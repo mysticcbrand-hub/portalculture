@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import haptics from '@/lib/haptics'
 
 const CustomCursor = dynamic(() => import('../components/CustomCursor'), { ssr: false })
 
@@ -11,21 +10,11 @@ export default function AccesoPage() {
   const [hoveredOption, setHoveredOption] = useState<number | null>(null)
 
   const handleWaitlist = () => {
-    haptics.buttonPress() // Medium impact for secondary action
     window.location.href = 'https://app-portalculture.vercel.app'
   }
 
   const handleFastPass = () => {
-    haptics.buttonPrimary() // Heavy impact for primary CTA (purchase)
     window.open('https://whop.com/checkout/plan_2juGEWOZ7uBGM', '_blank')
-  }
-
-  // Card hover haptic - light tap when entering a card
-  const handleCardHover = (option: number) => {
-    if (hoveredOption !== option) {
-      haptics.glassTap() // Light tap for glass surface interaction
-    }
-    setHoveredOption(option)
   }
 
   return (
@@ -127,8 +116,7 @@ export default function AccesoPage() {
           
           {/* Option 1: Acceso Inmediato (Pago) */}
           <div
-            onMouseEnter={() => handleCardHover(1)}
-            onTouchStart={() => handleCardHover(1)}
+            onMouseEnter={() => setHoveredOption(1)}
             onMouseLeave={() => setHoveredOption(null)}
             className="order-1 group relative liquid-glass-card p-4 lg:p-10"
           >
@@ -191,8 +179,7 @@ export default function AccesoPage() {
 
           {/* Option 2: Waitlist (Gratis) */}
           <div
-            onMouseEnter={() => handleCardHover(2)}
-            onTouchStart={() => handleCardHover(2)}
+            onMouseEnter={() => setHoveredOption(2)}
             onMouseLeave={() => setHoveredOption(null)}
             className="order-2 group relative liquid-glass-card p-4 lg:p-10"
           >

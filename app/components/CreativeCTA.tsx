@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import haptics from '@/lib/haptics'
 
 interface CreativeCTAProps {
   onCtaClick: () => void
@@ -21,10 +20,6 @@ export default function CreativeCTA({ onCtaClick }: CreativeCTAProps) {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
-
-  const handleCtaClick = () => {
-    haptics.buttonPrimary() // Heavy impact for main CTA
-  }
 
   return (
     <section className="relative min-h-[80vh] md:min-h-screen flex items-center justify-center px-5 md:px-6 py-20 md:py-40">
@@ -52,8 +47,6 @@ export default function CreativeCTA({ onCtaClick }: CreativeCTAProps) {
         {/* CTA Button - Liquid Glass Primary */}
         <a
           href="https://app-portalculture.vercel.app"
-          onClick={handleCtaClick}
-          onTouchStart={handleCtaClick}
           className="liquid-glass-primary inline-block px-8 md:px-12 py-4 md:py-6 text-base md:text-xl font-medium rounded-full"
         >
           <span className="relative z-10">Solicitar Acceso Ahora</span>
