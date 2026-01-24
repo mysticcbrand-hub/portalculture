@@ -140,9 +140,12 @@ export default function CreativeBenefits() {
   }
 
   // Smooth swipe handlers with proper vertical scroll lock
+  const swipeDirectionRef = useRef<'horizontal' | 'vertical' | null>(null)
+  
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!isMobile) return
     const touch = e.touches[0]
+    swipeDirectionRef.current = null // Reset direction on new touch
     setIsDragging(true)
     setIsHorizontalSwipe(false)
     setDragState({
@@ -159,16 +162,18 @@ export default function CreativeBenefits() {
     const deltaX = touch.clientX - dragState.startX
     const deltaY = touch.clientY - dragState.startY
     
-    // Determine swipe direction on first significant movement
-    if (!isHorizontalSwipe && (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10)) {
+    // Determine swipe direction on first significant movement (only once per gesture)
+    if (swipeDirectionRef.current === null && (Math.abs(deltaX) > 8 || Math.abs(deltaY) > 8)) {
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        // Horizontal swipe detected - lock it in
+        swipeDirectionRef.current = 'horizontal'
         setIsHorizontalSwipe(true)
+      } else {
+        swipeDirectionRef.current = 'vertical'
       }
     }
     
     // If horizontal swipe, prevent vertical scroll and update drag
-    if (isHorizontalSwipe || (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 5)) {
+    if (swipeDirectionRef.current === 'horizontal') {
       e.preventDefault()
       e.stopPropagation()
       setDragState(prev => ({ ...prev, x: deltaX, y: deltaY }))
@@ -178,9 +183,10 @@ export default function CreativeBenefits() {
   const handleTouchEnd = () => {
     if (!isMobile) return
     
-    const threshold = 50 // Responsive threshold
+    const threshold = 50
+    const wasHorizontal = swipeDirectionRef.current === 'horizontal'
     
-    if (isHorizontalSwipe || Math.abs(dragState.x) > threshold) {
+    if (wasHorizontal && Math.abs(dragState.x) > threshold) {
       if (dragState.x < -threshold) {
         // Swipe left - next (with loop)
         if (currentCardIndex < benefits.length - 1) {
@@ -198,6 +204,8 @@ export default function CreativeBenefits() {
       }
     }
     
+    // Reset everything
+    swipeDirectionRef.current = null
     setIsDragging(false)
     setIsHorizontalSwipe(false)
     setDragState({ x: 0, y: 0, startX: 0, startY: 0 })
