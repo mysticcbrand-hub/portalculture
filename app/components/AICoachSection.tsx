@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { hapticImpact } from '@/lib/haptics'
 
 export default function AICoachSection() {
   const sectionRef = useRef<HTMLDivElement>(null)
