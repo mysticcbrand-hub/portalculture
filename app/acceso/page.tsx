@@ -128,10 +128,9 @@ export default function AccesoPage() {
                 
                 {/* Pricing inline */}
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl lg:text-5xl font-bold text-white">7€</span>
+                  <span className="text-3xl lg:text-5xl font-bold text-white">17€</span>
                   <span className="text-white/50 text-xs">una vez</span>
                 </div>
-                <p className="text-[10px] lg:text-sm text-yellow-400 mt-0.5">Oferta · Antes 47€</p>
               </div>
             </div>
 
@@ -170,6 +169,10 @@ export default function AccesoPage() {
             >
               Acceder Ya →
             </button>
+            
+            <p className="text-xs lg:text-sm text-center mt-3 lg:mt-4">
+              <span className="text-yellow-400 font-semibold">Valorado en +500€</span>
+            </p>
           </div>
 
           {/* Option 2: Waitlist (Gratis) */}

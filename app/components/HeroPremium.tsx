@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
-import Image from 'next/image'
 
 export default function HeroPremium() {
   const [mounted, setMounted] = useState(false)
@@ -152,14 +151,8 @@ export default function HeroPremium() {
             >
               {/* Shine effect on hover */}
               <div className="absolute inset-0 bg-gradient-to-br from-white/[0.12] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              {/* Logo */}
-              <Image 
-                src="/WHOP_MEJOR.png" 
-                alt="Portal" 
-                width={56} 
-                height={56}
-                className="relative z-10 w-12 h-12 md:w-14 md:h-14 object-contain"
-              />
+              {/* Logo Icon */}
+              <span className="relative z-10 text-3xl md:text-4xl">🏛️</span>
             </div>
           </div>
 
