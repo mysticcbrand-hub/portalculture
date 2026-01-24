@@ -110,7 +110,7 @@ export default function ScrollRevealCourses() {
     if (!isMobile || isDragging || isPaused || !hasStarted) return
     
     setProgressAnimation(0)
-    const duration = 5000 // 5 seconds per story
+    const duration = 2500 // 2.5 seconds per story
     const interval = 50
     let progress = 0
     
