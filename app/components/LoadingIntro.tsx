@@ -84,18 +84,21 @@ export default function LoadingIntro() {
           </video>
         )}
 
-        {/* MOBILE: GIF (guaranteed autoplay on all devices) */}
+        {/* MOBILE: WebP animado (ligero, autoplay garantizado) */}
         {isMobile && (
-          <Image
-            src="/logo-3d.gif"
-            alt="Portal Culture"
-            width={280}
-            height={280}
-            priority
-            unoptimized
-            className={`logo-media ${isLoaded ? 'loaded' : ''}`}
-            onLoad={() => setIsLoaded(true)}
-          />
+          <picture>
+            <source srcSet="/logo-3d.webp" type="image/webp" />
+            <Image
+              src="/logo-3d-small.gif"
+              alt="Portal Culture"
+              width={480}
+              height={480}
+              priority
+              unoptimized
+              className={`logo-media ${isLoaded ? 'loaded' : ''}`}
+              onLoad={() => setIsLoaded(true)}
+            />
+          </picture>
         )}
       </div>
 
