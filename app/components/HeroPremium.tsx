@@ -32,9 +32,10 @@ export default function HeroPremium() {
     }
   }, [])
 
-  // Scroll-based animations
+  // Scroll-based animations - reduced blur on mobile for smoother performance
   const scrollProgress = Math.min(1, scrollY / 600)
-  const contentBlur = scrollProgress * 8
+  const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768
+  const contentBlur = isMobileDevice ? scrollProgress * 4 : scrollProgress * 8 // Reduced blur on mobile
   const contentOpacity = 1 - scrollProgress * 0.7
   const contentY = scrollProgress * -50
   const contentScale = 1 - scrollProgress * 0.05
@@ -100,60 +101,12 @@ export default function HeroPremium() {
           {/* Section indicator */}
           <div 
             className={`
-              mb-6
+              mb-8 md:mb-10
               transition-all duration-1000 ease-out
               ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
             `}
           >
             <span className="font-mono text-xs tracking-wider text-white/30">/ 01</span>
-          </div>
-          
-          {/* Logo mark - with 3D tilt hover */}
-          <div 
-            className={`
-              group mb-8 md:mb-10
-              transition-all duration-1000 ease-out
-              ${mounted ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-6 scale-95'}
-            `}
-            style={{ 
-              transitionDelay: '100ms',
-              perspective: '1000px',
-            }}
-          >
-            <div 
-              className="
-                relative w-20 h-20 md:w-24 md:h-24
-                rounded-2xl md:rounded-3xl
-                bg-gradient-to-b from-white/[0.08] to-white/[0.02]
-                border border-white/[0.08]
-                backdrop-blur-xl
-                shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.06)]
-                flex items-center justify-center
-                overflow-hidden
-                transition-all duration-500 ease-out
-                group-hover:shadow-[0_16px_48px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.1)]
-                group-hover:border-white/[0.12]
-              "
-              style={{
-                transformStyle: 'preserve-3d',
-              }}
-              onMouseMove={(e) => {
-                // Skip 3D effect on mobile (touch devices)
-                if (window.matchMedia('(hover: none)').matches) return
-                const rect = e.currentTarget.getBoundingClientRect()
-                const x = (e.clientX - rect.left) / rect.width - 0.5
-                const y = (e.clientY - rect.top) / rect.height - 0.5
-                e.currentTarget.style.transform = `rotateY(${x * 15}deg) rotateX(${-y * 15}deg)`
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'rotateY(0) rotateX(0)'
-              }}
-            >
-              {/* Shine effect on hover */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.12] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              {/* Logo Icon */}
-              <span className="relative z-10 text-3xl md:text-4xl">🏛️</span>
-            </div>
           </div>
 
           {/* Main headline - Liquid Chrome Effect */}

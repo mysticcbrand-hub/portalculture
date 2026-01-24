@@ -27,9 +27,11 @@ export default function SectionBlurTransition() {
   return (
     <>
       {/* Clean gradient fade - no blur, just darkening */}
+      {/* Positioned below notch area on iPhone (env safe-area) */}
       <div 
-        className="fixed top-0 left-0 right-0 pointer-events-none z-40"
+        className="fixed left-0 right-0 pointer-events-none z-40"
         style={{
+          top: 'env(safe-area-inset-top, 0px)',
           height: '120px',
           opacity: opacity * 0.6,
           background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%)',
@@ -39,8 +41,9 @@ export default function SectionBlurTransition() {
       
       {/* Subtle blur layer - very gentle */}
       <div 
-        className="fixed top-0 left-0 right-0 pointer-events-none z-[39]"
+        className="fixed left-0 right-0 pointer-events-none z-[39]"
         style={{
+          top: 'env(safe-area-inset-top, 0px)',
           height: '80px',
           opacity: opacity * 0.5,
           backdropFilter: 'blur(4px) saturate(1.2)',
