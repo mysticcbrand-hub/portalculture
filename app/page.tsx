@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import GlobalBackground from './components/GlobalBackground'
 import HeroPremium from './components/HeroPremium'
 import CreativeBenefits from './components/CreativeBenefits'
 import AICoachSection from './components/AICoachSection'
 import ScrollRevealCourses from './components/ScrollRevealCourses'
+import ParallaxDivider from './components/ParallaxDivider'
 import AvatarComparison from './components/AvatarComparison'
 import CreativeCTA from './components/CreativeCTA'
 import Footer from './components/Footer'
@@ -22,10 +22,7 @@ export default function Home() {
   const closeModal = () => setIsModalOpen(false)
 
   return (
-    <main className="relative min-h-screen text-white">
-      {/* Global atmospheric background - anti-banding gradients */}
-      <GlobalBackground />
-      
+    <main className="relative min-h-screen bg-black text-white">
       {/* Smooth scrolling - ciridae.com style */}
       <SmoothScroll />
       
@@ -49,6 +46,9 @@ export default function Home() {
 
       {/* AI Coach Section - NOVA */}
       <AICoachSection />
+
+      {/* Parallax Divider - 3D Line Transition */}
+      <ParallaxDivider />
 
       {/* Avatar Comparison Section */}
       <AvatarComparison />

@@ -58,17 +58,20 @@ export default function AvatarComparison() {
       ref={sectionRef}
       className="relative min-h-screen flex items-center justify-center px-5 py-24 md:py-32 overflow-hidden"
     >
-      {/* Background accent - shifts with slider */}
-      <div 
-        className="absolute inset-0 transition-opacity duration-700 pointer-events-none"
-        style={{
-          background: `linear-gradient(135deg, 
-            rgba(239,68,68,${0.02 * (1 - sliderPosition/100)}) 0%, 
-            transparent 50%,
-            rgba(34,197,94,${0.03 * (sliderPosition/100)}) 100%
-          )`,
-        }}
-      />
+      {/* Background */}
+      <div className="absolute inset-0 bg-[#030303]">
+        {/* Gradient that shifts with slider */}
+        <div 
+          className="absolute inset-0 transition-opacity duration-500"
+          style={{
+            background: `linear-gradient(135deg, 
+              rgba(239,68,68,${0.03 * (1 - sliderPosition/100)}) 0%, 
+              transparent 50%,
+              rgba(34,197,94,${0.05 * (sliderPosition/100)}) 100%
+            )`,
+          }}
+        />
+      </div>
 
       <div className="relative z-10 max-w-5xl mx-auto w-full">
         {/* Section label */}
