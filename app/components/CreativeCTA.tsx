@@ -1,61 +1,149 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface CreativeCTAProps {
   onCtaClick: () => void
 }
 
 export default function CreativeCTA({ onCtaClick }: CreativeCTAProps) {
-  const textRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!textRef.current) return
-      const scrolled = window.scrollY
-      const opacity = Math.min(scrolled / 1000, 1)
-      textRef.current.style.opacity = opacity.toString()
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      { threshold: 0.3 }
+    )
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
     }
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => observer.disconnect()
   }, [])
 
   return (
-    <section className="relative min-h-[80vh] md:min-h-screen flex items-center justify-center px-5 md:px-6 py-20 md:py-40">
-      {/* Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent" />
+    <section 
+      ref={sectionRef}
+      className="relative min-h-[80vh] flex items-center justify-center px-5 py-24 md:py-32"
+    >
+      {/* Minimal background with subtle glow */}
+      <div className="absolute inset-0 bg-[#030303]">
+        {/* Top subtle light */}
+        <div 
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] opacity-50"
+          style={{
+            background: 'radial-gradient(ellipse at top, rgba(255,255,255,0.02) 0%, transparent 60%)',
+            filter: 'blur(60px)',
+          }}
+        />
+      </div>
 
-      <div ref={textRef} className="relative z-10 max-w-5xl mx-auto text-center">
-        {/* Section Label */}
-        <p className="text-[10px] md:text-xs font-mono text-white/30 tracking-wider mb-8 md:mb-12">/ 06</p>
-        
-        {/* Main Question */}
-        <h2 className="font-display text-[clamp(1.8rem,6vw,5rem)] font-normal leading-tight tracking-normal mb-5 md:mb-8 text-white" style={{ transform: 'scaleY(1.15)' }}>
+      <div className="relative z-10 max-w-2xl mx-auto w-full text-center">
+        {/* Section label */}
+        <div 
+          className={`mb-12 transition-all duration-700 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}
+        >
+          <span className="text-[11px] font-mono text-white/25 tracking-widest">/ 06</span>
+        </div>
+
+        {/* Main heading */}
+        <h2 
+          className={`text-4xl md:text-6xl font-medium text-white mb-6 tracking-tight leading-[1.1] transition-all duration-700 delay-100 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}
+        >
           ¿Listo para
           <br />
-          dar el salto?
+          <span className="text-white/60">dar el salto?</span>
         </h2>
 
-        {/* Statement */}
-        <p className="text-base md:text-3xl font-light text-white/60 mb-10 md:mb-16 leading-relaxed px-2">
+        {/* Subtext */}
+        <p 
+          className={`text-lg md:text-xl text-white/40 mb-12 transition-all duration-700 delay-200 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}
+        >
           Rodéate de jóvenes con tu misma mentalidad.
-          <br />
-          <span className="text-white">Construid juntos.</span>
         </p>
 
-        {/* CTA Button - Liquid Glass Primary */}
-        <a
-          href="https://app-portalculture.vercel.app"
-          className="liquid-glass-primary inline-block px-8 md:px-12 py-4 md:py-6 text-base md:text-xl font-medium rounded-full"
+        {/* CTA Button - Glassmorphism */}
+        <div 
+          className={`transition-all duration-700 delay-300 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}
         >
-          <span className="relative z-10">Solicitar Acceso Ahora</span>
-        </a>
+          <a
+            href="https://app-portalculture.vercel.app"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            className="group relative inline-flex items-center"
+          >
+            {/* Button glow on hover */}
+            <div 
+              className="absolute -inset-4 rounded-3xl transition-all duration-500"
+              style={{
+                background: 'radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%)',
+                opacity: isHovered ? 1 : 0,
+                filter: 'blur(20px)',
+              }}
+            />
+            
+            {/* Button */}
+            <div 
+              className="relative px-8 py-4 rounded-2xl border transition-all duration-300"
+              style={{
+                background: isHovered 
+                  ? 'rgba(255,255,255,0.08)' 
+                  : 'rgba(255,255,255,0.04)',
+                borderColor: isHovered 
+                  ? 'rgba(255,255,255,0.15)' 
+                  : 'rgba(255,255,255,0.08)',
+                backdropFilter: 'blur(20px)',
+                transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
+                boxShadow: isHovered 
+                  ? '0 20px 40px -20px rgba(0,0,0,0.5)' 
+                  : 'none',
+              }}
+            >
+              <span className="flex items-center gap-3 text-white font-medium">
+                Solicitar acceso
+                <svg 
+                  className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </span>
+            </div>
+          </a>
+        </div>
 
-        {/* Sub Info */}
-        <div className="mt-8 md:mt-12 flex flex-wrap items-center justify-center gap-3 md:gap-6 text-xs md:text-sm font-mono">
-          <span className="liquid-glass-chip text-red-400 font-semibold">⚡ PLAZAS LIMITADAS</span>
-          <span className="liquid-glass-chip text-yellow-400 font-semibold">Precio sube pronto</span>
+        {/* Trust indicators */}
+        <div 
+          className={`mt-16 flex flex-wrap items-center justify-center gap-6 transition-all duration-700 delay-400 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}
+        >
+          <div className="flex items-center gap-2 text-white/25 text-sm">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400/60" />
+            <span>100% gratuito</span>
+          </div>
+          <div className="flex items-center gap-2 text-white/25 text-sm">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400/60" />
+            <span>Proceso activo</span>
+          </div>
         </div>
       </div>
     </section>
