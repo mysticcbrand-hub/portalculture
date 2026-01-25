@@ -5,6 +5,7 @@ import HeroPremium from './components/HeroPremium'
 import CreativeBenefits from './components/CreativeBenefits'
 import AICoachSection from './components/AICoachSection'
 import ScrollRevealCourses from './components/ScrollRevealCourses'
+import ParallaxDivider from './components/ParallaxDivider'
 import AvatarComparison from './components/AvatarComparison'
 import CreativeCTA from './components/CreativeCTA'
 import Footer from './components/Footer'
@@ -45,6 +46,9 @@ export default function Home() {
 
       {/* AI Coach Section - NOVA */}
       <AICoachSection />
+
+      {/* Parallax Divider - 3D Line Transition */}
+      <ParallaxDivider />
 
       {/* Avatar Comparison Section */}
       <AvatarComparison />
