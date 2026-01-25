@@ -5,7 +5,9 @@ import { useEffect, useRef, useState } from 'react'
 export default function AvatarComparison() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
-  const [activeTab, setActiveTab] = useState<'before' | 'after'>('before')
+  const [sliderPosition, setSliderPosition] = useState(50)
+  const [isDragging, setIsDragging] = useState(false)
+  const sliderRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -24,41 +26,64 @@ export default function AvatarComparison() {
     return () => observer.disconnect()
   }, [])
 
-  const transformations = [
-    { before: 'Dudas constantes', after: 'Claridad mental', icon: '🧠' },
-    { before: 'Sin dirección', after: 'Propósito definido', icon: '🎯' },
-    { before: 'Solo en el camino', after: 'Comunidad real', icon: '👥' },
-    { before: 'Potencial dormido', after: 'Acción diaria', icon: '⚡' },
+  // Handle slider drag
+  const handleMove = (clientX: number) => {
+    if (!sliderRef.current) return
+    const rect = sliderRef.current.getBoundingClientRect()
+    const x = clientX - rect.left
+    const percentage = Math.max(5, Math.min(95, (x / rect.width) * 100))
+    setSliderPosition(percentage)
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return
+    handleMove(e.clientX)
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging) return
+    handleMove(e.touches[0].clientX)
+  }
+
+  // Before/After traits
+  const traits = [
+    { before: 'Confusión', after: 'Claridad', beforeValue: 25, afterValue: 90 },
+    { before: 'Soledad', after: 'Comunidad', beforeValue: 20, afterValue: 85 },
+    { before: 'Estancamiento', after: 'Crecimiento', beforeValue: 30, afterValue: 95 },
+    { before: 'Dudas', after: 'Acción', beforeValue: 35, afterValue: 88 },
   ]
 
   return (
     <section 
       ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center px-5 py-24 md:py-32"
+      className="relative min-h-screen flex items-center justify-center px-5 py-24 md:py-32 overflow-hidden"
     >
-      {/* Minimal background */}
+      {/* Background */}
       <div className="absolute inset-0 bg-[#030303]">
-        {/* Subtle center glow */}
+        {/* Gradient that shifts with slider */}
         <div 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] opacity-40"
+          className="absolute inset-0 transition-opacity duration-500"
           style={{
-            background: 'radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 60%)',
-            filter: 'blur(40px)',
+            background: `linear-gradient(135deg, 
+              rgba(239,68,68,${0.03 * (1 - sliderPosition/100)}) 0%, 
+              transparent 50%,
+              rgba(34,197,94,${0.05 * (sliderPosition/100)}) 100%
+            )`,
           }}
         />
       </div>
 
-      <div className="relative z-10 max-w-3xl mx-auto w-full">
+      <div className="relative z-10 max-w-5xl mx-auto w-full">
         {/* Section label */}
         <div 
-          className={`text-center mb-16 transition-all duration-700 ${
+          className={`text-center mb-6 transition-all duration-700 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
           <span className="text-[11px] font-mono text-white/25 tracking-widest">/ 05</span>
         </div>
 
-        {/* Main heading */}
+        {/* Heading */}
         <h2 
           className={`text-center text-3xl md:text-5xl font-medium text-white mb-4 tracking-tight transition-all duration-700 delay-100 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
@@ -68,116 +93,179 @@ export default function AvatarComparison() {
         </h2>
         
         <p 
-          className={`text-center text-white/40 text-lg mb-14 transition-all duration-700 delay-150 ${
+          className={`text-center text-white/40 text-lg mb-16 transition-all duration-700 delay-150 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          Lo que cambia cuando decides empezar
+          Desliza para ver el cambio
         </p>
 
-        {/* Toggle tabs */}
+        {/* Interactive Comparison Slider */}
         <div 
-          className={`flex justify-center mb-12 transition-all duration-700 delay-200 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          className={`transition-all duration-700 delay-200 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
-          <div className="inline-flex p-1 rounded-full bg-white/[0.03] border border-white/[0.06]">
-            <button
-              onClick={() => setActiveTab('before')}
-              className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
-                activeTab === 'before'
-                  ? 'bg-white/10 text-white'
-                  : 'text-white/40 hover:text-white/60'
-              }`}
-            >
-              Antes
-            </button>
-            <button
-              onClick={() => setActiveTab('after')}
-              className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
-                activeTab === 'after'
-                  ? 'bg-white/10 text-white'
-                  : 'text-white/40 hover:text-white/60'
-              }`}
-            >
-              Después
-            </button>
-          </div>
-        </div>
-
-        {/* Cards */}
-        <div 
-          className={`space-y-3 transition-all duration-700 delay-300 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`}
-        >
-          {transformations.map((item, index) => (
-            <div
-              key={index}
-              className="group relative"
-              style={{ 
-                transitionDelay: `${350 + index * 50}ms`,
+          <div 
+            ref={sliderRef}
+            className="relative h-[400px] md:h-[450px] rounded-3xl overflow-hidden cursor-ew-resize select-none"
+            onMouseDown={() => setIsDragging(true)}
+            onMouseUp={() => setIsDragging(false)}
+            onMouseLeave={() => setIsDragging(false)}
+            onMouseMove={handleMouseMove}
+            onTouchStart={() => setIsDragging(true)}
+            onTouchEnd={() => setIsDragging(false)}
+            onTouchMove={handleTouchMove}
+          >
+            {/* BEFORE Side (Left) */}
+            <div 
+              className="absolute inset-0"
+              style={{
+                clipPath: `inset(0 ${100 - sliderPosition}% 0 0)`,
               }}
             >
-              {/* Card */}
-              <div 
-                className={`relative p-5 rounded-2xl border transition-all duration-500 ${
-                  activeTab === 'after'
-                    ? 'bg-white/[0.03] border-white/[0.08]'
-                    : 'bg-white/[0.015] border-white/[0.04]'
-                }`}
-                style={{
-                  backdropFilter: 'blur(20px)',
-                }}
-              >
-                <div className="flex items-center gap-4">
-                  {/* Icon */}
-                  <div 
-                    className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl transition-all duration-500 ${
-                      activeTab === 'after'
-                        ? 'bg-white/[0.06]'
-                        : 'bg-white/[0.03]'
-                    }`}
-                    style={{
-                      filter: activeTab === 'after' ? 'blur(0px)' : 'blur(0.5px)',
-                    }}
-                  >
-                    {item.icon}
-                  </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-red-950/30 via-[#0a0a0a] to-[#0a0a0a] border border-white/[0.04]" />
+              
+              {/* Before content */}
+              <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-between">
+                {/* Header */}
+                <div>
+                  <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 mb-6">
+                    <div className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
+                    <span className="text-red-400 text-xs font-medium uppercase tracking-wider">Antes</span>
+                  </span>
+                  <h3 className="text-2xl md:text-3xl font-medium text-white/60 mb-2">Sin dirección</h3>
+                  <p className="text-white/30 text-sm max-w-xs">Días que pasan sin propósito, potencial sin desbloquear</p>
+                </div>
 
-                  {/* Text */}
-                  <div className="flex-1">
-                    <p 
-                      className={`text-base md:text-lg font-medium transition-all duration-500 ${
-                        activeTab === 'after' ? 'text-white' : 'text-white/50'
-                      }`}
-                    >
-                      {activeTab === 'before' ? item.before : item.after}
-                    </p>
-                  </div>
-
-                  {/* Status indicator */}
-                  <div 
-                    className={`w-2 h-2 rounded-full transition-all duration-500 ${
-                      activeTab === 'after' 
-                        ? 'bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.5)]' 
-                        : 'bg-white/20'
-                    }`}
-                  />
+                {/* Stats */}
+                <div className="space-y-4">
+                  {traits.map((trait, i) => (
+                    <div key={i} className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-white/40">{trait.before}</span>
+                        <span className="text-white/20">{trait.beforeValue}%</span>
+                      </div>
+                      <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-red-500/50 to-red-400/30 rounded-full transition-all duration-500"
+                          style={{ width: `${trait.beforeValue}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
-          ))}
+
+            {/* AFTER Side (Right) */}
+            <div 
+              className="absolute inset-0"
+              style={{
+                clipPath: `inset(0 0 0 ${sliderPosition}%)`,
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-bl from-emerald-950/30 via-[#0a0a0a] to-[#0a0a0a] border border-white/[0.06]" />
+              
+              {/* After content */}
+              <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-between">
+                {/* Header */}
+                <div className="text-right">
+                  <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-6">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]" />
+                    <span className="text-emerald-400 text-xs font-medium uppercase tracking-wider">Después</span>
+                  </span>
+                  <h3 className="text-2xl md:text-3xl font-medium text-white mb-2">Con propósito</h3>
+                  <p className="text-white/50 text-sm max-w-xs ml-auto">Claridad, comunidad y crecimiento constante</p>
+                </div>
+
+                {/* Stats */}
+                <div className="space-y-4">
+                  {traits.map((trait, i) => (
+                    <div key={i} className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-white/60">{trait.after}</span>
+                        <span className="text-emerald-400/80">{trait.afterValue}%</span>
+                      </div>
+                      <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-emerald-500/70 to-emerald-400/50 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(52,211,153,0.3)]"
+                          style={{ width: `${trait.afterValue}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* DIVIDER LINE - The main interactive element */}
+            <div 
+              className="absolute top-0 bottom-0 w-1 -translate-x-1/2 z-20"
+              style={{ left: `${sliderPosition}%` }}
+            >
+              {/* Glow behind line */}
+              <div 
+                className="absolute inset-0 w-8 -translate-x-1/2"
+                style={{
+                  background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
+                  filter: 'blur(8px)',
+                }}
+              />
+              
+              {/* Main line */}
+              <div className="absolute inset-0 w-0.5 bg-white/40 -translate-x-1/2" />
+              
+              {/* Handle */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <div 
+                  className="w-12 h-12 rounded-full border-2 border-white/30 bg-black/80 backdrop-blur-xl flex items-center justify-center transition-transform duration-200 hover:scale-110"
+                  style={{
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.5), 0 0 30px rgba(255,255,255,0.1)',
+                  }}
+                >
+                  <svg className="w-5 h-5 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* Instruction hint */}
+            <div 
+              className={`absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 transition-opacity duration-500 ${
+                isDragging ? 'opacity-0' : 'opacity-100'
+              }`}
+            >
+              <svg className="w-4 h-4 text-white/40 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+              </svg>
+              <span className="text-white/40 text-xs">Arrastra para comparar</span>
+            </div>
+          </div>
         </div>
 
-        {/* Bottom note */}
-        <p 
-          className={`text-center text-white/20 text-sm mt-12 transition-all duration-700 delay-500 ${
-            isVisible ? 'opacity-100' : 'opacity-0'
+        {/* Bottom stats summary */}
+        <div 
+          className={`mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 transition-all duration-700 delay-400 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          Basado en la experiencia de +200 miembros
-        </p>
+          {[
+            { value: '+200', label: 'Miembros activos' },
+            { value: '92%', label: 'Reportan claridad' },
+            { value: '4.9', label: 'Satisfacción' },
+            { value: '24h', label: 'Tiempo de respuesta' },
+          ].map((stat, i) => (
+            <div 
+              key={i} 
+              className="text-center p-4 rounded-2xl bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.04] hover:border-white/[0.08] transition-all duration-300"
+            >
+              <div className="text-2xl md:text-3xl font-semibold text-white mb-1">{stat.value}</div>
+              <div className="text-white/30 text-xs">{stat.label}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   )
