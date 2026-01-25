@@ -33,17 +33,14 @@ export default function CreativeCTA({ onCtaClick }: CreativeCTAProps) {
       ref={sectionRef}
       className="relative min-h-[80vh] flex items-center justify-center px-5 py-24 md:py-32"
     >
-      {/* Minimal background with subtle glow */}
-      <div className="absolute inset-0 bg-[#030303]">
-        {/* Top subtle light */}
-        <div 
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] opacity-50"
-          style={{
-            background: 'radial-gradient(ellipse at top, rgba(255,255,255,0.02) 0%, transparent 60%)',
-            filter: 'blur(60px)',
-          }}
-        />
-      </div>
+      {/* Subtle accent glow */}
+      <div 
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] opacity-40 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at top, rgba(255,255,255,0.015) 0%, transparent 70%)',
+          filter: 'blur(40px)',
+        }}
+      />
 
       <div className="relative z-10 max-w-2xl mx-auto w-full text-center">
         {/* Section label */}

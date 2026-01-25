@@ -337,7 +337,8 @@ export default function ScrollRevealCourses() {
   return (
     <section id="cursos" className="relative py-12 md:py-32 overflow-hidden" ref={sectionRef}>
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-zinc-950 to-black" />
+      {/* Subtle section accent */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/[0.01] to-transparent" />
 
       <div className={`relative z-10 max-w-7xl mx-auto px-5 md:px-6 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         {/* Section Header */}

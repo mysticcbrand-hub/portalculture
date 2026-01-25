@@ -105,7 +105,7 @@ Hazlo. Ahora. 🔥`
       className="relative min-h-screen flex items-center justify-center px-5 md:px-6 py-16 md:py-32 overflow-hidden"
     >
       {/* Background - SIMPLIFIED for mobile (no animated blurs) */}
-      <div className="absolute inset-0 bg-black">
+      <div className="absolute inset-0">
         {/* Static gradient for mobile, animated for desktop */}
         <div 
           className="absolute w-[400px] md:w-[600px] h-[400px] md:h-[600px] rounded-full opacity-15 md:opacity-20"
