@@ -33,57 +33,68 @@ export default function CreativeCTA({ onCtaClick }: CreativeCTAProps) {
       ref={sectionRef}
       className="relative min-h-[80vh] flex items-center justify-center px-5 py-24 md:py-32 overflow-hidden"
     >
-      {/* Premium mesh gradient background */}
-      <div className="absolute inset-0 bg-[#030303]">
-        {/* Primary gradient orb - top center */}
-        <div 
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] pointer-events-none"
-          style={{
-            background: `radial-gradient(
-              ellipse 100% 80% at 50% 0%,
-              rgba(255, 255, 255, 0.05) 0%,
-              rgba(255, 255, 255, 0.03) 25%,
-              rgba(255, 255, 255, 0.015) 50%,
-              rgba(255, 255, 255, 0.005) 70%,
-              transparent 85%
-            )`,
-          }}
-        />
-        
-        {/* Secondary gradient orb - bottom left */}
-        <div 
-          className="absolute bottom-0 left-0 w-[600px] h-[400px] pointer-events-none"
-          style={{
-            background: `radial-gradient(
-              ellipse 80% 70% at 15% 100%,
-              rgba(255, 255, 255, 0.035) 0%,
-              rgba(255, 255, 255, 0.02) 30%,
-              rgba(255, 255, 255, 0.008) 55%,
-              transparent 75%
-            )`,
-          }}
-        />
-        
-        {/* Tertiary gradient orb - bottom right */}
-        <div 
-          className="absolute bottom-0 right-0 w-[550px] h-[380px] pointer-events-none"
-          style={{
-            background: `radial-gradient(
-              ellipse 75% 65% at 85% 100%,
-              rgba(255, 255, 255, 0.03) 0%,
-              rgba(255, 255, 255, 0.015) 35%,
-              rgba(255, 255, 255, 0.005) 60%,
-              transparent 80%
-            )`,
-          }}
-        />
-        
-        {/* Noise dithering for anti-banding */}
+      {/* Premium background - anti-banding with many stops + noise */}
+      <div className="absolute inset-0 bg-black">
+        {/* Primary gradient - top glow with 8 stops */}
         <div 
           className="absolute inset-0 pointer-events-none"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-            opacity: 0.035,
+            background: `radial-gradient(
+              ellipse 80% 50% at 50% 0%,
+              rgba(255, 255, 255, 0.06) 0%,
+              rgba(255, 255, 255, 0.05) 10%,
+              rgba(255, 255, 255, 0.04) 20%,
+              rgba(255, 255, 255, 0.03) 30%,
+              rgba(255, 255, 255, 0.02) 45%,
+              rgba(255, 255, 255, 0.01) 60%,
+              rgba(255, 255, 255, 0.005) 75%,
+              transparent 90%
+            )`,
+          }}
+        />
+        
+        {/* Secondary gradient - bottom left with 8 stops */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(
+              ellipse 60% 50% at 10% 100%,
+              rgba(255, 255, 255, 0.04) 0%,
+              rgba(255, 255, 255, 0.035) 10%,
+              rgba(255, 255, 255, 0.028) 20%,
+              rgba(255, 255, 255, 0.02) 35%,
+              rgba(255, 255, 255, 0.012) 50%,
+              rgba(255, 255, 255, 0.006) 65%,
+              rgba(255, 255, 255, 0.002) 80%,
+              transparent 95%
+            )`,
+          }}
+        />
+        
+        {/* Tertiary gradient - bottom right with 8 stops */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(
+              ellipse 55% 45% at 90% 100%,
+              rgba(255, 255, 255, 0.035) 0%,
+              rgba(255, 255, 255, 0.03) 10%,
+              rgba(255, 255, 255, 0.024) 20%,
+              rgba(255, 255, 255, 0.018) 35%,
+              rgba(255, 255, 255, 0.01) 50%,
+              rgba(255, 255, 255, 0.005) 65%,
+              rgba(255, 255, 255, 0.002) 80%,
+              transparent 95%
+            )`,
+          }}
+        />
+        
+        {/* High-quality noise dithering - essential for anti-banding */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            opacity: 0.05,
             mixBlendMode: 'soft-light',
           }}
         />

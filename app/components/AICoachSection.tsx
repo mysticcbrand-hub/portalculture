@@ -104,33 +104,50 @@ Hazlo. Ahora. 🔥`
       id="ai-coach"
       className="relative min-h-screen flex items-center justify-center px-5 md:px-6 py-16 md:py-32 overflow-hidden"
     >
-      {/* Background - SIMPLIFIED for mobile (no animated blurs) */}
+      {/* Background - anti-banding gradients */}
       <div className="absolute inset-0 bg-black">
-        {/* Static gradient for mobile, animated for desktop */}
+        {/* Primary gradient - subtle with 8 stops */}
         <div 
-          className="absolute w-[400px] md:w-[600px] h-[400px] md:h-[600px] rounded-full opacity-15 md:opacity-20"
+          className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'radial-gradient(circle, #a855f7 0%, transparent 70%)',
-            top: '10%',
-            left: '5%',
-            filter: 'blur(100px)',
-          }}
-        />
-        <div 
-          className="hidden md:block absolute w-[700px] h-[700px] rounded-full opacity-15"
-          style={{
-            background: 'radial-gradient(circle, #3b82f6 0%, transparent 70%)',
-            top: '5%',
-            right: '10%',
-            filter: 'blur(120px)',
+            background: `radial-gradient(
+              ellipse 60% 50% at 20% 30%,
+              rgba(255, 255, 255, 0.05) 0%,
+              rgba(255, 255, 255, 0.04) 12%,
+              rgba(255, 255, 255, 0.03) 25%,
+              rgba(255, 255, 255, 0.02) 38%,
+              rgba(255, 255, 255, 0.012) 50%,
+              rgba(255, 255, 255, 0.006) 65%,
+              rgba(255, 255, 255, 0.002) 80%,
+              transparent 95%
+            )`,
           }}
         />
         
-        {/* Grain texture - only on desktop */}
+        {/* Secondary gradient - desktop only */}
         <div 
-          className="hidden md:block absolute inset-0 opacity-[0.04] mix-blend-overlay"
+          className="hidden md:block absolute inset-0 pointer-events-none"
           style={{
-            backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
+            background: `radial-gradient(
+              ellipse 50% 45% at 80% 25%,
+              rgba(255, 255, 255, 0.04) 0%,
+              rgba(255, 255, 255, 0.032) 15%,
+              rgba(255, 255, 255, 0.024) 30%,
+              rgba(255, 255, 255, 0.016) 45%,
+              rgba(255, 255, 255, 0.008) 60%,
+              rgba(255, 255, 255, 0.003) 75%,
+              transparent 90%
+            )`,
+          }}
+        />
+        
+        {/* Noise dithering - essential for anti-banding */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            opacity: 0.05,
+            mixBlendMode: 'soft-light',
           }}
         />
       </div>
@@ -146,14 +163,6 @@ Hazlo. Ahora. 🔥`
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
-            {/* Floating orb effect - DESKTOP ONLY */}
-            <div 
-              className="hidden md:block absolute -inset-40 opacity-40 pointer-events-none"
-              style={{
-                background: 'radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, transparent 70%)',
-                filter: 'blur(60px)',
-              }}
-            />
 
             {/* Chat interface - Compact horizontal on mobile, tall on desktop */}
             <div 

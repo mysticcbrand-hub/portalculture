@@ -98,19 +98,6 @@ export default function HeroPremium() {
         }}
       />
 
-      {/* Interactive gradient accent - follows mouse subtly (neutral/white) */}
-      <div 
-        className="absolute inset-0 z-[3] pointer-events-none transition-all duration-1000 ease-out"
-        style={{
-          background: `radial-gradient(
-            ellipse 50% 40% at ${50 + (mousePosition.x - 0.5) * 12}% ${45 + (mousePosition.y - 0.5) * 12}%,
-            rgba(255, 255, 255, 0.06) 0%,
-            rgba(255, 255, 255, 0.03) 30%,
-            rgba(255, 255, 255, 0.01) 50%,
-            transparent 70%
-          )`,
-        }}
-      />
 
       {/* High-quality noise dithering for anti-banding */}
       <div 

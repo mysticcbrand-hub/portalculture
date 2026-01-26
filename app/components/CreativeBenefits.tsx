@@ -535,14 +535,21 @@ export default function CreativeBenefits() {
             cursor-pointer
           "
         >
-          {/* Animated gradient background on hover */}
+          {/* Animated gradient background on hover - anti-banding */}
           <div 
             className="
               absolute inset-0 opacity-0 group-hover:opacity-100
               transition-opacity duration-700
             "
             style={{
-              background: 'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(139, 92, 246, 0.08) 0%, transparent 50%)',
+              background: `radial-gradient(
+                ellipse 80% 50% at 50% 0%, 
+                rgba(255, 255, 255, 0.06) 0%, 
+                rgba(255, 255, 255, 0.04) 15%,
+                rgba(255, 255, 255, 0.02) 30%,
+                rgba(255, 255, 255, 0.01) 45%,
+                transparent 60%
+              )`,
             }}
           />
           
