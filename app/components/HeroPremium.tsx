@@ -14,7 +14,6 @@ export default function HeroPremium() {
     setMounted(true)
     
     const handleMouseMove = (e: MouseEvent) => {
-      // Normalized 0-1 for smoother calculations
       const x = e.clientX / window.innerWidth
       const y = e.clientY / window.innerHeight
       setMousePosition({ x, y })
@@ -32,57 +31,92 @@ export default function HeroPremium() {
     }
   }, [])
 
-  // Scroll-based animations - reduced blur on mobile for smoother performance
+  // Scroll-based animations
   const scrollProgress = Math.min(1, scrollY / 600)
   const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768
-  const contentBlur = isMobileDevice ? scrollProgress * 4 : scrollProgress * 8 // Reduced blur on mobile
+  const contentBlur = isMobileDevice ? scrollProgress * 4 : scrollProgress * 8
   const contentOpacity = 1 - scrollProgress * 0.7
   const contentY = scrollProgress * -50
   const contentScale = 1 - scrollProgress * 0.05
+  
+  // Parallax for background image
+  const bgY = scrollY * 0.4
+  const bgScale = 1 + scrollProgress * 0.1
 
   return (
     <section ref={heroRef} className="relative min-h-screen bg-black overflow-hidden">
       
       {/* ============================================
-          BACKGROUND - Apple-style premium gradient (anti-banding)
+          BACKGROUND IMAGE with parallax & overlays
           ============================================ */}
       
-      {/* Multi-stop gradient for smooth transitions - NO banding */}
+      {/* Main background image */}
       <div 
-        className="absolute inset-0 pointer-events-none transition-all duration-1000 ease-out"
+        className="absolute inset-0 z-0"
         style={{
-          background: `radial-gradient(
-            ellipse 80% 60% at ${50 + (mousePosition.x - 0.5) * 8}% ${45 + (mousePosition.y - 0.5) * 8}%,
-            rgba(99, 102, 241, 0.12) 0%,
-            rgba(107, 100, 245, 0.09) 15%,
-            rgba(120, 95, 248, 0.06) 30%,
-            rgba(139, 92, 246, 0.04) 45%,
-            rgba(150, 90, 245, 0.02) 60%,
-            transparent 75%
+          transform: `translateY(${bgY}px) scale(${bgScale})`,
+          transition: 'transform 0.1s ease-out',
+        }}
+      >
+        <img 
+          src="/FONDO_HERO.jpg" 
+          alt=""
+          className="w-full h-full object-cover object-center"
+          style={{
+            filter: 'brightness(0.4) contrast(1.1)',
+          }}
+        />
+      </div>
+
+      {/* Dark gradient overlay - bottom to top */}
+      <div 
+        className="absolute inset-0 z-[1]"
+        style={{
+          background: `linear-gradient(
+            to top,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 0.95) 10%,
+            rgba(0, 0, 0, 0.7) 30%,
+            rgba(0, 0, 0, 0.4) 50%,
+            rgba(0, 0, 0, 0.3) 70%,
+            rgba(0, 0, 0, 0.5) 100%
           )`,
         }}
       />
-      
-      {/* Secondary accent with smooth falloff */}
+
+      {/* Radial vignette */}
       <div 
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 z-[2]"
         style={{
           background: `radial-gradient(
-            ellipse 60% 40% at 70% 20%,
-            rgba(168, 85, 247, 0.06) 0%,
-            rgba(160, 88, 245, 0.04) 25%,
-            rgba(150, 90, 242, 0.02) 50%,
-            transparent 70%
+            ellipse 80% 80% at 50% 50%,
+            transparent 0%,
+            transparent 40%,
+            rgba(0, 0, 0, 0.4) 70%,
+            rgba(0, 0, 0, 0.8) 100%
           )`,
         }}
       />
-      
+
+      {/* Interactive gradient accent - follows mouse subtly */}
+      <div 
+        className="absolute inset-0 z-[3] pointer-events-none transition-all duration-1000 ease-out"
+        style={{
+          background: `radial-gradient(
+            ellipse 60% 50% at ${50 + (mousePosition.x - 0.5) * 15}% ${40 + (mousePosition.y - 0.5) * 15}%,
+            rgba(139, 92, 246, 0.15) 0%,
+            rgba(120, 95, 248, 0.08) 30%,
+            transparent 60%
+          )`,
+        }}
+      />
+
       {/* High-quality noise dithering for anti-banding */}
       <div 
-        className="absolute inset-0 pointer-events-none z-[5]"
+        className="absolute inset-0 pointer-events-none z-[4]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-          opacity: 0.06,
+          opacity: 0.05,
           mixBlendMode: 'soft-light',
         }}
       />
@@ -115,13 +149,13 @@ export default function HeroPremium() {
               ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
             `}
           >
-            <span className="font-mono text-xs tracking-wider text-white/30">/ 01</span>
+            <span className="font-mono text-xs tracking-wider text-white/40">/ 01</span>
           </div>
 
-          {/* Main headline - Liquid Chrome Effect */}
+          {/* Main headline - BIGGER & BOLDER */}
           <h1 
             className={`
-              text-center mb-5 md:mb-6
+              text-center mb-6 md:mb-8
               transition-all duration-1000 ease-out
               ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}
             `}
@@ -131,21 +165,19 @@ export default function HeroPremium() {
               ref={titleRef}
               className="
                 liquid-chrome-text
-                block text-[clamp(2.5rem,8vw,5.5rem)] 
-                font-normal tracking-[0.01em] leading-[0.95]
+                block text-[clamp(3.5rem,12vw,9rem)] 
+                font-normal tracking-[-0.02em] leading-[0.85]
                 relative cursor-default
               "
               style={{
                 fontFamily: "'Fuente Display', 'Scotch Display', Georgia, serif",
               }}
               onMouseEnter={() => {
-                // Skip chrome effect on mobile
                 if (window.matchMedia('(hover: none)').matches) return
                 setIsHoveringTitle(true)
               }}
               onMouseLeave={() => setIsHoveringTitle(false)}
               onMouseMove={(e) => {
-                // Skip chrome effect on mobile
                 if (window.matchMedia('(hover: none)').matches) return
                 if (!titleRef.current) return
                 const rect = titleRef.current.getBoundingClientRect()
@@ -155,14 +187,17 @@ export default function HeroPremium() {
                 titleRef.current.style.setProperty('--chrome-y', `${y}%`)
               }}
             >
-              {/* Base text */}
+              {/* Base text with text shadow for depth */}
               <span 
                 className="relative z-10 transition-all duration-300"
                 style={{
-                  color: isHoveringTitle ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.9)',
+                  color: isHoveringTitle ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.95)',
+                  textShadow: '0 4px 30px rgba(0,0,0,0.5), 0 0 60px rgba(139,92,246,0.3)',
                 }}
               >
-                PORTAL CULTURE
+                PORTAL
+                <br />
+                CULTURE
               </span>
               
               {/* Chrome reflection layer - follows cursor */}
@@ -171,7 +206,7 @@ export default function HeroPremium() {
                 style={{
                   background: `
                     radial-gradient(
-                      circle 250px at var(--chrome-x, 50%) var(--chrome-y, 50%),
+                      circle 300px at var(--chrome-x, 50%) var(--chrome-y, 50%),
                       rgba(255, 255, 255, 1) 0%,
                       rgba(230, 230, 250, 0.9) 8%,
                       rgba(200, 200, 230, 0.7) 18%,
@@ -186,7 +221,9 @@ export default function HeroPremium() {
                   opacity: isHoveringTitle ? 1 : 0,
                 }}
               >
-                PORTAL CULTURE
+                PORTAL
+                <br />
+                CULTURE
               </span>
               
               {/* Bright core highlight */}
@@ -195,7 +232,7 @@ export default function HeroPremium() {
                 style={{
                   background: `
                     radial-gradient(
-                      circle 100px at var(--chrome-x, 50%) var(--chrome-y, 50%),
+                      circle 120px at var(--chrome-x, 50%) var(--chrome-y, 50%),
                       rgba(255, 255, 255, 1) 0%,
                       rgba(255, 255, 255, 0.5) 30%,
                       transparent 60%
@@ -208,7 +245,9 @@ export default function HeroPremium() {
                   filter: 'blur(0.5px)',
                 }}
               >
-                PORTAL CULTURE
+                PORTAL
+                <br />
+                CULTURE
               </span>
             </span>
           </h1>
@@ -216,7 +255,7 @@ export default function HeroPremium() {
           {/* Divider line */}
           <div 
             className={`
-              w-12 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent mb-6
+              w-16 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent mb-6
               transition-all duration-1000 ease-out
               ${mounted ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'}
             `}
@@ -226,19 +265,19 @@ export default function HeroPremium() {
           {/* Tagline */}
           <p 
             className={`
-              text-center text-white/40 
-              text-sm md:text-base lg:text-lg 
+              text-center text-white/50 
+              text-base md:text-lg lg:text-xl 
               font-light tracking-wide
-              max-w-md md:max-w-lg
+              max-w-lg md:max-w-xl
               leading-relaxed
-              mb-10 md:mb-12
+              mb-12 md:mb-14
               transition-all duration-1000 ease-out
               ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}
             `}
             style={{ transitionDelay: '450ms' }}
           >
             La comunidad exclusiva donde jóvenes ambiciosos 
-            <span className="text-white/70"> construyen su mejor versión</span>
+            <span className="text-white/80"> construyen su mejor versión</span>
           </p>
 
           {/* CTA Group */}
@@ -256,19 +295,18 @@ export default function HeroPremium() {
               className="
                 group relative
                 inline-flex items-center gap-2.5
-                px-8 py-4
+                px-10 py-4
                 rounded-full
                 bg-white text-black
                 font-medium text-sm
                 tracking-wide
                 transition-all duration-300 ease-out
-                hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_10px_40px_rgba(255,255,255,0.15)]
+                hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_10px_50px_rgba(255,255,255,0.2)]
                 active:scale-[0.98]
                 overflow-hidden
               "
               style={{ perspective: '500px' }}
               onMouseMove={(e) => {
-                // Skip 3D effect on mobile (touch devices)
                 if (window.matchMedia('(hover: none)').matches) return
                 const rect = e.currentTarget.getBoundingClientRect()
                 const x = (e.clientX - rect.left) / rect.width - 0.5
@@ -293,7 +331,7 @@ export default function HeroPremium() {
               </svg>
             </a>
 
-            {/* Secondary CTA - scrolls to benefits section */}
+            {/* Secondary CTA */}
             <button
               onClick={() => {
                 const section = document.getElementById('beneficios')
@@ -309,8 +347,9 @@ export default function HeroPremium() {
                 font-medium text-sm
                 tracking-wide
                 transition-all duration-300
-                hover:bg-white/[0.04]
-                border border-transparent hover:border-white/[0.06]
+                hover:bg-white/[0.06]
+                border border-white/[0.08] hover:border-white/[0.15]
+                backdrop-blur-sm
                 cursor-pointer
               "
             >
@@ -320,98 +359,43 @@ export default function HeroPremium() {
                 fill="none" 
                 viewBox="0 0 24 24" 
                 stroke="currentColor" 
-                strokeWidth={2}
+                strokeWidth={1.5}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
               </svg>
             </button>
           </div>
 
-          {/* Social proof - subtle with hover effect */}
+          {/* Scroll indicator */}
           <div 
             className={`
-              group/social mt-14 md:mt-16
-              flex items-center gap-3 text-[11px] md:text-xs
-              transition-all duration-1000 ease-out
-              ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
-              cursor-default
+              absolute bottom-8 left-1/2 -translate-x-1/2
+              flex flex-col items-center gap-2
+              transition-all duration-1000
+              ${mounted ? 'opacity-100' : 'opacity-0'}
             `}
             style={{ transitionDelay: '800ms' }}
           >
-            <div className="
-              flex items-center justify-center w-10 h-10 rounded-full 
-              bg-white/[0.04] border border-white/[0.08]
-              transition-all duration-500
-              group-hover/social:bg-white/[0.06] group-hover/social:border-white/[0.12]
-              group-hover/social:shadow-[0_0_20px_rgba(255,255,255,0.05)]
-            ">
-              <svg 
-                className="w-5 h-5 text-white/50 transition-all duration-500 group-hover/social:text-white/70 group-hover/social:scale-110" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor" 
-                strokeWidth={1.5}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div className="flex flex-col">
-              <span className="
-                text-white/60 font-medium
-                transition-all duration-500
-                group-hover/social:text-white/80
-              ">
-                +500 horas de valor
-              </span>
-              <span className="text-white/30 transition-colors duration-500 group-hover/social:text-white/40">
-                en contenido exclusivo
-              </span>
+            <span className="text-white/30 text-[10px] uppercase tracking-widest">Scroll</span>
+            <div className="w-px h-8 bg-gradient-to-b from-white/30 to-transparent relative overflow-hidden">
+              <div 
+                className="absolute top-0 left-0 w-full h-3 bg-white/60"
+                style={{
+                  animation: 'scrollIndicator 1.5s ease-in-out infinite',
+                }}
+              />
             </div>
           </div>
         </div>
-
-        {/* Scroll indicator */}
-        <div 
-          className={`
-            absolute bottom-8 left-1/2 -translate-x-1/2
-            flex flex-col items-center gap-3
-            transition-all duration-1000 ease-out
-            ${mounted ? 'opacity-100' : 'opacity-0'}
-          `}
-          style={{ 
-            transitionDelay: '1000ms',
-            opacity: mounted ? Math.max(0, 1 - scrollProgress * 3) : 0,
-          }}
-        >
-          <span className="text-[10px] text-white/30 tracking-[0.2em] uppercase">Scroll</span>
-          <div className="w-px h-8 bg-gradient-to-b from-white/20 to-transparent overflow-hidden">
-            <div 
-              className="w-full h-3 bg-white/50"
-              style={{
-                animation: 'scrollDown 1.8s ease-in-out infinite',
-              }}
-            />
-          </div>
-        </div>
-
       </div>
 
+      {/* Keyframes */}
       <style jsx>{`
-        @keyframes scrollDown {
-          0% { 
-            transform: translateY(-12px);
-            opacity: 0;
-          }
-          30% {
-            opacity: 1;
-          }
-          70% {
-            opacity: 1;
-          }
-          100% { 
-            transform: translateY(32px);
-            opacity: 0;
-          }
+        @keyframes scrollIndicator {
+          0% { transform: translateY(-100%); opacity: 0; }
+          30% { opacity: 1; }
+          70% { opacity: 1; }
+          100% { transform: translateY(300%); opacity: 0; }
         }
       `}</style>
     </section>
