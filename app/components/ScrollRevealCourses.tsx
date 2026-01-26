@@ -561,6 +561,18 @@ export default function ScrollRevealCourses() {
               >
                 {/* Backdrop blur card */}
                 <div className="relative backdrop-blur-xl bg-white/[0.03] border border-white/[0.08] rounded-2xl md:rounded-3xl p-5 md:p-12 min-h-[180px] md:min-h-[280px] overflow-hidden">
+                  {/* Premium shimmer effect on hover */}
+                  <div 
+                    className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none"
+                    style={{
+                      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent)',
+                    }}
+                  />
+                  
+                  {/* Top accent line */}
+                  <div 
+                    className="absolute top-0 left-1/2 -translate-x-1/2 h-px w-0 group-hover:w-1/2 bg-gradient-to-r from-transparent via-white/20 to-transparent transition-all duration-500 pointer-events-none"
+                  />
                   {/* Background Images for all courses */}
                   {course.id === 1 && (
                     <div className="absolute inset-0 opacity-35 md:opacity-20 group-hover:opacity-45 md:group-hover:opacity-30 transition-opacity duration-500">
