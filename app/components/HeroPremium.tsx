@@ -98,15 +98,16 @@ export default function HeroPremium() {
         }}
       />
 
-      {/* Interactive gradient accent - follows mouse subtly */}
+      {/* Interactive gradient accent - follows mouse subtly (neutral/white) */}
       <div 
         className="absolute inset-0 z-[3] pointer-events-none transition-all duration-1000 ease-out"
         style={{
           background: `radial-gradient(
-            ellipse 60% 50% at ${50 + (mousePosition.x - 0.5) * 15}% ${40 + (mousePosition.y - 0.5) * 15}%,
-            rgba(139, 92, 246, 0.15) 0%,
-            rgba(120, 95, 248, 0.08) 30%,
-            transparent 60%
+            ellipse 50% 40% at ${50 + (mousePosition.x - 0.5) * 12}% ${45 + (mousePosition.y - 0.5) * 12}%,
+            rgba(255, 255, 255, 0.06) 0%,
+            rgba(255, 255, 255, 0.03) 30%,
+            rgba(255, 255, 255, 0.01) 50%,
+            transparent 70%
           )`,
         }}
       />
@@ -192,7 +193,7 @@ export default function HeroPremium() {
                 className="relative z-10 transition-all duration-300"
                 style={{
                   color: isHoveringTitle ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.95)',
-                  textShadow: '0 4px 30px rgba(0,0,0,0.5), 0 0 60px rgba(139,92,246,0.3)',
+                  textShadow: '0 4px 40px rgba(0,0,0,0.6), 0 0 80px rgba(255,255,255,0.1)',
                 }}
               >
                 PORTAL
@@ -289,7 +290,7 @@ export default function HeroPremium() {
             `}
             style={{ transitionDelay: '600ms' }}
           >
-            {/* Primary CTA - with 3D effect */}
+            {/* Primary CTA - Glassmorphism style */}
             <a
               href="https://app-portalculture.vercel.app"
               className="
@@ -297,31 +298,41 @@ export default function HeroPremium() {
                 inline-flex items-center gap-2.5
                 px-10 py-4
                 rounded-full
-                bg-white text-black
                 font-medium text-sm
                 tracking-wide
-                transition-all duration-300 ease-out
-                hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_10px_50px_rgba(255,255,255,0.2)]
+                transition-all duration-500 ease-out
                 active:scale-[0.98]
                 overflow-hidden
               "
-              style={{ perspective: '500px' }}
-              onMouseMove={(e) => {
-                if (window.matchMedia('(hover: none)').matches) return
-                const rect = e.currentTarget.getBoundingClientRect()
-                const x = (e.clientX - rect.left) / rect.width - 0.5
-                const y = (e.clientY - rect.top) / rect.height - 0.5
-                e.currentTarget.style.transform = `rotateY(${x * 10}deg) rotateX(${-y * 10}deg) scale(1.02)`
+              style={{ 
+                background: 'rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                boxShadow: '0 4px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.18)'
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)'
+                e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 0 40px rgba(255, 255, 255, 0.1)'
+                e.currentTarget.style.transform = 'translateY(-2px)'
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'rotateY(0) rotateX(0) scale(1)'
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)'
+                e.currentTarget.style.boxShadow = '0 4px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                e.currentTarget.style.transform = 'translateY(0)'
               }}
             >
+              {/* Top highlight line */}
+              <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+              
               {/* Shine sweep on hover */}
-              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out bg-gradient-to-r from-transparent via-black/10 to-transparent" />
-              <span className="relative">Solicitar acceso</span>
+              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              
+              <span className="relative text-white">Solicitar acceso</span>
               <svg 
-                className="w-4 h-4 relative transition-transform duration-300 group-hover:translate-x-0.5" 
+                className="w-4 h-4 relative text-white transition-transform duration-300 group-hover:translate-x-1" 
                 fill="none" 
                 viewBox="0 0 24 24" 
                 stroke="currentColor" 

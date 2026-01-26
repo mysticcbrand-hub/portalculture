@@ -31,16 +31,60 @@ export default function CreativeCTA({ onCtaClick }: CreativeCTAProps) {
   return (
     <section 
       ref={sectionRef}
-      className="relative min-h-[80vh] flex items-center justify-center px-5 py-24 md:py-32"
+      className="relative min-h-[80vh] flex items-center justify-center px-5 py-24 md:py-32 overflow-hidden"
     >
-      {/* Minimal background with subtle glow */}
+      {/* Premium mesh gradient background */}
       <div className="absolute inset-0 bg-[#030303]">
-        {/* Top subtle light */}
+        {/* Primary gradient orb - top center */}
         <div 
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] opacity-50"
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] pointer-events-none"
           style={{
-            background: 'radial-gradient(ellipse at top, rgba(255,255,255,0.02) 0%, transparent 60%)',
-            filter: 'blur(60px)',
+            background: `radial-gradient(
+              ellipse 100% 80% at 50% 0%,
+              rgba(255, 255, 255, 0.05) 0%,
+              rgba(255, 255, 255, 0.03) 25%,
+              rgba(255, 255, 255, 0.015) 50%,
+              rgba(255, 255, 255, 0.005) 70%,
+              transparent 85%
+            )`,
+          }}
+        />
+        
+        {/* Secondary gradient orb - bottom left */}
+        <div 
+          className="absolute bottom-0 left-0 w-[600px] h-[400px] pointer-events-none"
+          style={{
+            background: `radial-gradient(
+              ellipse 80% 70% at 15% 100%,
+              rgba(255, 255, 255, 0.035) 0%,
+              rgba(255, 255, 255, 0.02) 30%,
+              rgba(255, 255, 255, 0.008) 55%,
+              transparent 75%
+            )`,
+          }}
+        />
+        
+        {/* Tertiary gradient orb - bottom right */}
+        <div 
+          className="absolute bottom-0 right-0 w-[550px] h-[380px] pointer-events-none"
+          style={{
+            background: `radial-gradient(
+              ellipse 75% 65% at 85% 100%,
+              rgba(255, 255, 255, 0.03) 0%,
+              rgba(255, 255, 255, 0.015) 35%,
+              rgba(255, 255, 255, 0.005) 60%,
+              transparent 80%
+            )`,
+          }}
+        />
+        
+        {/* Noise dithering for anti-banding */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            opacity: 0.035,
+            mixBlendMode: 'soft-light',
           }}
         />
       </div>
@@ -75,7 +119,7 @@ export default function CreativeCTA({ onCtaClick }: CreativeCTAProps) {
           Rodéate de jóvenes con tu misma mentalidad.
         </p>
 
-        {/* CTA Button - Glassmorphism */}
+        {/* CTA Button - Premium Glassmorphism */}
         <div 
           className={`transition-all duration-700 delay-300 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
@@ -87,34 +131,44 @@ export default function CreativeCTA({ onCtaClick }: CreativeCTAProps) {
             onMouseLeave={() => setIsHovered(false)}
             className="group relative inline-flex items-center"
           >
-            {/* Button glow on hover */}
+            {/* Outer glow on hover */}
             <div 
-              className="absolute -inset-4 rounded-3xl transition-all duration-500"
+              className="absolute -inset-6 rounded-3xl transition-all duration-700"
               style={{
-                background: 'radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%)',
+                background: 'radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)',
                 opacity: isHovered ? 1 : 0,
-                filter: 'blur(20px)',
+                filter: 'blur(25px)',
               }}
             />
             
             {/* Button */}
             <div 
-              className="relative px-8 py-4 rounded-2xl border transition-all duration-300"
+              className="relative px-10 py-4 rounded-2xl overflow-hidden transition-all duration-500"
               style={{
                 background: isHovered 
-                  ? 'rgba(255,255,255,0.08)' 
-                  : 'rgba(255,255,255,0.04)',
-                borderColor: isHovered 
-                  ? 'rgba(255,255,255,0.15)' 
-                  : 'rgba(255,255,255,0.08)',
+                  ? 'rgba(255,255,255,0.12)' 
+                  : 'rgba(255,255,255,0.06)',
+                border: `1px solid ${isHovered ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.1)'}`,
                 backdropFilter: 'blur(20px)',
-                transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
+                WebkitBackdropFilter: 'blur(20px)',
+                transform: isHovered ? 'translateY(-3px)' : 'translateY(0)',
                 boxShadow: isHovered 
-                  ? '0 20px 40px -20px rgba(0,0,0,0.5)' 
-                  : 'none',
+                  ? '0 20px 50px -15px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15), 0 0 30px rgba(255,255,255,0.05)' 
+                  : '0 4px 20px -10px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08)',
               }}
             >
-              <span className="flex items-center gap-3 text-white font-medium">
+              {/* Top highlight line */}
+              <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+              
+              {/* Shimmer effect */}
+              <div 
+                className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"
+                style={{
+                  background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)',
+                }}
+              />
+              
+              <span className="relative flex items-center gap-3 text-white font-medium">
                 Solicitar acceso
                 <svg 
                   className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" 
