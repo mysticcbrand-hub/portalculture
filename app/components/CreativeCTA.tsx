@@ -52,7 +52,7 @@ export default function CreativeCTA({ onCtaClick }: CreativeCTAProps) {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          <span className="text-[11px] font-mono text-white/25 tracking-widest">/ 06</span>
+          <span className="text-[11px] font-mono text-white/25 tracking-widest">/ 05</span>
         </div>
 
         {/* Main heading */}
