@@ -445,10 +445,39 @@ export default function CreativeBenefits() {
             </div>
           </div>
         ) : (
-          // Desktop Grid
-          <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12 max-w-[92%] md:max-w-none mx-auto transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+          // Desktop Grid - Expandable cards
+          <div className={`relative grid grid-cols-3 gap-5 mb-8 md:mb-12 max-w-6xl mx-auto transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+            style={{ minHeight: '500px' }}
+          >
             {benefits.map((benefit, index) => {
-              const rotation = cardRotations[index] || { x: 0, y: 0 }
+              const isHovered = hoveredIndex === index
+              const hasHover = hoveredIndex !== null
+              
+              // Creative positions when hovered - each card expands differently
+              const getHoverStyles = () => {
+                if (!isHovered) {
+                  return {
+                    scale: hasHover ? 0.92 : 1,
+                    opacity: hasHover ? 0.4 : 1,
+                    zIndex: 1,
+                    translateX: 0,
+                    translateY: 0,
+                  }
+                }
+                
+                // Each card has unique expansion direction
+                const positions: { [key: number]: any } = {
+                  0: { scale: 1.35, translateX: 20, translateY: 15, zIndex: 50 },   // Top-left → expands right-down
+                  1: { scale: 1.35, translateX: 0, translateY: 20, zIndex: 50 },    // Top-center → expands down
+                  2: { scale: 1.35, translateX: -20, translateY: 15, zIndex: 50 },  // Top-right → expands left-down
+                  3: { scale: 1.35, translateX: 25, translateY: -10, zIndex: 50 },  // Bottom-left → expands right-up
+                  4: { scale: 1.35, translateX: 0, translateY: -15, zIndex: 50 },   // Bottom-center → expands up
+                  5: { scale: 1.35, translateX: -25, translateY: -10, zIndex: 50 }, // Bottom-right → expands left-up
+                }
+                return positions[index] || { scale: 1.3, translateX: 0, translateY: 0, zIndex: 50 }
+              }
+              
+              const hoverStyles = getHoverStyles()
               
               return (
               <div
@@ -459,32 +488,47 @@ export default function CreativeBenefits() {
                   setHoveredIndex(null)
                   handleCardMouseLeave(index)
                 }}
-                onMouseMove={(e) => handleCardMouseMove(e, index)}
-                className={`group relative p-5 md:p-8 rounded-xl md:rounded-2xl border border-white/10 
-                           bg-gradient-to-br ${benefit.color}
-                           backdrop-blur-xl
-                           hover:border-white/30
-                           transition-all duration-200 ease-out
-                           shadow-xl md:shadow-2xl ${benefit.glow}
-                           ${index === 5 ? 'md:col-span-2 lg:col-span-1' : ''}`}
+                className="group relative p-6 md:p-8 rounded-2xl border border-white/[0.08] 
+                           bg-white/[0.02] backdrop-blur-xl cursor-pointer"
                 style={{
-                  transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
-                  transformStyle: 'preserve-3d',
-                  transformOrigin: 'center bottom',
-                  willChange: 'transform, opacity, filter'
+                  transform: `scale(${hoverStyles.scale}) translate(${hoverStyles.translateX}px, ${hoverStyles.translateY}px)`,
+                  opacity: hoverStyles.opacity,
+                  zIndex: hoverStyles.zIndex,
+                  transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                  transformOrigin: 'center center',
                 }}
               >
-                {/* Glow Effect */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-0 
-                               group-hover:opacity-100 blur-xl transition-opacity duration-700 rounded-2xl -z-10`} />
+                {/* Hover background glow */}
+                <div 
+                  className="absolute inset-0 rounded-2xl transition-opacity duration-500 -z-10"
+                  style={{
+                    background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.08) 0%, transparent 70%)',
+                    opacity: isHovered ? 1 : 0,
+                    filter: 'blur(20px)',
+                  }}
+                />
+                
+                {/* Card border glow on hover */}
+                <div 
+                  className="absolute inset-0 rounded-2xl transition-opacity duration-500"
+                  style={{
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    opacity: isHovered ? 1 : 0,
+                  }}
+                />
 
                 {/* Number Badge */}
-                <div className="flex items-start justify-between mb-4 md:mb-6">
-                  <span className="font-mono text-[10px] md:text-xs text-white/30 group-hover:text-white/60 
+                <div className="flex items-start justify-between mb-5">
+                  <span className="font-mono text-xs text-white/25 group-hover:text-white/50 
                                  transition-colors duration-500 tracking-wider">
                     {benefit.number}
                   </span>
-                  <div className="w-9 h-9 md:w-12 md:h-12 transform group-hover:scale-110 transition-transform duration-500">
+                  <div 
+                    className="w-10 h-10 md:w-12 md:h-12 transition-all duration-500"
+                    style={{
+                      transform: isHovered ? 'scale(1.15)' : 'scale(1)',
+                    }}
+                  >
                     <Image 
                       src={benefit.icon} 
                       alt={benefit.title}
@@ -496,20 +540,34 @@ export default function CreativeBenefits() {
                 </div>
 
                 {/* Content */}
-                <div className="space-y-2 md:space-y-3">
-                  <h3 className="text-lg md:text-2xl font-bold text-white group-hover:text-white 
-                               transition-all duration-500">
+                <div className="space-y-3">
+                  <h3 
+                    className="text-xl md:text-2xl font-semibold text-white transition-all duration-500"
+                    style={{
+                      transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
+                    }}
+                  >
                     {benefit.title}
                   </h3>
-                  <p className="text-sm md:text-base text-white/60 leading-relaxed group-hover:text-white/80 
-                              transition-colors duration-500">
+                  <p 
+                    className="text-sm md:text-base text-white/40 leading-relaxed transition-all duration-500"
+                    style={{
+                      color: isHovered ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.4)',
+                    }}
+                  >
                     {benefit.description}
                   </p>
                 </div>
 
-                {/* Hover Indicator */}
-                <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-white/0 via-white/50 to-white/0
-                               transition-all duration-700 ${hoveredIndex === index ? 'opacity-100' : 'opacity-0'}`} />
+                {/* Bottom accent line */}
+                <div 
+                  className="absolute bottom-0 left-4 right-4 h-px transition-all duration-500"
+                  style={{
+                    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
+                    opacity: isHovered ? 1 : 0,
+                    transform: isHovered ? 'scaleX(1)' : 'scaleX(0.5)',
+                  }}
+                />
               </div>
             )})}
           </div>
