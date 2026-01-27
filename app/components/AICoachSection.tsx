@@ -104,59 +104,30 @@ Hazlo. Ahora. 🔥`
       id="ai-coach"
       className="relative min-h-screen flex items-center justify-center px-5 md:px-6 py-16 md:py-32 overflow-hidden"
     >
-      {/* Background - Premium gradients with anti-banding (CSS dithering technique) */}
+      {/* Background - Subtle gradient with noise dithering */}
       <div className="absolute inset-0 bg-black">
-        {/* Primary soft glow - top left - 12 color stops for smoothness */}
+        {/* Single subtle top glow */}
         <div 
           className="absolute inset-0 pointer-events-none"
           style={{
             background: `radial-gradient(
-              ellipse 70% 55% at 15% 20%,
-              hsla(0, 0%, 100%, 0.045) 0%,
-              hsla(0, 0%, 100%, 0.042) 8%,
-              hsla(0, 0%, 100%, 0.038) 16%,
-              hsla(0, 0%, 100%, 0.033) 24%,
-              hsla(0, 0%, 100%, 0.027) 33%,
-              hsla(0, 0%, 100%, 0.021) 42%,
-              hsla(0, 0%, 100%, 0.015) 52%,
-              hsla(0, 0%, 100%, 0.010) 62%,
-              hsla(0, 0%, 100%, 0.006) 72%,
-              hsla(0, 0%, 100%, 0.003) 82%,
-              hsla(0, 0%, 100%, 0.001) 92%,
-              transparent 100%
+              ellipse 80% 40% at 50% 0%,
+              rgba(255, 255, 255, 0.04) 0%,
+              rgba(255, 255, 255, 0.02) 40%,
+              transparent 70%
             )`,
           }}
         />
         
-        {/* Secondary soft glow - bottom right - 12 color stops */}
+        {/* Noise dithering - same technique as courses */}
         <div 
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: `radial-gradient(
-              ellipse 60% 50% at 85% 80%,
-              hsla(0, 0%, 100%, 0.035) 0%,
-              hsla(0, 0%, 100%, 0.032) 8%,
-              hsla(0, 0%, 100%, 0.028) 16%,
-              hsla(0, 0%, 100%, 0.024) 25%,
-              hsla(0, 0%, 100%, 0.019) 35%,
-              hsla(0, 0%, 100%, 0.014) 45%,
-              hsla(0, 0%, 100%, 0.010) 56%,
-              hsla(0, 0%, 100%, 0.006) 67%,
-              hsla(0, 0%, 100%, 0.003) 78%,
-              hsla(0, 0%, 100%, 0.001) 89%,
-              transparent 100%
-            )`,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+            opacity: 0.04,
+            mixBlendMode: 'overlay',
           }}
         />
-        
-        {/* SVG noise texture for dithering - eliminates banding completely */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.035]" style={{ mixBlendMode: 'overlay' }}>
-          <filter id="noise-04">
-            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" result="noise" />
-            <feColorMatrix type="saturate" values="0" />
-          </filter>
-          <rect width="100%" height="100%" filter="url(#noise-04)" />
-        </svg>
       </div>
 
 
