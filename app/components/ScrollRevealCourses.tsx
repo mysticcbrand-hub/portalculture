@@ -42,7 +42,7 @@ const courses: Course[] = [
     title: 'Templo de Zeus',
     description: 'Sana tu salud mental y recupera tu vida',
     tags: [{ text: 'Popular', variant: 'popular' }],
-    icon: '/icons/ZEUS.png',
+    icon: '/icons/puzzle.png',
   },
   {
     id: 5,
