@@ -40,7 +40,7 @@ const courses: Course[] = [
     id: 4,
     number: '04',
     title: 'Templo de Zeus',
-    description: 'Conviértete en ultraproductivo y nunca más te sentirás estancado',
+    description: 'Sana tu salud mental y recupera tu vida',
     tags: [{ text: 'Popular', variant: 'popular' }],
     icon: '/icons/ZEUS.png',
   },
