@@ -445,13 +445,14 @@ export default function CreativeBenefits() {
             </div>
           </div>
         ) : (
-          // Desktop Grid - Expandable cards
+          // Desktop Grid - Expandable cards with 3D hover
           <div className={`relative grid grid-cols-3 gap-5 mb-8 md:mb-12 max-w-6xl mx-auto transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
             style={{ minHeight: '500px' }}
           >
             {benefits.map((benefit, index) => {
               const isHovered = hoveredIndex === index
               const hasHover = hoveredIndex !== null
+              const rotation = cardRotations[index] || { x: 0, y: 0 }
               
               // Creative positions when hovered - each card expands differently
               const getHoverStyles = () => {
@@ -488,13 +489,15 @@ export default function CreativeBenefits() {
                   setHoveredIndex(null)
                   handleCardMouseLeave(index)
                 }}
+                onMouseMove={(e) => handleCardMouseMove(e, index)}
                 className="group relative p-6 md:p-8 rounded-2xl border border-white/[0.08] 
                            bg-white/[0.02] backdrop-blur-xl cursor-pointer"
                 style={{
-                  transform: `scale(${hoverStyles.scale}) translate(${hoverStyles.translateX}px, ${hoverStyles.translateY}px)`,
+                  transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) scale(${hoverStyles.scale}) translate(${hoverStyles.translateX}px, ${hoverStyles.translateY}px)`,
                   opacity: hoverStyles.opacity,
                   zIndex: hoverStyles.zIndex,
                   transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                  transformStyle: 'preserve-3d',
                   transformOrigin: 'center center',
                 }}
               >
