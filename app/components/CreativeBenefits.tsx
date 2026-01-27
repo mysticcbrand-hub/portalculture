@@ -455,27 +455,28 @@ export default function CreativeBenefits() {
               const rotation = cardRotations[index] || { x: 0, y: 0 }
               
               // Creative positions when hovered - each card expands differently
+              // Scale reduced to 1.12 to prevent pixelation
               const getHoverStyles = () => {
                 if (!isHovered) {
                   return {
-                    scale: hasHover ? 0.92 : 1,
-                    opacity: hasHover ? 0.4 : 1,
+                    scale: hasHover ? 0.96 : 1,
+                    opacity: hasHover ? 0.5 : 1,
                     zIndex: 1,
                     translateX: 0,
                     translateY: 0,
                   }
                 }
                 
-                // Each card has unique expansion direction
+                // Each card has unique expansion direction (subtle movement)
                 const positions: { [key: number]: any } = {
-                  0: { scale: 1.35, translateX: 20, translateY: 15, zIndex: 50 },   // Top-left → expands right-down
-                  1: { scale: 1.35, translateX: 0, translateY: 20, zIndex: 50 },    // Top-center → expands down
-                  2: { scale: 1.35, translateX: -20, translateY: 15, zIndex: 50 },  // Top-right → expands left-down
-                  3: { scale: 1.35, translateX: 25, translateY: -10, zIndex: 50 },  // Bottom-left → expands right-up
-                  4: { scale: 1.35, translateX: 0, translateY: -15, zIndex: 50 },   // Bottom-center → expands up
-                  5: { scale: 1.35, translateX: -25, translateY: -10, zIndex: 50 }, // Bottom-right → expands left-up
+                  0: { scale: 1.08, translateX: 8, translateY: 6, zIndex: 50 },   // Top-left → expands right-down
+                  1: { scale: 1.08, translateX: 0, translateY: 8, zIndex: 50 },    // Top-center → expands down
+                  2: { scale: 1.08, translateX: -8, translateY: 6, zIndex: 50 },  // Top-right → expands left-down
+                  3: { scale: 1.08, translateX: 10, translateY: -4, zIndex: 50 },  // Bottom-left → expands right-up
+                  4: { scale: 1.08, translateX: 0, translateY: -6, zIndex: 50 },   // Bottom-center → expands up
+                  5: { scale: 1.08, translateX: -10, translateY: -4, zIndex: 50 }, // Bottom-right → expands left-up
                 }
-                return positions[index] || { scale: 1.3, translateX: 0, translateY: 0, zIndex: 50 }
+                return positions[index] || { scale: 1.08, translateX: 0, translateY: 0, zIndex: 50 }
               }
               
               const hoverStyles = getHoverStyles()
@@ -496,9 +497,11 @@ export default function CreativeBenefits() {
                   transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) scale(${hoverStyles.scale}) translate(${hoverStyles.translateX}px, ${hoverStyles.translateY}px)`,
                   opacity: hoverStyles.opacity,
                   zIndex: hoverStyles.zIndex,
-                  transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                  transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
                   transformStyle: 'preserve-3d',
                   transformOrigin: 'center center',
+                  willChange: 'transform, opacity',
+                  backfaceVisibility: 'hidden',
                 }}
               >
                 {/* Hover background glow */}
