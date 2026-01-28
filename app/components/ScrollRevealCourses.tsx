@@ -336,8 +336,42 @@ export default function ScrollRevealCourses() {
 
   return (
     <section id="cursos" className="relative py-12 md:py-32 overflow-hidden" ref={sectionRef}>
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-zinc-950 to-black" />
+      {/* Enhanced Background with Debanding */}
+      <div className="absolute inset-0">
+        {/* Multi-layer gradient for smooth transitions */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: `
+              radial-gradient(
+                ellipse 90% 70% at 50% 30%,
+                rgba(217, 119, 6, 0.05) 0%,
+                rgba(234, 88, 12, 0.03) 20%,
+                rgba(194, 65, 12, 0.018) 40%,
+                rgba(154, 52, 18, 0.01) 60%,
+                transparent 80%
+              ),
+              radial-gradient(
+                ellipse 85% 65% at 50% 70%,
+                rgba(168, 85, 247, 0.06) 0%,
+                rgba(147, 51, 234, 0.04) 25%,
+                rgba(126, 34, 206, 0.022) 50%,
+                rgba(107, 33, 168, 0.012) 75%,
+                transparent 100%
+              ),
+              linear-gradient(180deg, #000000 0%, #0a0a0a 50%, #000000 100%)
+            `,
+          }}
+        />
+        {/* Noise dithering */}
+        <div 
+          className="absolute inset-0 opacity-[0.025] mix-blend-overlay"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            backgroundSize: '200px 200px',
+          }}
+        />
+      </div>
 
       <div className={`relative z-10 max-w-7xl mx-auto px-5 md:px-6 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         {/* Section Header */}

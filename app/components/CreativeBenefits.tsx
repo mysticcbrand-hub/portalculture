@@ -218,10 +218,40 @@ export default function CreativeBenefits() {
 
   return (
     <section ref={sectionRef} id="beneficios" className="py-12 md:py-32 px-5 md:px-6 relative overflow-hidden">
-      {/* Ambient Background */}
+      {/* Enhanced Ambient Background with Debanding */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
+        {/* Layered gradients for smooth transitions */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: `
+              radial-gradient(
+                ellipse 80% 60% at 30% 20%,
+                rgba(139, 92, 246, 0.08) 0%,
+                rgba(139, 92, 246, 0.05) 20%,
+                rgba(124, 58, 237, 0.03) 40%,
+                rgba(109, 40, 217, 0.015) 60%,
+                transparent 80%
+              ),
+              radial-gradient(
+                ellipse 75% 65% at 70% 60%,
+                rgba(59, 130, 246, 0.06) 0%,
+                rgba(37, 99, 235, 0.04) 25%,
+                rgba(29, 78, 216, 0.02) 50%,
+                rgba(30, 64, 175, 0.01) 75%,
+                transparent 100%
+              )
+            `,
+          }}
+        />
+        {/* Noise texture for dithering effect */}
+        <div 
+          className="absolute inset-0 opacity-[0.02] mix-blend-overlay"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            backgroundSize: '180px 180px',
+          }}
+        />
       </div>
 
       <div className={`max-w-7xl mx-auto relative z-10 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>

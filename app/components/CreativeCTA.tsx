@@ -33,8 +33,44 @@ export default function CreativeCTA({ onCtaClick }: CreativeCTAProps) {
       ref={sectionRef}
       className="relative min-h-[80vh] flex items-center justify-center px-5 py-24 md:py-32 overflow-hidden"
     >
-      {/* Background - clean black */}
-      <div className="absolute inset-0 bg-black" />
+      {/* Dramatic Background with Debanding - Epic Finale */}
+      <div className="absolute inset-0">
+        {/* Elegant radial gradient layers */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: `
+              radial-gradient(
+                ellipse 100% 80% at 50% 50%,
+                rgba(236, 72, 153, 0.08) 0%,
+                rgba(219, 39, 119, 0.05) 15%,
+                rgba(190, 24, 93, 0.03) 30%,
+                rgba(157, 23, 77, 0.018) 45%,
+                rgba(131, 24, 67, 0.01) 60%,
+                transparent 75%
+              ),
+              radial-gradient(
+                ellipse 120% 90% at 50% 40%,
+                rgba(139, 92, 246, 0.06) 0%,
+                rgba(124, 58, 237, 0.04) 20%,
+                rgba(109, 40, 217, 0.025) 40%,
+                rgba(91, 33, 182, 0.015) 60%,
+                rgba(76, 29, 149, 0.008) 80%,
+                transparent 100%
+              ),
+              linear-gradient(180deg, #000000 0%, #050505 50%, #000000 100%)
+            `,
+          }}
+        />
+        {/* Premium noise dithering for smooth transitions */}
+        <div 
+          className="absolute inset-0 opacity-[0.03] mix-blend-overlay"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            backgroundSize: '220px 220px',
+          }}
+        />
+      </div>
 
       <div className="relative z-10 max-w-2xl mx-auto w-full text-center">
         {/* Section label */}
