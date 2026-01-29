@@ -20,22 +20,22 @@ export default function TransitionLink({ href, children, className, style, exter
     if (external || href.startsWith('http')) {
       e.preventDefault()
       
-      // Trigger fade
-      setIsTransitioning(true)
+      // Create full-screen black overlay
       const overlay = document.createElement('div')
-      overlay.className = 'fixed inset-0 bg-black z-[9999] pointer-events-none'
+      overlay.className = 'fixed inset-0 bg-black z-[9999]'
       overlay.style.opacity = '0'
-      overlay.style.transition = 'opacity 300ms cubic-bezier(0.16, 1, 0.3, 1)'
+      overlay.style.transition = 'opacity 800ms cubic-bezier(0.16, 1, 0.3, 1)'
+      overlay.style.pointerEvents = 'all' // Block all interactions
       document.body.appendChild(overlay)
       
       // Force reflow
       overlay.offsetHeight
       overlay.style.opacity = '1'
       
-      // Navigate after fade
+      // Wait 2 seconds for complete fade before navigating
       setTimeout(() => {
         window.location.href = href
-      }, 300)
+      }, 2000)
     }
     // For internal links, Next.js Link handles navigation
   }
