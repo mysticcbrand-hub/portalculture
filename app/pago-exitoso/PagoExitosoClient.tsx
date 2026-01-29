@@ -216,7 +216,17 @@ export default function PagoExitosoClient() {
 
         <p
           className={`
-            mt-8 text-xs text-white/30 font-light
+            mt-4 text-xs text-white/40 font-light
+            transition-all duration-700 delay-200
+            ${showContent ? 'opacity-100' : 'opacity-0'}
+          `}
+        >
+          Pulsa el botón para entrar. Tu enlace expira en 5 minutos.
+        </p>
+
+        <p
+          className={`
+            mt-4 text-xs text-white/30 font-light
             transition-all duration-700 delay-300
             ${showContent ? 'opacity-100' : 'opacity-0'}
           `}
