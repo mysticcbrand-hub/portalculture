@@ -90,10 +90,10 @@ export default function PagoExitosoClient() {
             <p className="text-white/60">{error}</p>
           </div>
           <a
-            href="/acceso"
+            href="https://app-portalculture.vercel.app/seleccionar-acceso"
             className="inline-block px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors"
           >
-            Volver a la página de acceso
+            Volver a seleccionar acceso
           </a>
         </div>
       </main>
