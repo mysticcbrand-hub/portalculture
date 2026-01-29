@@ -3,18 +3,20 @@
 import { useState, MouseEvent } from 'react'
 import Link from 'next/link'
 
-interface TransitionLinkProps {
+interface TransitionLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string
   children: React.ReactNode
-  className?: string
-  style?: React.CSSProperties
   external?: boolean
 }
 
-export default function TransitionLink({ href, children, className, style, external = false }: TransitionLinkProps) {
+export default function TransitionLink({ href, children, className, style, external = false, onClick, ...rest }: TransitionLinkProps) {
   const [isTransitioning, setIsTransitioning] = useState(false)
 
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    if (onClick) {
+      onClick(e)
+    }
+
     if (external || href.startsWith('http')) {
       e.preventDefault()
       
@@ -47,6 +49,7 @@ export default function TransitionLink({ href, children, className, style, exter
         style={style}
         target={external ? '_blank' : undefined}
         rel={external ? 'noopener noreferrer' : undefined}
+        {...rest}
       >
         {children}
       </a>
@@ -54,7 +57,7 @@ export default function TransitionLink({ href, children, className, style, exter
   }
 
   return (
-    <Link href={href} className={className} style={style}>
+    <Link href={href} className={className} style={style} {...rest}>
       {children}
     </Link>
   )
