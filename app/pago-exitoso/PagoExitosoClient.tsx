@@ -43,7 +43,14 @@ export default function PagoExitosoClient() {
             clearTimeout(contentTimer)
           }
         } else {
-          setError('Token inválido o expirado. Por favor, intenta de nuevo.')
+          const reason = data.error
+          if (reason === 'expired') {
+            setError('Tu enlace ha expirado. Vuelve a intentar el pago o contacta soporte.')
+          } else if (reason === 'invalid-signature' || reason === 'invalid-format') {
+            setError('Enlace inválido. Por favor, completa el pago de nuevo.')
+          } else {
+            setError('No pudimos validar tu pago. Intenta de nuevo o contacta soporte.')
+          }
         }
       } catch {
         setError('Error al validar el acceso. Por favor, contacta soporte.')
