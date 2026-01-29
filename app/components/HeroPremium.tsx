@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
+import TransitionLink from '@/components/TransitionLink'
 
 export default function HeroPremium() {
   const [mounted, setMounted] = useState(false)
@@ -278,8 +279,9 @@ export default function HeroPremium() {
             style={{ transitionDelay: '600ms' }}
           >
             {/* Primary CTA - Glassmorphism style */}
-            <a
+            <TransitionLink
               href="https://app-portalculture.vercel.app"
+              external
               className="
                 group relative
                 inline-flex items-center gap-2.5
@@ -327,7 +329,7 @@ export default function HeroPremium() {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
               </svg>
-            </a>
+            </TransitionLink>
 
             {/* Secondary CTA */}
             <button

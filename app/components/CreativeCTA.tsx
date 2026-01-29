@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import TransitionLink from '@/components/TransitionLink'
 
 interface CreativeCTAProps {
   onCtaClick: () => void
@@ -108,12 +109,16 @@ export default function CreativeCTA({ onCtaClick }: CreativeCTAProps) {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          <a
+          <TransitionLink
             href="https://app-portalculture.vercel.app"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            external
             className="group relative inline-flex items-center"
           >
+            <div
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              className="contents"
+            >
             {/* Outer glow on hover */}
             <div 
               className="absolute -inset-6 rounded-3xl transition-all duration-700"
@@ -164,7 +169,8 @@ export default function CreativeCTA({ onCtaClick }: CreativeCTAProps) {
                 </svg>
               </span>
             </div>
-          </a>
+            </div>
+          </TransitionLink>
         </div>
 
         {/* Trust indicators */}

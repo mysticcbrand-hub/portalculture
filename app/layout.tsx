@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import PageTransition from '@/components/PageTransition'
 
 export const metadata: Metadata = {
   title: 'Portal Culture - Entra al Portal. Cambia tu vida',
@@ -30,7 +31,10 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body>{children}</body>
+      <body>
+        <PageTransition />
+        {children}
+      </body>
     </html>
   )
 }
