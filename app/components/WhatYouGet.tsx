@@ -200,8 +200,10 @@ export default function WhatYouGet() {
 
                 {/* 3D Shadow */}
                 <div 
-                  className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-2xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"
+                  className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 pointer-events-none"
                   style={{
+                    background: `radial-gradient(ellipse 120% 100% at 50% 50%, rgba(59, 130, 246, 0.08) 0%, rgba(99, 102, 241, 0.06) 30%, rgba(168, 85, 247, 0.04) 60%, transparent 85%)`,
+                    filter: 'blur(20px)',
                     transform: 'translateZ(-50px)',
                   }}
                 />

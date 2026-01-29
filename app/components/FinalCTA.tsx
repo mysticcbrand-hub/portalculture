@@ -117,7 +117,13 @@ export default function FinalCTA({ onCtaClick }: FinalCTAProps) {
 
         {/* Headline with glow */}
         <div className="relative mb-6">
-          <div className="absolute inset-0 blur-3xl bg-white/5 rounded-full scale-150 opacity-50" />
+          <div 
+            className="absolute inset-0 rounded-full scale-150 opacity-50 pointer-events-none"
+            style={{
+              background: `radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.03) 40%, transparent 70%)`,
+              filter: 'blur(40px)',
+            }}
+          />
           <h2 className={`relative text-4xl md:text-5xl lg:text-6xl font-bold fade-in-up ${isVisible ? 'visible' : ''}`}
             style={{
               background: 'linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.7) 40%, #ffffff 60%, rgba(255,255,255,0.85) 100%)',

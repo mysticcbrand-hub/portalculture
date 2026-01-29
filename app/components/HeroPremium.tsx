@@ -32,13 +32,13 @@ export default function HeroPremium() {
     }
   }, [])
 
-  // Scroll-based animations
+  // Scroll-based animations - subtle blur
   const scrollProgress = Math.min(1, scrollY / 600)
   const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768
-  const contentBlur = isMobileDevice ? scrollProgress * 4 : scrollProgress * 8
-  const contentOpacity = 1 - scrollProgress * 0.7
-  const contentY = scrollProgress * -50
-  const contentScale = 1 - scrollProgress * 0.05
+  const contentBlur = isMobileDevice ? scrollProgress * 2 : scrollProgress * 3
+  const contentOpacity = 1 - scrollProgress * 0.6
+  const contentY = scrollProgress * -40
+  const contentScale = 1 - scrollProgress * 0.03
   
   // Parallax for background image
   const bgY = scrollY * 0.4
