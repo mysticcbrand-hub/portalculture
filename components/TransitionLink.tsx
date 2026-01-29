@@ -11,7 +11,7 @@ interface TransitionLinkProps {
   external?: boolean
 }
 
-export default function TransitionLink({ href, children, className, style, external = false }: TransitionLinkProps) {"}
+export default function TransitionLink({ href, children, className, style, external = false }: TransitionLinkProps) {
   const [isTransitioning, setIsTransitioning] = useState(false)
 
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
