@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 
-export default function PagoExitoso() {
+function PagoExitosoContent() {
   const searchParams = useSearchParams()
   const [mounted, setMounted] = useState(false)
   const [showTick, setShowTick] = useState(false)
@@ -63,6 +63,7 @@ export default function PagoExitoso() {
       document.body.style.cursor = ''
     }
   }, [searchParams])
+
 
   const handleContinue = () => {
     window.location.href = 'https://discord.gg/dgB4d5UzFr'
@@ -280,5 +281,22 @@ export default function PagoExitoso() {
         }
       `}</style>
     </main>
+  )
+}
+
+export default function PagoExitoso() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-black flex items-center justify-center p-4">
+          <div className="text-center">
+            <div className="inline-block w-12 h-12 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin mb-4" />
+            <p className="text-white/60">Cargando...</p>
+          </div>
+        </main>
+      }
+    >
+      <PagoExitosoContent />
+    </Suspense>
   )
 }
