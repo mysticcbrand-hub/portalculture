@@ -1,32 +1,111 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 export default function PagoExitoso() {
+  const searchParams = useSearchParams()
   const [mounted, setMounted] = useState(false)
   const [showTick, setShowTick] = useState(false)
   const [showContent, setShowContent] = useState(false)
+  const [isValidating, setIsValidating] = useState(true)
+  const [isValid, setIsValid] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     setMounted(true)
-    // Staggered animations
-    const tickTimer = setTimeout(() => setShowTick(true), 400)
-    const contentTimer = setTimeout(() => setShowContent(true), 800)
+    
+    // Validate access token
+    const validateToken = async () => {
+      const token = searchParams.get('token')
+      
+      if (!token) {
+        setError('Acceso no autorizado. Por favor, completa el pago primero.')
+        setIsValidating(false)
+        return
+      }
+
+      try {
+        const response = await fetch('/api/generate-access-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token }),
+        })
+
+        const data = await response.json()
+
+        if (data.valid) {
+          setIsValid(true)
+          // Staggered animations
+          const tickTimer = setTimeout(() => setShowTick(true), 400)
+          const contentTimer = setTimeout(() => setShowContent(true), 800)
+          
+          return () => {
+            clearTimeout(tickTimer)
+            clearTimeout(contentTimer)
+          }
+        } else {
+          setError('Token inválido o expirado. Por favor, intenta de nuevo.')
+        }
+      } catch (err) {
+        setError('Error al validar el acceso. Por favor, contacta soporte.')
+      } finally {
+        setIsValidating(false)
+      }
+    }
+
+    validateToken()
     
     // Force default cursor on this page
     document.body.style.cursor = 'auto'
     
     return () => {
-      clearTimeout(tickTimer)
-      clearTimeout(contentTimer)
       document.body.style.cursor = ''
     }
-  }, [])
+  }, [searchParams])
 
   const handleContinue = () => {
     window.location.href = 'https://discord.gg/dgB4d5UzFr'
   }
 
+  // Show loading state while validating
+  if (isValidating) {
+    return (
+      <main className="min-h-screen bg-black flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="inline-block w-12 h-12 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin mb-4" />
+          <p className="text-white/60">Validando acceso...</p>
+        </div>
+      </main>
+    )
+  }
+
+  // Show error state if validation failed
+  if (!isValid || error) {
+    return (
+      <main className="min-h-screen bg-black flex items-center justify-center p-4">
+        <div className="max-w-md text-center space-y-6">
+          <div className="w-20 h-20 mx-auto rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center">
+            <svg className="w-10 h-10 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-white mb-2">Acceso Denegado</h1>
+            <p className="text-white/60">{error}</p>
+          </div>
+          <a
+            href="/acceso"
+            className="inline-block px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors"
+          >
+            Volver a la página de acceso
+          </a>
+        </div>
+      </main>
+    )
+  }
+
+  // Success page - only shown if token is valid
   return (
     <main className="min-h-screen bg-black flex items-center justify-center px-6" style={{ cursor: 'auto' }}>
       {/* Subtle ambient glow */}
