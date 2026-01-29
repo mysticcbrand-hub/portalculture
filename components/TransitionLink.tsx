@@ -7,10 +7,11 @@ interface TransitionLinkProps {
   href: string
   children: React.ReactNode
   className?: string
+  style?: React.CSSProperties
   external?: boolean
 }
 
-export default function TransitionLink({ href, children, className, external = false }: TransitionLinkProps) {
+export default function TransitionLink({ href, children, className, style, external = false }: TransitionLinkProps) {"}
   const [isTransitioning, setIsTransitioning] = useState(false)
 
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
@@ -43,6 +44,7 @@ export default function TransitionLink({ href, children, className, external = f
         href={href}
         onClick={handleClick}
         className={className}
+        style={style}
         target={external ? '_blank' : undefined}
         rel={external ? 'noopener noreferrer' : undefined}
       >
@@ -52,7 +54,7 @@ export default function TransitionLink({ href, children, className, external = f
   }
 
   return (
-    <Link href={href} className={className}>
+    <Link href={href} className={className} style={style}>
       {children}
     </Link>
   )
