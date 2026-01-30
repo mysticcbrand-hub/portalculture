@@ -1,0 +1,5 @@
+# Verifying important files are NOT in .gitignore
+.env.local
+.env*.local
+node_modules
+.next
